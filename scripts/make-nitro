@@ -1,0 +1,17 @@
+#!/bin/bash
+TOP=$(realpath "$(dirname "${BASH_SOURCE[0]}")"/..)
+source ${TOP}/scripts/funcs.sh
+src="$1"
+if [ ! -d "$src" ]; then
+	echo "!!!!! '$src' is not a directory" 1>&2
+	exit 1
+fi
+dst="$2"
+cleandir "$dst"
+[ "$?" != "0" ] && echo "!!!!! '$dst' is not an empty folder!" && exit 1
+for x in "$src"/*-runit; do
+	xbn="$(basename "$x")"
+	tgt="$dst/${xbn%-*}-nitro"
+	mkdir -p "$tgt"
+	pkgbuild "$x" "$tgt" "0"
+done

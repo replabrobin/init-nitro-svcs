@@ -1,3 +1,34 @@
+yesans(){
+	local ans
+	while true; do
+		read -p "$1 (yes/no):" ans
+		case "$ans" in
+			(yes|y) return 0;;
+			(no|n) return 1;;
+			(*) echo "please enter yes or no"
+				;;
+		esac
+	done
+}
+cleandir(){
+	local d="$1"
+	if [ -n "$d" ]; then
+		if [ -d "$d" ]; then
+			if [ -n "$(ls -A "${d}")" ]; then
+   				echo "directory '$d' is not empty!"
+				if yesans "OK to clean?"; then
+					rm -rf "$d"/*
+					return 0
+				fi
+				return 1
+			fi
+		elif yesans "OK to mkdir -p '$d'?"; then
+			mkdir -p "$d" && return 0 || true
+   			echo "!!!!! cannot make directory '$d'!"
+			return 2
+		fi
+	fi
+}
 pkg-names(){
 	local d
 	for d in "$TOP/src/"*; do
@@ -24,7 +55,7 @@ pkg-src(){
 	fi
 }
 pkg-mt(){
-	local mt=0 f t name="$1" d="${TOP}/src/${name}"
+	local mt=0 f t d="$1" name="$(basename "$1")"
 	for fn in "$TOP/src/$name"/{$name.{run,check,setup,finish,install,hook,conf},PKGBUILD}; do
 		t="$(stat -c'%Y' "${d}/${f}")"
 		[ "$t" -gt "$mt" ] && mt="$t" || true
@@ -49,32 +80,66 @@ pkg-info(){
 		echo "${status} ${p} ${src} ${mt}"
 	done
 }
+_pkgbuild-array(){
+	local A x pkgbuild="$1" kind="$2" filter="$3"
+	eval A=\( "$(pkgbuild-value "$pkgbuild" "$kind")" \)
+	for x in "${A[@]}"; do
+		if [ -n "$filter" ]; then
+			x="$($filter "$x")"
+		fi
+		[ -n "$x" ] && echo "'$x'" || true
+	done
+}
+pkgbuild-array(){
+	local A
+	eval A=\( "$(_pkgbuild-array "$1" "$2" "$3")" \)
+	if [ -n "$A" ]; then
+		local x t=$'\t'
+		echo "$2=("
+		for x in "${A[@]}"; do
+			echo "$t'$x'"
+		done
+		echo "$t)"
+	fi
+}
 pkgbuild(){
-	local dir="$1" name="$(basename $1)" q='"' d='$' fn bn S="" SI="" I="" B="" t=$'\t' n=$'\n'
-	for fn in "$TOP/src/$name"/$name.{run,check,setup,finish,conf,install}; do
+	local dir="$1" name="$(basename "$1")" q='"' d='$' tdir="$2" show="${3:-1}"
+	cleandir "$tdir"
+	[ "$?" != "0" ] && return 1
+	local fn bn S="" SI="" I="" B="" t=$'\t' n=$'\n' A iname sname
+	local pkgbfn="$dir/PKGBUILD" ptext rname="${name%-runit}"
+	for fn in "$dir/"{$rname,$name}{,.{run,check,setup,finish,conf,install}}; do
 		if [ -f "$fn" ]; then
 			bn="$(basename "$fn")"
-			if [ "$bn" = "$name.install" ]; then
-				I="install='$name.install'${n}"
+			[ "$bn" = "$rname" -o "$bn" = "$name" ] && iname=run || iname="${bn#*.}"
+			if [ "$bn" = "$name.install" -o "$bn" = "$rname.install" ]; then
+				sname="$bn"
+				iname="$rname.install"
+				I="install='$iname'${n}"
 			else
-				S="${S}${t}${bn}${n}"
-				SI="${SI}${t}install -Dm755 ${q}${d}srcdir${q}/${bn} ${q}${d}pkgdir/etc/nitro/sv/${name}/${bn#*.}${q}${n}"
+				sname="$bn"
+				S="${S}${t}${iname}${n}"
+				SI="${SI}${t}install -Dm755 ${q}${d}srcdir${q}/${iname} ${q}${d}pkgdir/etc/nitro/sv/${rname}/${iname}${q}${n}"
 				B="${B}${t}'$(b2sum $fn | cut -d' ' -f1)'${n}"
+			fi
+			if [ -d "$tdir" ]; then
+				cp "$dir/$sname" "$tdir/$iname"
 			fi
 		fi
 	done
-	echo "# Maintainer: replabrobin <replabrobin@gmail.com>
-pkgname=${name}-nitro
-pkgver='$(pkg-mt "$name")'
+	ptext="# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='$(echo ${name}| sed -e's/-runit/-nitro/')'
+pkgver='$(pkg-mt "$dir")'
 pkgrel=1
 pkgdesc='nitro service script for ${name}'
 arch=('any')
 url=${q}https://github.com/replabrobin/init-nitro-svcs${q}
 license=('BSD')
-depends=('${name}' 'nitro')
 #groups=('nitro-galaxy')
-provides=('init-${name}')
-conflicts=('init-${name}')
+$(pkgbuild-array "$pkgbfn" provides depends-filter)
+$(pkgbuild-array "$pkgbfn" conflicts depends-filter)
+$(pkgbuild-array "$pkgbfn" depends depends-filter)
+$(pkgbuild-array "$pkgbfn" optdepends depends-filter)
 ${I}source=(
 ${S%${n}}
 	)
@@ -83,9 +148,13 @@ ${B%${n}}
 	)
 
 package() {
-	install -dm755 ${q}${d}pkgdir/etc/nitro/sv/${name}/${q}
+	install -dm755 ${q}${d}pkgdir/etc/nitro/sv/${rname}/${q}
 ${SI%${n}}
 }"
+	if [ -d "$tdir" ]; then
+		echo "$ptext" > "$tdir/PKGBUILD"
+	fi
+	[ "$show" = "1" ] && echo "$ptext"
 }
 
 pkgbuild-value(){
@@ -106,7 +175,7 @@ pkgbuild-value(){
 
 depends-filter(){
 	local x
-	for x in $@; do
+	for x in "$@"; do
 		case "$x" in
 			(socklog|syslog-ng|runit-rc)
 				;;

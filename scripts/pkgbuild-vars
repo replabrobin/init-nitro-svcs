@@ -12,6 +12,6 @@ for d in "$DIR"/*/PKGBUILD; do
 		if [ -n "$FILTER" ]; then
 			x="$(depends-filter "$x")"
 		fi
-		[ -n "$x" ] && echo "$x" || true
+		[ -n "$x" ] && echo "'$x'" || true
 	done
 done | sort -u
