@@ -29,162 +29,191 @@ cleandir(){
 		fi
 	fi
 }
-pkg-names(){
-	local d
-	for d in "$TOP/src/"*; do
-		echo "$(basename "${d}")"
-	done | sort
+
+nitroize(){
+	echo "$1" | sed -e's/runit/nitro/g'
 }
-pkg-ver(){
-	local f="${TOP}/src/${1}/PKGBUILD"
-	[ -f "${f}" ] && sed -n -e'/^pkgver=/{s/^pkgver=//;p}' "${f}" || true
-}
-pkg-src(){
-	local s f="${TOP}/src/${1}/PKGBUILD"
-	if [ -f "${f}" ]; then
-		s="$(sed -n -e'/^source=(.*)/{s/\(([^()]*)\).*/\1/p}' "${f}")"
+
+get-pkgbuild-data(){
+	local src="$(cat "${1}/PKGBUILD")" tmp _x
+	pkgbuild-value(){
+		local s kind="$1" A
+		s="$(echo "$src" | sed -n -e'/^'"$kind"'=(.*)/{s/\(([^()]*)\).*/\1/p}')"
 		if [ -z "${s}" ]; then
-			s="$(sed -n -e'/^source=/,/.*)/p' "${f}")"
+			s="$(echo "$src" | sed -n -e'/^'"$kind"'=/,/.*)/p')"
 		fi
 		if [ -n "$s" ]; then
 			(
 			eval "$s"
-			echo "${source[@]}"
+			eval A=\( \"\${${kind}[@]}\" \)
+			for s in "${A[@]}"; do echo "'$s'"; done
 			)
 		fi
+	}
+
+	depends-filter(){
+		local x
+		for x in "$@"; do
+			case "$x" in
+				(socklog|syslog-ng|runit-rc)
+					;;
+				(runit) echo nitro
+					;;
+				(*) echo "$x"
+					;;
+			esac
+		done | sed -e's/runit/nitro/g'
+	}
+	_pkgbuild-array(){
+		local A x kind="$1" filter="$2"
+		eval A=\( "$(pkgbuild-value "$kind")" \)
+		for x in "${A[@]}"; do
+			if [ -n "$filter" ]; then
+				x="$($filter "$x")"
+			fi
+			[ -n "$x" ] && echo "'$x'" || true
+		done
+	}
+	pkgbuild-array(){
+		local A
+		eval A=\( "$(_pkgbuild-array "$1" "$2")" \)
+		if [ -n "$A" ]; then
+			local x t=$'\t'
+			echo "$1=("
+			for x in "${A[@]}"; do
+				echo "$t'$x'"
+			done
+			echo "$t)"
+		fi
+	}
+	inst-sv-names(){
+		local n f fn m N i cdst csrc lf=$'\n' tab=$'\t' q='"' d='$'
+		local N=$(echo "$src" | sed -n -e'/^\s*_inst_sv\s/{s/^\s*_inst_sv\s*//;s/['$'"'$"'"']//g;p}' | sort -u)
+		if [ -n "$N" ]; then
+			for n in ${N}; do
+				case "$n" in
+					(log*|*.log*) continue;;
+				esac
+				for f in run finish check conf; do
+					fn="$1/$n.$f"
+					[ ! -f "$fn" ] && continue || true
+					cdst="$(nitroize "$n.$f")"
+					csrc="$n.$f"
+					case "$f" in
+						(conf) m="644";i=conf;;
+						(*) m="755";i="$cdst";;
+					esac
+					_CSRC+=("$csrc")
+					_CDST+=("$cdst")
+					_PBD[itext]="${_PBD[itext]}${tab}install -Dm755 ${q}${d}srcdir${q}/${cdst} ${q}${d}pkgdir/etc/nitro/sv/$n/${i}${q}${lf}"
+					_PBD[source]="${_PBD[source]}${tab}${cdst}${lf}"
+					_PBD[b2sums]="${_PBD[b2sums]}${tab}'$(b2sum $fn | cut -d' ' -f1)'${lf}"
+				done
+			done
+		else
+			#echo "$src" | sed -n -e'/^\s*install\s\s*-Dm/{s/^\s*//;s/\s\s*$//;s/\s\s*/ /g;p}' | sort -u | while read N; do
+			N=$(echo "$src" | sed -n -e'/^\s*install\s\s*-Dm/{s/^\s*//;s/\s\s*$//;s/\s\s*/ /g;p}' | cut -d' ' -f3 | sort -u)
+			for n in ${N}; do
+				n="$(basename "$n")"
+				case "$n" in
+					(log*.run|*.log.run) continue;;
+				esac
+				fn="$1/$n"
+				[ ! -f "$fn" ] && continue || true
+				cdst="$(nitroize "$n")"
+				csrc="$n"
+				case "$n" in
+					(*conf) m="644";i=conf;;
+					(*) m="755";i="$cdst";;
+				esac
+				_CSRC+=("$csrc")
+				_CDST+=("$cdst")
+				_PBD[itext]="${_PBD[itext]}${tab}install -Dm755 ${q}${d}srcdir${q}/${cdst} ${q}${d}pkgdir/etc/nitro/sv/${_PBD[svcname]}/${i}${q}${lf}"
+				_PBD[source]="${_PBD[source]}${tab}${cdst}${lf}"
+				_PBD[b2sums]="${_PBD[b2sums]}${tab}'$(b2sum $fn | cut -d' ' -f1)'${lf}"
+			done
+		fi
+	}
+	_CSRC=()
+	_CDST=()
+	_PBD["oname"]="$(basename "$1")"
+	_PBD["name"]="$(nitroize "${_PBD[oname]}")"
+	_PBD["ver"]="$(echo "$src" | sed -n -e'/^pkgver=/{s/^pkgver=//;p}')"
+	_PBD["rel"]="$(echo "$src" | sed -n -e'/^pkgrel=/{s/^pkgrel=//;p}')"
+	tmp="$(echo "$src" | sed -n -e'/^install=/{s/install=//;s/['"'"$q]'//g;p}')"
+	if [ -n "$tmp" ]; then
+		_CSRC+=("$tmp")
+		_CDST+=("$(nitroize "$tmp")")
 	fi
-}
-pkg-mt(){
-	local mt=0 f t d="$1" name="$(basename "$1")"
-	for fn in "$TOP/src/$name"/{$name.{run,check,setup,finish,install,hook,conf},PKGBUILD}; do
-		t="$(stat -c'%Y' "${d}/${f}")"
-		[ "$t" -gt "$mt" ] && mt="$t" || true
+	_PBD["install"]="$(nitroize "$(echo "$src" | sed -n -e'/^install=/{p}')")"
+	_PBD["svcname"]="${_PBD[name]%-nitro}"
+	for _x in provides conflicts depends optdepends; do
+		_PBD["$_x"]="$(pkgbuild-array "$_x" depends-filter)"
 	done
-	[ "$mt" != 0 ] && echo "$(date -d@${mt} +%Y%m%d)"
+	_PBD["source"]=""
+	_PBD["itext"]=""
+	_PBD["b2sums"]=""
+	inst-sv-names "${sdir}"
 }
 
-pkg-info(){
-	for p in $(pkg-names); do
-		ver="$(pkg-ver "${p}")"
-		src="$(pkg-src "${p}")"
-		if [ -z "$ver" -o -z "$src" ]; then
-				msg="unready"
-		else
-				mt="$(pkg-mt "${p}")"
-			if [ "$mt" != "$ver" ]; then
-					msg="rebuild"
-			else
-					msg="unchanged"
-			fi
-		fi
-		echo "${status} ${p} ${src} ${mt}"
-	done
+script-names(){
+	local dir="${1%/}" name="$(basename "$1")" cname
+	for cname in "$dir"/{"$name","${name%-runit}"} "$dir"/*.{run,check,setup,finish,conf,install}; do
+		cname="$(basename "$cname")"
+		case "$cname" in
+			(log*|*.log.run) ;;
+			(*) [ -e "$dir/$cname" ] && echo "$cname";;
+		esac
+	done | sort -u
 }
-_pkgbuild-array(){
-	local A x pkgbuild="$1" kind="$2" filter="$3"
-	eval A=\( "$(pkgbuild-value "$pkgbuild" "$kind")" \)
-	for x in "${A[@]}"; do
-		if [ -n "$filter" ]; then
-			x="$($filter "$x")"
-		fi
-		[ -n "$x" ] && echo "'$x'" || true
-	done
-}
-pkgbuild-array(){
-	local A
-	eval A=\( "$(_pkgbuild-array "$1" "$2" "$3")" \)
-	if [ -n "$A" ]; then
-		local x t=$'\t'
-		echo "$2=("
-		for x in "${A[@]}"; do
-			echo "$t'$x'"
-		done
-		echo "$t)"
-	fi
-}
+
 pkgbuild(){
-	local dir="$1" name="$(basename "$1")" q='"' d='$' tdir="$2" show="${3:-1}"
+	local sdir="${1%/}" tdir=${2%/} i q='"' d='$' show="${3:-1}" lf=$'\n'
+	declare -A _PBD
+	declare -a _CSRC _CDST
+	get-pkgbuild-data "$sdir"
 	cleandir "$tdir"
 	[ "$?" != "0" ] && return 1
-	local fn bn S="" SI="" I="" B="" t=$'\t' n=$'\n' A iname sname
-	local pkgbfn="$dir/PKGBUILD" ptext rname="${name%-runit}"
-	for fn in "$dir/"{$rname,$name}{,.{run,check,setup,finish,conf,install}}; do
-		if [ -f "$fn" ]; then
-			bn="$(basename "$fn")"
-			[ "$bn" = "$rname" -o "$bn" = "$name" ] && iname=run || iname="${bn#*.}"
-			if [ "$bn" = "$name.install" -o "$bn" = "$rname.install" ]; then
-				sname="$bn"
-				iname="$rname.install"
-				I="install='$iname'${n}"
-			else
-				sname="$bn"
-				S="${S}${t}${iname}${n}"
-				SI="${SI}${t}install -Dm755 ${q}${d}srcdir${q}/${iname} ${q}${d}pkgdir/etc/nitro/sv/${rname}/${iname}${q}${n}"
-				B="${B}${t}'$(b2sum $fn | cut -d' ' -f1)'${n}"
-			fi
-			if [ -d "$tdir" ]; then
-				cp "$dir/$sname" "$tdir/$iname"
-			fi
-		fi
-	done
 	ptext="# Maintainer: replabrobin <replabrobin@gmail.com>
-pkgname='$(echo ${name}| sed -e's/-runit/-nitro/')'
-pkgver='$(pkg-mt "$dir")'
-pkgrel=1
-pkgdesc='nitro service script for ${name}'
+pkgname='${_PBD[name]}'
+pkgver='${_PBD[ver]}'
+pkgrel='${_PBD[rel]}'
+pkgdesc='nitro service script for ${_PBD[svcname]}'
 arch=('any')
 url=${q}https://github.com/replabrobin/init-nitro-svcs${q}
 license=('BSD')
 #groups=('nitro-galaxy')
-$(pkgbuild-array "$pkgbfn" provides depends-filter)
-$(pkgbuild-array "$pkgbfn" conflicts depends-filter)
-$(pkgbuild-array "$pkgbfn" depends depends-filter)
-$(pkgbuild-array "$pkgbfn" optdepends depends-filter)
+${_PBD[install]}
+${_PBD[provides]}
+${_PBD[conflicst]}
+${_PBD[depends]}
+${_PBD[optdepends]}
 ${I}source=(
-${S%${n}}
+${_PBD[source]%${lf}}
 	)
 ${I}b2sums=(
-${B%${n}}
+${_PBD[b2sums]%${lf}}
 	)
-
 package() {
-	install -dm755 ${q}${d}pkgdir/etc/nitro/sv/${rname}/${q}
-${SI%${n}}
+${_PBD[itext]%${lf}}
 }"
 	if [ -d "$tdir" ]; then
+		xfer(){
+			[ -z "$1" ] && return 0 || true
+			local sfn="$sdir/$1" dfn
+			if [ -f "$sfn" ]; then
+				[ -n "$2" ] && dfn="$tdir/$2" || dfn="$tdir/$1"
+				cp -p "$sfn" "$dfn"
+				sed -i -e's/runit/nitro/g;s/sv check/nitroctl check/g' "$dfn"
+			fi
+		}
 		echo "$ptext" > "$tdir/PKGBUILD"
+		xfer "README.md"
+		for i in "${!_CSRC[@]}"; do
+			xfer "${_CSRC[$i]}" "${_CDST[$i]}"
+		done
 	fi
 	[ "$show" = "1" ] && echo "$ptext"
-}
-
-pkgbuild-value(){
-	local s f="$1" kind="$2" A
-	[ ! -f "$f" -o -z "$kind" ] && echo "!!!!! pkgbuild-value <PKGBUILD> <kind>" && exit 1
-	s="$(sed -n -e'/^'"$kind"'=(.*)/{s/\(([^()]*)\).*/\1/p}' "$f")"
-	if [ -z "${s}" ]; then
-		s="$(sed -n -e'/^'"$kind"'=/,/.*)/p' "$f")"
-	fi
-	if [ -n "$s" ]; then
-		(
-		eval "$s"
-		eval A=\( \"\${${kind}[@]}\" \)
-		for s in "${A[@]}"; do echo "'$s'"; done
-		)
-	fi
-}
-
-depends-filter(){
-	local x
-	for x in "$@"; do
-		case "$x" in
-			(socklog|syslog-ng|runit-rc)
-				;;
-			(runit) echo nitro
-				;;
-			(*) echo "$x"
-				;;
-		esac
-	done | sed -e's/runit/nitro/g'
 }
 
 runit-gitea-list(){
