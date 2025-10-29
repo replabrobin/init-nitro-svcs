@@ -33,6 +33,9 @@ cleandir(){
 nitroize(){
 	echo "$1" | sed -e's/runit/nitro/g'
 }
+nitro-change(){
+	sed -e's/runit/nitro/g;s/sv check/nitroctl check/g' "$1"
+}
 
 get-pkgbuild-data(){
 	local src="$(cat "${1}/PKGBUILD")" tmp _x
@@ -100,14 +103,14 @@ get-pkgbuild-data(){
 					cdst="$(nitroize "$n.$f")"
 					csrc="$n.$f"
 					case "$f" in
-						(conf) m="644";i=conf;;
-						(*) m="755";i="$cdst";;
+						(conf) m="644";;
+						(*) m="755";;
 					esac
 					_CSRC+=("$csrc")
 					_CDST+=("$cdst")
-					_PBD[itext]="${_PBD[itext]}${tab}install -Dm755 ${q}${d}srcdir${q}/${cdst} ${q}${d}pkgdir/etc/nitro/sv/$n/${i}${q}${lf}"
+					_PBD[itext]="${_PBD[itext]}${tab}install -Dm755 ${q}${d}srcdir${q}/${cdst} ${q}${d}pkgdir/etc/nitro/sv/$n/${f}${q}${lf}"
 					_PBD[source]="${_PBD[source]}${tab}${cdst}${lf}"
-					_PBD[b2sums]="${_PBD[b2sums]}${tab}'$(b2sum $fn | cut -d' ' -f1)'${lf}"
+					_PBD[b2sums]="${_PBD[b2sums]}${tab}'$(nitro-change "$fn" | b2sum | cut -d' ' -f1)'${lf}"
 				done
 			done
 		else
@@ -123,14 +126,14 @@ get-pkgbuild-data(){
 				cdst="$(nitroize "$n")"
 				csrc="$n"
 				case "$n" in
-					(*conf) m="644";i=conf;;
-					(*) m="755";i="$cdst";;
+					(*conf) m="644";;
+					(*) m="755";;
 				esac
 				_CSRC+=("$csrc")
 				_CDST+=("$cdst")
-				_PBD[itext]="${_PBD[itext]}${tab}install -Dm755 ${q}${d}srcdir${q}/${cdst} ${q}${d}pkgdir/etc/nitro/sv/${_PBD[svcname]}/${i}${q}${lf}"
+				_PBD[itext]="${_PBD[itext]}${tab}install -Dm755 ${q}${d}srcdir${q}/${cdst} ${q}${d}pkgdir/etc/nitro/sv/${_PBD[svcname]}/${cdst##*.}${q}${lf}"
 				_PBD[source]="${_PBD[source]}${tab}${cdst}${lf}"
-				_PBD[b2sums]="${_PBD[b2sums]}${tab}'$(b2sum $fn | cut -d' ' -f1)'${lf}"
+				_PBD[b2sums]="${_PBD[b2sums]}${tab}'$(nitro-change "$fn" | b2sum | cut -d' ' -f1)'${lf}"
 			done
 		fi
 	}
@@ -200,11 +203,11 @@ ${_PBD[itext]%${lf}}
 	if [ -d "$tdir" ]; then
 		xfer(){
 			[ -z "$1" ] && return 0 || true
-			local sfn="$sdir/$1" dfn
+			local sfn="$sdir/$1" dfn tmp
 			if [ -f "$sfn" ]; then
 				[ -n "$2" ] && dfn="$tdir/$2" || dfn="$tdir/$1"
-				cp -p "$sfn" "$dfn"
-				sed -i -e's/runit/nitro/g;s/sv check/nitroctl check/g' "$dfn"
+				nitro-change "$sfn" > "$dfn"
+				chmod "$dfn" --reference="$sfn"
 			fi
 		}
 		echo "$ptext" > "$tdir/PKGBUILD"
@@ -212,6 +215,8 @@ ${_PBD[itext]%${lf}}
 		for i in "${!_CSRC[@]}"; do
 			xfer "${_CSRC[$i]}" "${_CDST[$i]}"
 		done
+		makepkg -D"$tdir" --printsrcinfo > "$tdir"/.SRCINFO
+
 	fi
 	[ "$show" = "1" ] && echo "$ptext"
 }
