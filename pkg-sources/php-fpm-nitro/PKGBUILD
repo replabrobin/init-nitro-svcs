@@ -1,0 +1,26 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='php-fpm-nitro'
+pkgver='20190628'
+pkgrel='4'
+pkgdesc='nitro service script for php-fpm'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-php-fpm'
+	)
+
+depends=(
+	'php-fpm'
+	'nitro'
+	)
+
+source=(
+	php-fpm.run
+	)
+b2sums=('caa533ceb8715b17a46ca974a68c2c765a67a248da897234f4ddcc4a5856ff761c5c3782a960fa0cf1271941dc85bf1a96d82f0fa0793bce4c11e18386fed2ff')
+package() {
+	install -Dm755 "$srcdir"/php-fpm.run "$pkgdir/etc/nitro/sv/php-fpm/run"
+}

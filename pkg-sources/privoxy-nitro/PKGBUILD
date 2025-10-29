@@ -1,0 +1,26 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='privoxy-nitro'
+pkgver='20180314'
+pkgrel='5'
+pkgdesc='nitro service script for privoxy'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-privoxy'
+	)
+
+depends=(
+	'privoxy'
+	'nitro'
+	)
+
+source=(
+	privoxy.run
+	)
+b2sums=('eb9f835092f6d5f2c4ab315ce90f76eab759bdeb218f3d77ca5bfe58dd45af5793f5c260a920f3198b9e09c10006cc328928dea2ffa636bf8abe9e9916a9358e')
+package() {
+	install -Dm755 "$srcdir"/privoxy.run "$pkgdir/etc/nitro/sv/privoxy/run"
+}

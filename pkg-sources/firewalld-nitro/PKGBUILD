@@ -1,0 +1,26 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='firewalld-nitro'
+pkgver='20200623'
+pkgrel='2'
+pkgdesc='nitro service script for firewalld'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-firewalld'
+	)
+
+depends=(
+	'firewalld'
+	'nitro'
+	)
+
+source=(
+	firewalld.run
+	)
+b2sums=('258fd6b90fe7e6dbf7539836833b6dc630480aedf618c43962c0d473fc5696ea592067ca5cab939cc0282c640a3a249cd9d62d17df808671dbfb40a670901468')
+package() {
+	install -Dm755 "$srcdir"/firewalld.run "$pkgdir/etc/nitro/sv/firewalld/run"
+}

@@ -1,0 +1,29 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='shairplay-nitro'
+pkgver='20210407'
+pkgrel='5'
+pkgdesc='nitro service script for shairplay'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-shairplay'
+	)
+
+depends=(
+	'shairplay'
+	'nitro'
+	)
+
+source=(
+	shairplay.run
+	shairplay.conf
+	)
+b2sums=('78a6a0cdab755ce9d72e32a8dfc4d432b09a336d7c5d3e2771ff33e85d65038409f950df300e28db817f7f0322b65bec60ecca284e407f942574ce996981040d'
+        'bc09804d75e3c39474a205914df0c04ae16413ff08ed44d8cd148f3afc561917599d6a4a7cca434ccbd23e8d670c8edef03ca8b288a311320bc3a16653dd760f')
+package() {
+	install -Dm755 "$srcdir"/shairplay.run "$pkgdir/etc/nitro/sv/shairplay/run"
+	install -Dm755 "$srcdir"/shairplay.conf "$pkgdir/etc/nitro/sv/shairplay/conf"
+}

@@ -1,0 +1,2 @@
+#!/bin/sh
+exec chpst -u rspamd rspamd -c /etc/rspamd/rspamd.conf -f

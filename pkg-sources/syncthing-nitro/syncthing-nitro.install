@@ -1,0 +1,5 @@
+post_upgrade() {
+    echo 'We previously included syncthing-relaysrv nitro script into this'
+    echo 'package, we moved it to its own syncthing-relaysrv package and this'
+    echo 'package now contains the proper syncthing nitro service script.'
+}

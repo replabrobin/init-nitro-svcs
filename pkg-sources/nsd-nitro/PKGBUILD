@@ -1,0 +1,26 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='nsd-nitro'
+pkgver='20200925'
+pkgrel='2'
+pkgdesc='nitro service script for nsd'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-nsd'
+	)
+
+depends=(
+	'nsd'
+	'nitro'
+	)
+
+source=(
+	nsd.run
+	)
+b2sums=('ce0bbe45f2d2f4f980f2f44382e0d0c2d6cab4aa2b6ca05f8ae1123fbe356106828a4a2179aeb60fc745e774f5d72df1900b5258556a140f0925522dd50fd3cc')
+package() {
+	install -Dm755 "$srcdir"/nsd.run "$pkgdir/etc/nitro/sv/nsd/run"
+}

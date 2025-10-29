@@ -1,0 +1,26 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='hostapd-nitro'
+pkgver='20221002'
+pkgrel='1'
+pkgdesc='nitro service script for hostapd'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-hostapd'
+	)
+
+depends=(
+	'hostapd'
+	'nitro'
+	)
+
+source=(
+	hostapd.run
+	)
+b2sums=('fc45ea05f0f33932d8014bffd8e02c43bfdb88831cbb6257eff5d94a625522df72c8d17ac0c4eba6c619d99de94a1225f59b7bdf2402e500f1765ca7e536cfd8')
+package() {
+	install -Dm755 "$srcdir"/hostapd.run "$pkgdir/etc/nitro/sv/hostapd/run"
+}

@@ -1,0 +1,25 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='hdparm-nitro'
+pkgver='20210407'
+pkgrel='2'
+pkgdesc='nitro service script for hdparm'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-hdparm'
+	)
+
+depends=(
+	'hdparm'
+	)
+
+source=(
+	hdparm.conf
+	)
+b2sums=('57fa5ec565bc912075279f02eb7165d756bc8651564a9cfcc315a7970f6e0fad1da37e46d45c47b22c3f845987e6af12070ea4bf677cede39cf8c9ff865da81e')
+package() {
+	install -Dm755 "$srcdir"/hdparm.conf "$pkgdir/etc/nitro/sv/hdparm/conf"
+}

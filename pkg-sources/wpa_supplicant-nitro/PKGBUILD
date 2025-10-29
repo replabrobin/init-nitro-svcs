@@ -1,0 +1,26 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='wpa_supplicant-nitro'
+pkgver='20180429'
+pkgrel='3'
+pkgdesc='nitro service script for wpa_supplicant'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-wpa_supplicant'
+	)
+
+depends=(
+	'wpa_supplicant'
+	'nitro'
+	)
+
+source=(
+	wpa_supplicant.run
+	)
+b2sums=('c87008a7680b7ce9654fdd8ced24efa1333df8f81f5c7dfda907a7eb0525a223540253e880f39a9b020593244de2efe3f588687b2031a7d99b5ec93730771356')
+package() {
+	install -Dm755 "$srcdir"/wpa_supplicant.run "$pkgdir/etc/nitro/sv/wpa_supplicant/run"
+}

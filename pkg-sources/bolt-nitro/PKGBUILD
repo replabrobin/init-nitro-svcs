@@ -1,0 +1,26 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='bolt-nitro'
+pkgver='20210426'
+pkgrel='1'
+pkgdesc='nitro service script for bolt'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-bolt'
+	)
+
+depends=(
+	'dbus-nitro'
+	'bolt'
+	)
+
+source=(
+	boltd.run
+	)
+b2sums=('c870f6d44f4c31c78a11d74c4425466996b47841ec49b24ccd4c7f1be86de6cb4dd54a64724e092e82d2f64141fcdb3e367494e5adf90c93c15536384402d0c5')
+package() {
+	install -Dm755 "$srcdir"/boltd.run "$pkgdir/etc/nitro/sv/boltd/run"
+}

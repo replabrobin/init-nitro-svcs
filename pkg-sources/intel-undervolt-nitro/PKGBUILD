@@ -1,0 +1,26 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='intel-undervolt-nitro'
+pkgver='20210407'
+pkgrel='3'
+pkgdesc='nitro service script for intel-undervolt'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-intel-undervolt'
+	)
+
+depends=(
+	'intel-undervolt'
+	'nitro'
+	)
+
+source=(
+	intel-undervolt.run
+	)
+b2sums=('d3fbf6a9e0bed67729030f47e520b63293cb7ff249180f8d07103efcd0779a00c0e3ede40b5d0de9ed09174fef330706a85cbc58b3d37dc40d0c91813773700a')
+package() {
+	install -Dm755 "$srcdir"/intel-undervolt.run "$pkgdir/etc/nitro/sv/intel-undervolt/run"
+}

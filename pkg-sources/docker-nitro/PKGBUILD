@@ -1,0 +1,26 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='docker-nitro'
+pkgver='20220411'
+pkgrel='2'
+pkgdesc='nitro service script for docker'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+install=docker-nitro.install
+provides=(
+	'init-docker'
+	)
+
+depends=(
+	'docker'
+	'nitro'
+	)
+
+source=(
+	docker.run
+	)
+b2sums=('797b7909c7d1fbe36170fcfffa2120338751e6fdef43b5de78702540b22c7004b2a650e6ec7e141e418e70bea01d3441c7652b059ef3019a649d4782d2fd7935')
+package() {
+	install -Dm755 "$srcdir"/docker.run "$pkgdir/etc/nitro/sv/docker/run"
+}

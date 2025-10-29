@@ -1,0 +1,26 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='vault-nitro'
+pkgver='20231119'
+pkgrel='2'
+pkgdesc='nitro service script for vault'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-vault'
+	)
+
+depends=(
+	'vault'
+	'nitro'
+	)
+
+source=(
+	vault.run
+	)
+b2sums=('b18148707c604cda363aa239848d493d0bfc19a6c5b5acf3461b918ac31391513ed58d79587298c9d65a33ed97b5ed696ba1e4c8465b782f6ae2db7eb12f67e5')
+package() {
+	install -Dm755 "$srcdir"/vault.run "$pkgdir/etc/nitro/sv/vault/run"
+}

@@ -1,0 +1,26 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='rsync-nitro'
+pkgver='20180226'
+pkgrel='3'
+pkgdesc='nitro service script for rsync'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-rsync'
+	)
+
+depends=(
+	'rsync'
+	'nitro'
+	)
+
+source=(
+	rsyncd.run
+	)
+b2sums=('8ed830bf39455dcca25004eb47c94ea70813cfa81e369936e881d2d81a7ce9efe487cb90a73e3d4f9f6410926c4d78690e109ca8d09c9600a6f2ec1b5048a552')
+package() {
+	install -Dm755 "$srcdir"/rsyncd.run "$pkgdir/etc/nitro/sv/rsyncd/run"
+}

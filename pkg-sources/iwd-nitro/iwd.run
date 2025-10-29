@@ -1,0 +1,6 @@
+#!/bin/sh
+set -e
+
+sv start dbus >/dev/null
+
+exec /usr/lib/iwd/iwd 2>&1

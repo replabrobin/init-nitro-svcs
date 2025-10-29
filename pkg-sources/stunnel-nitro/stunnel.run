@@ -1,0 +1,12 @@
+#!/bin/sh -e
+
+if [ ! -f /etc/stunnel/stunnel.conf ]; then
+    cp /etc/stunnel/stunnel.conf-sample /etc/stunnel/stunnel.conf
+    sed -i 's/;setuid/setuid/' /etc/stunnel/stunnel.conf
+    sed -i 's/;setgid/setgid/' /etc/stunnel/stunnel.conf
+    sed -i 's/;foreground/foreground/' /etc/stunnel/stunnel.conf
+elif grep -q ";foreground" stunnel.conf; then
+    sed -i 's/;foreground/foreground/' /etc/stunnel/stunnel.conf
+fi
+
+exec stunnel 2>&1

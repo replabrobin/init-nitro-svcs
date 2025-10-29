@@ -1,0 +1,26 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='minidlna-nitro'
+pkgver='20180625'
+pkgrel='3'
+pkgdesc='nitro service script for minidlna'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-minidlna'
+	)
+
+depends=(
+	'minidlna'
+	'nitro'
+	)
+
+source=(
+	minidlnad.run
+	)
+b2sums=('a26e74118b74e7f3ae919c5401606ffeeb8321765b7cef10715df00f4c8498bf03ad9eba4aa0691f4520c7efccd7e5eb8ab413dafc66bd2e50dcdacd94cc65d8')
+package() {
+	install -Dm755 "$srcdir"/minidlnad.run "$pkgdir/etc/nitro/sv/minidlnad/run"
+}

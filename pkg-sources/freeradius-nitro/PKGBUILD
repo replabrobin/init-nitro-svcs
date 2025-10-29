@@ -1,0 +1,26 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='freeradius-nitro'
+pkgver='20210407'
+pkgrel='2'
+pkgdesc='nitro service script for freeradius'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-freeradius'
+	)
+
+depends=(
+	'freeradius'
+	'nitro'
+	)
+
+source=(
+	radiusd.run
+	)
+b2sums=('aa7695da8be71937178bf33d1957d59e8ec7c7be7f7d2aaaedb1b9196afcc41aed05a561be739b89d7c6dfde36d18841bd32fb00b58d3d7a74669323cc29ce44')
+package() {
+	install -Dm755 "$srcdir"/radiusd.run "$pkgdir/etc/nitro/sv/radiusd/run"
+}

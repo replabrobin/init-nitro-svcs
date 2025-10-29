@@ -1,0 +1,24 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='earlyoom-nitro'
+pkgver='20210405'
+pkgrel='1'
+pkgdesc='nitro service script for earlyoom'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+
+
+depends=(
+	'earlyoom'
+	'nitro'
+	)
+
+source=(
+	earlyoom.run
+	)
+b2sums=('6e9824300e755efdc6854bc56a915f672f933bb59f86b42e3a535b5f8de2f9f31ef9cecbd93d342957ef13dd357db8dc12e269f4bafe9fabfd0dbffd577f3d55')
+package() {
+	install -Dm755 "$srcdir"/earlyoom.run "$pkgdir/etc/nitro/sv/earlyoom/run"
+}

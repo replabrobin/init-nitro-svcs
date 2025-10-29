@@ -1,0 +1,27 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='xdm-nitro'
+pkgver='20180226'
+pkgrel='5'
+pkgdesc='nitro service script for xdm'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-xdm'
+	'init-displaymanager'
+	)
+
+depends=(
+	'xorg-xdm'
+	'nitro'
+	)
+
+source=(
+	xdm.run
+	)
+b2sums=('8b1603ca330b0712e4f88fce9cb5924a0ec3a313c09c84539df02a7586856e2630dc29926ba3789b8d58f8b57a2046772093765ade99545fac0c80d537320d08')
+package() {
+	install -Dm755 "$srcdir"/xdm.run "$pkgdir/etc/nitro/sv/xdm/run"
+}

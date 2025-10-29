@@ -1,0 +1,26 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='postfix-nitro'
+pkgver='20180602'
+pkgrel='3'
+pkgdesc='nitro service script for postfix'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-postfix'
+	)
+
+depends=(
+	'postfix'
+	'nitro'
+	)
+
+source=(
+	postfix.run
+	)
+b2sums=('9531c4a2dda011919c4ed4647e0772d2cc675cf3732df169f145c50920e0d16589ee2455fbbddbbe59364a04740fd9f8a7509dd9e620d27962b8f6ba43df8b7e')
+package() {
+	install -Dm755 "$srcdir"/postfix.run "$pkgdir/etc/nitro/sv/postfix/run"
+}

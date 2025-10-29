@@ -1,0 +1,26 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='openntpd-nitro'
+pkgver='20220306'
+pkgrel='1'
+pkgdesc='nitro service script for openntpd'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+install='openntpd-nitro.install'
+provides=(
+	'init-timed'
+	)
+
+depends=(
+	'openntpd'
+	'nitro'
+	)
+
+source=(
+	openntpd.run
+	)
+b2sums=('58195e480ddacbddc19512d392e2403a9823479e2fd59736ca8a9637c0ef7550979b754091b7b8582b739dbbe6d9d830fc3271728c04ba1e2c52f4471455830c')
+package() {
+	install -Dm755 "$srcdir"/openntpd.run "$pkgdir/etc/nitro/sv/openntpd/run"
+}

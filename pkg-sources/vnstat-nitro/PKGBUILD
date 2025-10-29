@@ -1,0 +1,26 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='vnstat-nitro'
+pkgver='20180314'
+pkgrel='5'
+pkgdesc='nitro service script for vnstat'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-vnstat'
+	)
+
+depends=(
+	'vnstat'
+	'nitro'
+	)
+
+source=(
+	vnstatd.run
+	)
+b2sums=('8508294a01aa5f494ba52710b48bec1f21a7581ba745b58ffe0e79787d678722a34fc9a7b73ae1f04c6320a99a5267ecb9ac720e3318c691a9026f2318b5bd66')
+package() {
+	install -Dm755 "$srcdir"/vnstatd.run "$pkgdir/etc/nitro/sv/vnstatd/run"
+}

@@ -1,0 +1,4 @@
+#!/bin/sh
+[ -r conf ] && . ./conf
+
+/usr/bin/v2ray run -config /etc/v2ray/config.json > /var/log/v2ray.log

@@ -1,0 +1,2 @@
+#!/bin/sh
+exec chpst -uexim exim -bdf -q30m

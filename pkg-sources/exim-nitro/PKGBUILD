@@ -1,0 +1,26 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='exim-nitro'
+pkgver='20210407'
+pkgrel='1'
+pkgdesc='nitro service script for exim'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-exim'
+	)
+
+depends=(
+	'exim'
+	'nitro'
+	)
+
+source=(
+	exim.run
+	)
+b2sums=('dd3b7391fc89beda34461df7bcd2bd84e67f33de9e263252ad38b02815e98041112b75d6af49e2ad1666c0d9fbc28acafa0bffe2d350e6213cca7ec8b1600a9b')
+package() {
+	install -Dm755 "$srcdir"/exim.run "$pkgdir/etc/nitro/sv/exim/run"
+}

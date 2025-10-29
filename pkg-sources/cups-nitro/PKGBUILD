@@ -1,0 +1,26 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='cups-nitro'
+pkgver='20180226'
+pkgrel='3'
+pkgdesc='nitro service script for cups'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-cups'
+	)
+
+depends=(
+	'cups'
+	'dbus-nitro'
+	)
+
+source=(
+	cupsd.run
+	)
+b2sums=('91b684642aa853ac71db785f454c8b97a612456aa68105fd673a9efca4d210031d59156140d377f6b2fe93670432bf2876601219939e1c383bb239b6872d3573')
+package() {
+	install -Dm755 "$srcdir"/cupsd.run "$pkgdir/etc/nitro/sv/cupsd/run"
+}

@@ -1,0 +1,26 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='pdnsd-nitro'
+pkgver='20180314'
+pkgrel='4'
+pkgdesc='nitro service script for pdnsd'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-pdnsd'
+	)
+
+depends=(
+	'pdnsd'
+	'nitro'
+	)
+
+source=(
+	pdnsd.run
+	)
+b2sums=('aa16888f0bea810a8f5f5fbdb71f2535e651a415081e492128e63e705c03140b3a0edc0cb022d08bd88cfd607d0256ff8bfd55a848ee15420a03124da4bc3d99')
+package() {
+	install -Dm755 "$srcdir"/pdnsd.run "$pkgdir/etc/nitro/sv/pdnsd/run"
+}

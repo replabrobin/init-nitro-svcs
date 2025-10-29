@@ -1,0 +1,26 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='knot-nitro'
+pkgver='20200425'
+pkgrel='4'
+pkgdesc='nitro service script for knot'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-knot'
+	)
+
+depends=(
+	'knot'
+	'nitro'
+	)
+
+source=(
+	knotd.run
+	)
+b2sums=('ac6d8f7fe7aa009fc0aef57d35c2f321c53c1a7fbdecbe2ef54afebcf4700bbaeb805a88ce70f7e508ca08b2dd24e06b9c42692f0b0d1d3b8868fbe439d4e20a')
+package() {
+	install -Dm755 "$srcdir"/knotd.run "$pkgdir/etc/nitro/sv/knotd/run"
+}

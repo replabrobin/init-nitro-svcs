@@ -1,0 +1,32 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='dhcp-nitro'
+pkgver='20180226'
+pkgrel='4'
+pkgdesc='nitro service script for dhcp'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-dhcp'
+	)
+
+depends=(
+	'nitro'
+	'dhcp'
+	)
+
+source=(
+	dhclient.run
+	dhcpd4.run
+	dhcpd6.run
+	)
+b2sums=('6f61d6aed2c9c1f5dae0faf9b404d23ebcbeed81a7a21f939862627121ec0c97114847f0f78f27e4c2a1b2556ebfa56ab86b8f2a1ed9f6f97adc467ce12e5657'
+        'd1868c00f90b50bd1763ebc716e32fdb9f6995d02b41d9f0a0435df72f13317a33d53c5aeb6636af694b5a73a90ad749a33afa8bd76e5f689e73c2c4b33aa096'
+        'a6b476f15cde216f8a8844bfed574ab105ec2cb37c481685f63e7f8c2e9f98de80f977cbca0ba04c2266a0b16cd3f4413499bbfbb19e476bcf99311175fc9a86')
+package() {
+	install -Dm755 "$srcdir"/dhclient.run "$pkgdir/etc/nitro/sv/dhclient/run"
+	install -Dm755 "$srcdir"/dhcpd4.run "$pkgdir/etc/nitro/sv/dhcpd4/run"
+	install -Dm755 "$srcdir"/dhcpd6.run "$pkgdir/etc/nitro/sv/dhcpd6/run"
+}

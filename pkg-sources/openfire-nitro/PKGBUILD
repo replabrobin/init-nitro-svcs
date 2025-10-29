@@ -1,0 +1,26 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='openfire-nitro'
+pkgver='20200704'
+pkgrel='2'
+pkgdesc='nitro service script for openfire'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-openfire'
+	)
+
+depends=(
+	'openfire'
+	'nitro'
+	)
+
+source=(
+	openfire.run
+	)
+b2sums=('d3ddc27d32760ea1b9d134eb7ea8789c40448bdc2c498361a923316e5184ce019956eba0d84dd4c83dc59d56cc3710703f651bf4878f0251f9d12e05931d0a56')
+package() {
+	install -Dm755 "$srcdir"/openfire.run "$pkgdir/etc/nitro/sv/openfire/run"
+}

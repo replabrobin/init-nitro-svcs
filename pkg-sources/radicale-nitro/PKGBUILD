@@ -1,0 +1,26 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='radicale-nitro'
+pkgver='20200704'
+pkgrel='2'
+pkgdesc='nitro service script for radicale'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-radicale'
+	)
+
+depends=(
+	'radicale'
+	'nitro'
+	)
+
+source=(
+	radicale.run
+	)
+b2sums=('164077ac2b6ba0678f31acb9fb52743fc0f7390b7714419f2248c948f5d29673d50c71a1228120a568e4761dc5eb841317dade9c1a3b0ab1664e53f454ba2fc8')
+package() {
+	install -Dm755 "$srcdir"/radicale.run "$pkgdir/etc/nitro/sv/radicale/run"
+}

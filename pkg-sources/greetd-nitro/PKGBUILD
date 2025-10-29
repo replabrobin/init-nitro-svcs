@@ -1,0 +1,27 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='greetd-nitro'
+pkgver='20231119'
+pkgrel='1'
+pkgdesc='nitro service script for greetd'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-greetd'
+	)
+
+depends=(
+	'logind-nitro'
+	'greetd'
+	'nitro'
+	)
+
+source=(
+	greetd.run
+	)
+b2sums=('e007c5da29cb6ea3f74fb0bfc9d0f807d99509835dd7b7d46afceaad31944003202bef52697b290d29f5ed5bd7d5a7e20316ff5d3d5bda6573af1cd7b1fe6271')
+package() {
+	install -Dm755 "$srcdir"/greetd.run "$pkgdir/etc/nitro/sv/greetd/run"
+}

@@ -1,0 +1,27 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='chrony-nitro'
+pkgver='20200907'
+pkgrel='3'
+pkgdesc='nitro service script for chrony'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-chrony'
+	'init-timed'
+	)
+
+depends=(
+	'chrony'
+	'nitro'
+	)
+
+source=(
+	chrony.run
+	)
+b2sums=('5326af330493ab20f3871c6b8999fd10ab3b5c5777ab6d04b5d3dc1fd920cd03f0811707e11f4a0c36f4b245c1c8132fb7e0171fcf95de805ebf5e83232c78cc')
+package() {
+	install -Dm755 "$srcdir"/chrony.run "$pkgdir/etc/nitro/sv/chrony/run"
+}

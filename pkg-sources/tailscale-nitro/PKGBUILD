@@ -1,0 +1,26 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='tailscale-nitro'
+pkgver='20240326'
+pkgrel='3'
+pkgdesc='nitro service script for tailscale'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-tailscale'
+	)
+
+depends=(
+	'tailscale'
+	'nitro'
+	)
+
+source=(
+	tailscale.run
+	)
+b2sums=('0b8f5066cf3b48ca1cd5ba6d0f31d8bca197ad123a8633da638d29028d60a85345f335e1b92959536d3c97cf87e7618c000545e7cd3fe9ff96e7db975f4da91c')
+package() {
+	install -Dm755 "$srcdir"/tailscale.run "$pkgdir/etc/nitro/sv/tailscale/run"
+}

@@ -1,0 +1,27 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='fcron-nitro'
+pkgver='20180314'
+pkgrel='5'
+pkgdesc='nitro service script for fcron'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-fcron'
+	'init-cron'
+	)
+
+depends=(
+	'fcron'
+	'nitro'
+	)
+
+source=(
+	fcron.run
+	)
+b2sums=('67ff057a1a55e09bd6c426404ec314061dc767ccf7b78f16e91f78d8c40fec9b08f66e75832b91a2c7e906ffb1b038af67729ecba088393b809ebcc59a9c8a67')
+package() {
+	install -Dm755 "$srcdir"/fcron.run "$pkgdir/etc/nitro/sv/fcron/run"
+}

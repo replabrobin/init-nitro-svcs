@@ -1,0 +1,26 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='fail2ban-nitro'
+pkgver='20210407'
+pkgrel='2'
+pkgdesc='nitro service script for fail2ban'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-fail2ban'
+	)
+
+depends=(
+	'fail2ban'
+	'nitro'
+	)
+
+source=(
+	fail2ban.run
+	)
+b2sums=('81bcaf17b33df84e9dc7f6b4d9ce2b9cc89bb64116be7ab05f8c2dc0e8e83a2a3ddcad07a0b73e72da485b57385a72406c98e9c42f99082033a08eb86ee2353b')
+package() {
+	install -Dm755 "$srcdir"/fail2ban.run "$pkgdir/etc/nitro/sv/fail2ban/run"
+}

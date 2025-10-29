@@ -1,0 +1,29 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='ufw-nitro'
+pkgver='20200614'
+pkgrel='3'
+pkgdesc='nitro service script for ufw'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-ufw'
+	)
+
+depends=(
+	'ufw'
+	'nitro'
+	)
+
+source=(
+	ufw.run
+	ufw.finish
+	)
+b2sums=('58cc23d0b5b7e45002551a3a1c86616536c43e7102eafb9e8716a6f8bc7a6e9f7ae626fe84452d14fb58fb65889580f54626911e98a5f29449eb545b16f92f72'
+        'e3de466d6112f03684211a416273f7c256c3b10c05f321b7227bb0a620544b8d0f20fe6ecdb16400195702a76f603b0d07aca155ed682cf169ab51f421954d33')
+package() {
+	install -Dm755 "$srcdir"/ufw.run "$pkgdir/etc/nitro/sv/ufw/run"
+	install -Dm755 "$srcdir"/ufw.finish "$pkgdir/etc/nitro/sv/ufw/finish"
+}

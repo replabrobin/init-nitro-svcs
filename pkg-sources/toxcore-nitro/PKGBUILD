@@ -1,0 +1,26 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='toxcore-nitro'
+pkgver='20190504'
+pkgrel='3'
+pkgdesc='nitro service script for toxcore'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-toxcore'
+	)
+
+depends=(
+	'toxcore'
+	'nitro'
+	)
+
+source=(
+	toxbootstrapd.run
+	)
+b2sums=('dbf9bc56a46dae0b9e58af9b4d049596678a732cd29080cb63fd5d42b8225ff6217f70a9d7004c6467fecc3a556f5f32e0e338277409c4b9afcdf1a7d431a473')
+package() {
+	install -Dm755 "$srcdir"/toxbootstrapd.run "$pkgdir/etc/nitro/sv/toxbootstrapd/run"
+}

@@ -1,0 +1,33 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='nfs-utils-nitro'
+pkgver='20200613'
+pkgrel='2'
+pkgdesc='nitro service script for nfs-utils'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-nfs-utils'
+	)
+
+depends=(
+	'nfs-utils'
+	'rpcbind-nitro'
+	'device-mapper-nitro'
+	)
+
+source=(
+	nfs-server.run
+	nfs-server.finish
+	statd.run
+	)
+b2sums=('c00f85b992d3b0c2c69560d244446569e7ccba3bed84546456942d912a7df12a0d5816003b514d14fa8d803544bd407aa3e97c2694ceb0fcd4e3c02306d48d74'
+        'fc8d56a2b861f5815746e80d5cf1d476defdf21edefa1ad46e8c104cf8c8e78d21281619b292ca69736762302740cbf652ab669b9e3d94fd407d4c57ebb6ea51'
+        '1344ab4cafaa44b566f4079302c6479000323c98550c0124020d81251fe84160544253318b03d55fc0d21cb57a96d04ad5913e72f54b01808de152650d843f95')
+package() {
+	install -Dm755 "$srcdir"/nfs-server.run "$pkgdir/etc/nitro/sv/nfs-server/run"
+	install -Dm755 "$srcdir"/nfs-server.finish "$pkgdir/etc/nitro/sv/nfs-server/finish"
+	install -Dm755 "$srcdir"/statd.run "$pkgdir/etc/nitro/sv/statd/run"
+}

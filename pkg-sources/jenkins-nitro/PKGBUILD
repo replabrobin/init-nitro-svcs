@@ -1,0 +1,26 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='jenkins-nitro'
+pkgver='20200613'
+pkgrel='4'
+pkgdesc='nitro service script for jenkins'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-jenkins'
+	)
+
+depends=(
+	'jenkins'
+	'nitro'
+	)
+
+source=(
+	jenkins.run
+	)
+b2sums=('3b302024495e88049a2032a12f84cf98a2d5467268284a85f724ca5704ed2033f58598e671862525fef288ddee0e73e158b846f1492130db70fe98093736a5d1')
+package() {
+	install -Dm755 "$srcdir"/jenkins.run "$pkgdir/etc/nitro/sv/jenkins/run"
+}

@@ -1,0 +1,26 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='sslh-nitro'
+pkgver='20200814'
+pkgrel='2'
+pkgdesc='nitro service script for sslh'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-sslh'
+	)
+
+depends=(
+	'sslh'
+	'nitro'
+	)
+
+source=(
+	sslh.run
+	)
+b2sums=('ba4e96f569081c9acbccf06ea5d6f1df27fb7f9adc24403181e3cb5f08af2410157bff311a77d9b411f12b8d1084336dd3ae54d10af93e711b3cbe4ad99fc099')
+package() {
+	install -Dm755 "$srcdir"/sslh.run "$pkgdir/etc/nitro/sv/sslh/run"
+}

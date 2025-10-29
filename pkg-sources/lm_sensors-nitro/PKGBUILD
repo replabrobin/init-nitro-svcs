@@ -1,0 +1,32 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='lm_sensors-nitro'
+pkgver='20180226'
+pkgrel='4'
+pkgdesc='nitro service script for lm_sensors'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-lm_sensors'
+	)
+
+depends=(
+	'lm_sensors'
+	'nitro'
+	)
+
+source=(
+	fancontrol.run
+	lm_sensors.run
+	lm_sensors.finish
+	)
+b2sums=('8841fbba03dfec27a9905f442c0fbd2ae574305f027a75af9014d3051c134db862f1b69eb636421a4e4c268fceda2164cd63d40dafff36f44b8f9e13debf622a'
+        'e4cbfdc8024819a8e39909bd8f5ba1c2b4f82c4e1f633e74545464cb662a0d70926246d2e8084aff97ac49e34fac3905bc3d4fec852a98673b0ad1aa244b17cf'
+        '4e652cdd5690032bab0f8d400d25941523aacc931dd86dc6ae69192cbb0a57814422f6b760c3fb69152a7eeef931b79db84be3cf8e36f100819b012965753f53')
+package() {
+	install -Dm755 "$srcdir"/fancontrol.run "$pkgdir/etc/nitro/sv/fancontrol/run"
+	install -Dm755 "$srcdir"/lm_sensors.run "$pkgdir/etc/nitro/sv/lm_sensors/run"
+	install -Dm755 "$srcdir"/lm_sensors.finish "$pkgdir/etc/nitro/sv/lm_sensors/finish"
+}

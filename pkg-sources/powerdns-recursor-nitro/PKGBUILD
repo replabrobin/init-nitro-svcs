@@ -1,0 +1,26 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='powerdns-recursor-nitro'
+pkgver='20200928'
+pkgrel='2'
+pkgdesc='nitro service script for powerdns-recursor'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-powerdns-recursor'
+	)
+
+depends=(
+	'powerdns-recursor'
+	'nitro'
+	)
+
+source=(
+	powerdns-recursor.run
+	)
+b2sums=('d7136d203dd352cfb18e7e099a9a570d0912875c3b05e8e55cd7fafc626d02cc86d10b88825adccef2d9ec79975e1c0008c5602320b41bd4bd14a04b7befe059')
+package() {
+	install -Dm755 "$srcdir"/powerdns-recursor.run "$pkgdir/etc/nitro/sv/powerdns-recursor/run"
+}

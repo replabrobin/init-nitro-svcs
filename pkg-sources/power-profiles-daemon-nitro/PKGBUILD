@@ -1,0 +1,25 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='power-profiles-daemon-nitro'
+pkgver='20220503'
+pkgrel='1'
+pkgdesc='nitro service script for power-profiles-daemon'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+conflicts=("init-power-profiles-daemon")
+
+provides=(
+	'init-power-profiles-daemon'
+	)
+
+depends=(
+	power-profiles-daemon 'dbus-nitro'
+	)
+
+source=(power-profiles-daemon.run)
+
+b2sums=('7e682f13bba525786478df16dee702b3292d6d5b44745610b643add3bcd78c5ddb313986833ef8e64bd82ecf2a17221a8ff80580259ed46a406c2eb84b2b219b')
+package() {
+    install -Dm755 "$srcdir/power-profiles-daemon.run"     "$pkgdir/etc/nitro/sv/power-profiles-daemon/run"
+}

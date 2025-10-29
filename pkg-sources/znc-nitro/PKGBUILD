@@ -1,0 +1,26 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='znc-nitro'
+pkgver='20200614'
+pkgrel='2'
+pkgdesc='nitro service script for znc'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-znc'
+	)
+
+depends=(
+	'znc'
+	'nitro'
+	)
+
+source=(
+	znc.run
+	)
+b2sums=('a3c7766f0657139351dafc0cdce1b43fa0cc16ff4ff73500ca05c56f004caaced15e1b319c0a2cad748b01c27c446fdb1acba32faa37c9eadd90a565faf7b146')
+package() {
+	install -Dm755 "$srcdir"/znc.run "$pkgdir/etc/nitro/sv/znc/run"
+}

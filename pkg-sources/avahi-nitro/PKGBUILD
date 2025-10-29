@@ -1,0 +1,26 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='avahi-nitro'
+pkgver='20180226'
+pkgrel='3'
+pkgdesc='nitro service script for avahi'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-avahi'
+	)
+
+depends=(
+	'avahi'
+	'dbus-nitro'
+	)
+
+source=(
+	avahi-daemon.run
+	)
+b2sums=('415fdde904762013906b71c7d82167e6dea2fbc3b2a085d30dc4f3734222424859640365f00a72e9386b7b2f93f47365c86fe3216f6d312e1f809dc14c717d94')
+package() {
+	install -Dm755 "$srcdir"/avahi-daemon.run "$pkgdir/etc/nitro/sv/avahi-daemon/run"
+}

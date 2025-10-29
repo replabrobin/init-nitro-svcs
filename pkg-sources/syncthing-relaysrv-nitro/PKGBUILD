@@ -1,0 +1,26 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='syncthing-relaysrv-nitro'
+pkgver='20190202'
+pkgrel='3'
+pkgdesc='nitro service script for syncthing-relaysrv'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-syncthing-relaysrv'
+	)
+
+depends=(
+	'syncthing-relaysrv'
+	'nitro'
+	)
+
+source=(
+	relaysrv.run
+	)
+b2sums=('58ee02fb09e51d2d0d35ed394119ce5024d3d7a406a5eb363c9b9da3a28bc3f05ffb009611b881bebf1c023768bffc4e902f8c6935407554e6d262e1bb57a872')
+package() {
+	install -Dm755 "$srcdir"/relaysrv.run "$pkgdir/etc/nitro/sv/relaysrv/run"
+}

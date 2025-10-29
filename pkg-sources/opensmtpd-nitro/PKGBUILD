@@ -1,0 +1,26 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='opensmtpd-nitro'
+pkgver='20200425'
+pkgrel='3'
+pkgdesc='nitro service script for opensmtpd'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-opensmtpd'
+	)
+
+depends=(
+	'opensmtpd'
+	'nitro'
+	)
+
+source=(
+	opensmtpd.run
+	)
+b2sums=('6f8872d6cf0fdbc1070b1cb2efa95b51bbd36a466f502c7fbb87b12ab3ca8bf978ffa1ef7219c181d104f28e14bb31f20ec7c1894bc126a6c908e35b33845f85')
+package() {
+	install -Dm755 "$srcdir"/opensmtpd.run "$pkgdir/etc/nitro/sv/opensmtpd/run"
+}

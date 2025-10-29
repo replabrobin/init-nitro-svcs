@@ -1,0 +1,2 @@
+#!/bin/sh
+exec matterbridge -conf /etc/matterbridge.toml

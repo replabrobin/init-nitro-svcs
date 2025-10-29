@@ -1,0 +1,29 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='vsftpd-nitro'
+pkgver='20200614'
+pkgrel='3'
+pkgdesc='nitro service script for vsftpd'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-vsftpd'
+	)
+
+depends=(
+	'vsftpd'
+	'nitro'
+	)
+
+source=(
+	vsftpd.run
+	vsftpd-ipv6.run
+	)
+b2sums=('e452e7417b306826742fe99645034606e353d716ccce482161396f2c3d4112a70190cbe1fa4217e599eeb06950671e322c55d04c7ed94a9b29ed4014e4a33e0a'
+        'abab4653717f58889278519a8e7e6a2a6bd22bb5c778b278db075f254c7f7908e3a29604b4e2cb2a4601b06cc40ab2c56f8fc665614a48130100ad2d60c9ef01')
+package() {
+	install -Dm755 "$srcdir"/vsftpd.run "$pkgdir/etc/nitro/sv/vsftpd/run"
+	install -Dm755 "$srcdir"/vsftpd-ipv6.run "$pkgdir/etc/nitro/sv/vsftpd-ipv6/run"
+}

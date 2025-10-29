@@ -1,0 +1,26 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='squid-nitro'
+pkgver='20180314'
+pkgrel='4'
+pkgdesc='nitro service script for squid'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-squid'
+	)
+
+depends=(
+	'squid'
+	'nitro'
+	)
+
+source=(
+	squid.run
+	)
+b2sums=('760d07bb7242c1f50ef775b6c2976fbd36132ecd477e91cbb3c5bab5c506fcd974d5227796ff0c97d2ae0d5c9c5280695720ced4dd349b84079a5daa53a31d08')
+package() {
+	install -Dm755 "$srcdir"/squid.run "$pkgdir/etc/nitro/sv/squid/run"
+}

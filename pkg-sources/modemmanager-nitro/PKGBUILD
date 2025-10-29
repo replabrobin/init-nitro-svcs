@@ -1,0 +1,27 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='modemmanager-nitro'
+pkgver='20221204'
+pkgrel='2'
+pkgdesc='nitro service script for modemmanager'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-modemmanager'
+	)
+
+depends=(
+	'dbus-nitro'
+	'modemmanager'
+	'nitro'
+	)
+
+source=(
+	modemmanager.run
+	)
+b2sums=('cd81ce313a96feb817decdf22b984e7af339e2ce205f525b3c6bbd3685a6dcdefb70c8d823051d18927a6dc185761c2b59dddf2575d998183df3271cd1acebf4')
+package() {
+	install -Dm755 "$srcdir"/modemmanager.run "$pkgdir/etc/nitro/sv/modemmanager/run"
+}

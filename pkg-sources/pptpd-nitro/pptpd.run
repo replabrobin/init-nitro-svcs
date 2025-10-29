@@ -1,0 +1,2 @@
+#!/bin/sh
+exec pptpd -c /etc/pptpd.conf -p /var/run/pptpd.pid -f

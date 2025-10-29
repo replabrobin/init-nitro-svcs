@@ -1,0 +1,27 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='lxdm-nitro'
+pkgver='20180314'
+pkgrel='6'
+pkgdesc='nitro service script for lxdm'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-lxdm'
+	'init-displaymanager'
+	)
+
+depends=(
+	'lxdm-gtk3'
+	'nitro'
+	)
+
+source=(
+	lxdm.run
+	)
+b2sums=('5bcde93576a3a4277e90ca36aa60918632bb351c04b88a0bcabf8aebd4609fea2f55c7843090dc535b834018872d916d2b1307cfd8915631e00496d3ec367e93')
+package() {
+	install -Dm755 "$srcdir"/lxdm.run "$pkgdir/etc/nitro/sv/lxdm/run"
+}

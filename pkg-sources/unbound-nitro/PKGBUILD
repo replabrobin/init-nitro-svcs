@@ -1,0 +1,26 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='unbound-nitro'
+pkgver='20180314'
+pkgrel='4'
+pkgdesc='nitro service script for unbound'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-unbound'
+	)
+
+depends=(
+	'unbound'
+	'nitro'
+	)
+
+source=(
+	unbound.run
+	)
+b2sums=('662debba66d201accd09c60ba222de8ea8f172db0fe77e1871d9d7253b7d7047b4e03137f33e88a000e84c77659675db1710097121733f2065d97add68a5fd3c')
+package() {
+	install -Dm755 "$srcdir"/unbound.run "$pkgdir/etc/nitro/sv/unbound/run"
+}

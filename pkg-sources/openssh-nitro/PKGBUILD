@@ -1,0 +1,26 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='openssh-nitro'
+pkgver='20180429'
+pkgrel='4'
+pkgdesc='nitro service script for openssh'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-openssh'
+	)
+
+depends=(
+	'openssh'
+	'nitro'
+	)
+
+source=(
+	sshd.run
+	)
+b2sums=('86f0dde84f2bace1e51753fdf9b0d360493a67d9af800ad6cd01e9e8c291a7d173b7ea358703aabd89d2f839acb896a1c3a1c5fa2b565f3a0e9506dab491217d')
+package() {
+	install -Dm755 "$srcdir"/sshd.run "$pkgdir/etc/nitro/sv/sshd/run"
+}

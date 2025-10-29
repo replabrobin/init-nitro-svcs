@@ -1,0 +1,26 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='ddclient-nitro'
+pkgver='20180314'
+pkgrel='4'
+pkgdesc='nitro service script for ddclient'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-ddclient'
+	)
+
+depends=(
+	'ddclient'
+	'nitro'
+	)
+
+source=(
+	ddclient.run
+	)
+b2sums=('aaf02361c686f3b9799c7e8d34c9c7ace659c01d19769e66e6d436e907d0cfaf67098fd76ca058ca0072f31580ee1dae2ccde61190335af02f1bdd3cb6d955f4')
+package() {
+	install -Dm755 "$srcdir"/ddclient.run "$pkgdir/etc/nitro/sv/ddclient/run"
+}

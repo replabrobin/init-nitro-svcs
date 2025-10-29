@@ -1,0 +1,26 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='haveged-nitro'
+pkgver='20180226'
+pkgrel='4'
+pkgdesc='nitro service script for haveged'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-haveged'
+	)
+
+depends=(
+	'haveged'
+	'nitro'
+	)
+
+source=(
+	haveged.run
+	)
+b2sums=('f5a81c3f3608e7cc12680d49c328c9a36695ea35b365853395b574b04a2bd341991778061176f5c823b2b0d2df385bfd2f92fdc972b81acb10d603fafe1b293c')
+package() {
+	install -Dm755 "$srcdir"/haveged.run "$pkgdir/etc/nitro/sv/haveged/run"
+}

@@ -1,0 +1,15 @@
+#!/bin/sh
+[ -r /etc/default/cpupower ] && . /etc/default/cpupower
+
+# CPU speed
+[ "$governor" ] && cpupower frequency-set -g "$governor"
+[ "$max_freq" ] && cpupower frequency-set -u "$max_freq"
+[ "$min_freq" ] && cpupower frequency-set -d "$min_freq"
+[ "$freq" ] && cpupower frequency-set -f "$freq"
+
+# CPU options
+[ "$perf_bias" ] && cpupower set -b "$perf_bias"
+[ "$mc_scheduler" ] && cpupower set -m "$mc_scheduler"
+[ "$smp_scheduler" ] && cpupower set -s "$smp_scheduler"
+
+exec chpst -b cpupower pause

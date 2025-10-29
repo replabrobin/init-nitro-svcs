@@ -1,0 +1,29 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='postgresql-nitro'
+pkgver='20230414'
+pkgrel='1'
+pkgdesc='nitro service script for postgresql'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-postgresql'
+	)
+
+depends=(
+	'postgresql'
+	'nitro'
+	)
+
+source=(
+	postgresql.conf
+	postgresql.run
+	)
+b2sums=('5501b658cb5bdba6ba0de4570161ee1e5d23294a3bdaa5a8bed4663a59b61fb4811984f30f78d78bc6f6ffe4bd484e8620fe90c1c89299ee92343defa68a0168'
+        '45c465f9defea6ebec02b0cc0c9a93102f1851798f4ae3a2a03d2739a2a56b834d02988ac738df22e238503691f92fdfe7718dd01cfa42f0e6e3294da38d4e36')
+package() {
+	install -Dm755 "$srcdir"/postgresql.conf "$pkgdir/etc/nitro/sv/postgresql/conf"
+	install -Dm755 "$srcdir"/postgresql.run "$pkgdir/etc/nitro/sv/postgresql/run"
+}

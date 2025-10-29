@@ -1,0 +1,25 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='syslog-ng-nitro'
+pkgver='20180226'
+pkgrel='4'
+pkgdesc='nitro service script for syslog-ng'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-syslog-ng'
+	)
+
+depends=(
+	'nitro'
+	)
+
+source=(
+	syslog-ng.run
+	)
+b2sums=('412cec7da7d7f81d51a432c4c4629da763ab1cdc07b763c71ea83e190edda35f9cacf78bf364f0a6bfb646985b91ad1fd095bae7ef5f3d86b1a830a49cb79c18')
+package() {
+	install -Dm755 "$srcdir"/syslog-ng.run "$pkgdir/etc/nitro/sv/syslog-ng/run"
+}

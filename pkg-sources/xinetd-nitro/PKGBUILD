@@ -1,0 +1,26 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='xinetd-nitro'
+pkgver='20210425'
+pkgrel='1'
+pkgdesc='nitro service script for xinetd'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-xinetd'
+	)
+
+depends=(
+	'xinetd'
+	'nitro'
+	)
+
+source=(
+	xinetd.run
+	)
+b2sums=('0b5aa8fe25bfb293689318bdc1b426e3415d6e8f5c64b665a14f0aafa5c69dfb79880df68df0fe3d4013dd78686af3a36245402b83c8160637026618195af37e')
+package() {
+	install -Dm755 "$srcdir"/xinetd.run "$pkgdir/etc/nitro/sv/xinetd/run"
+}

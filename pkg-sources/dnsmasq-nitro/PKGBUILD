@@ -1,0 +1,26 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='dnsmasq-nitro'
+pkgver='20180226'
+pkgrel='4'
+pkgdesc='nitro service script for dnsmasq'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-dnsmasq'
+	)
+
+depends=(
+	'dnsmasq'
+	'nitro'
+	)
+
+source=(
+	dnsmasq.run
+	)
+b2sums=('f8e10a845514a4769f91c1d5920a54d4ae9a28fc42d5ddd1b92307382991724df8aea0a5e8a4b5aaa67bc8014fca69b5e07d9c23a91f889da81288c19f675474')
+package() {
+	install -Dm755 "$srcdir"/dnsmasq.run "$pkgdir/etc/nitro/sv/dnsmasq/run"
+}

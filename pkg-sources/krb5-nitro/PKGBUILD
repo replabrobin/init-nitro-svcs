@@ -1,0 +1,29 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='krb5-nitro'
+pkgver='20180605'
+pkgrel='5'
+pkgdesc='nitro service script for krb5'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-krb5'
+	)
+
+depends=(
+	'krb5'
+	'nitro'
+	)
+
+source=(
+	kadmind.run
+	krb5kdc.run
+	)
+b2sums=('44d9cba1fad49a4ef278ca42a8ec93c8e6052ef0c033fe945a365a832f1b36d89fe5b4d9061c24987b3581870559176feb6ac41f6cd4839d79a67637495d1557'
+        'ffec6e20236eb67d1cda2556db9a67b95cc40423642365b72675ae5742085b31f6f36347e068dec2decb27b3d2e965895b768350e04cb1cfd17baaa50385c3b6')
+package() {
+	install -Dm755 "$srcdir"/kadmind.run "$pkgdir/etc/nitro/sv/kadmind/run"
+	install -Dm755 "$srcdir"/krb5kdc.run "$pkgdir/etc/nitro/sv/krb5kdc/run"
+}

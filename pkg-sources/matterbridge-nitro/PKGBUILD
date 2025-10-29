@@ -1,0 +1,26 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='matterbridge-nitro'
+pkgver='20210407'
+pkgrel='2'
+pkgdesc='nitro service script for matterbridge'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-matterbridge'
+	)
+
+depends=(
+	'matterbridge'
+	'nitro'
+	)
+
+source=(
+	matterbridge.run
+	)
+b2sums=('453d64ba0b1c06591d45a7929ec5c504e637919775deb33ae1fe695ab07bea34f0bdaa30bc12596da5ae62ba516f36e0672186c4c8f50cd20c7dd45a1510e2e0')
+package() {
+	install -Dm755 "$srcdir"/matterbridge.run "$pkgdir/etc/nitro/sv/matterbridge/run"
+}

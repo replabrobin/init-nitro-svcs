@@ -1,0 +1,26 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='gitea-nitro'
+pkgver='20200914'
+pkgrel='2'
+pkgdesc='nitro service script for gitea'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-gitea'
+	)
+
+depends=(
+	'gitea'
+	'nitro'
+	)
+
+source=(
+	gitea.run
+	)
+b2sums=('6aa93c434c5b6b9162b1322e7efda2cc8625078a0ed2c32ccb94f28e7e61437b533cc6a6d5ae340894b5cfec60ffa6504c3a7d878af275e7d744baa834248003')
+package() {
+	install -Dm755 "$srcdir"/gitea.run "$pkgdir/etc/nitro/sv/gitea/run"
+}

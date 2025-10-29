@@ -1,0 +1,26 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='sndio-nitro'
+pkgver='20200417'
+pkgrel='3'
+pkgdesc='nitro service script for sndio'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-sndio'
+	)
+
+depends=(
+	'sndio'
+	'nitro'
+	)
+
+source=(
+	sndio.run
+	)
+b2sums=('f907d7cb7ae161babd80b03f11764e71c57dc5d67ab55fb10cd6563b478cc077d16fb4dcfb5facc9adce1ad22a23912a00f2cca911c5ef63b757c878ad913526')
+package() {
+	install -Dm755 "$srcdir"/sndio.run "$pkgdir/etc/nitro/sv/sndio/run"
+}

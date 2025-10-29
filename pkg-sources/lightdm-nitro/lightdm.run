@@ -1,0 +1,10 @@
+#!/bin/sh
+set -e
+
+sv start logind >/dev/null
+
+exec 2>&1
+
+[ -d /run/lightdm ] || install -dm0711 -olightdm -glightdm /run/lightdm
+
+exec /usr/bin/lightdm

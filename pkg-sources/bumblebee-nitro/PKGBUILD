@@ -1,0 +1,26 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='bumblebee-nitro'
+pkgver='20180314'
+pkgrel='4'
+pkgdesc='nitro service script for bumblebee'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-bumblebee'
+	)
+
+depends=(
+	'bumblebee'
+	'nitro'
+	)
+
+source=(
+	bumblebeed.run
+	)
+b2sums=('1c07c0d899181aa5d5d110a2b1d3965e29dbd137cf3a3afcba203f88375a670bf8d661c1552dcd6c41b523829b8168fcffd746b936c03ec59ba42cd99d463f5a')
+package() {
+	install -Dm755 "$srcdir"/bumblebeed.run "$pkgdir/etc/nitro/sv/bumblebeed/run"
+}

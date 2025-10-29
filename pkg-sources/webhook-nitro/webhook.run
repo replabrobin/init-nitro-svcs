@@ -1,0 +1,2 @@
+#!/bin/sh
+exec webhook -hooks /etc/webhook/hooks.json -verbose 2>&1

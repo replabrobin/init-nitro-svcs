@@ -1,0 +1,26 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='sshguard-nitro'
+pkgver='20210504'
+pkgrel='1'
+pkgdesc='nitro service script for sshguard'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-sshguard'
+	)
+
+depends=(
+	'sshguard'
+	'iptables-nitro'
+	)
+
+source=(
+	sshguard-socklog.run
+	)
+b2sums=('31cd6bf5a438baf4b957292628ba495e8fbf47861dc403b8fd39dba5a0c07f7d113539aab18eea6097adfaa790e4fd7b64d93df515c07695899f01bd20c32467')
+package() {
+	install -Dm755 "$srcdir"/sshguard-socklog.run "$pkgdir/etc/nitro/sv/sshguard-socklog/run"
+}

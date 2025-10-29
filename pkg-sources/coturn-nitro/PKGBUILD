@@ -1,0 +1,26 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='coturn-nitro'
+pkgver='20200820'
+pkgrel='3'
+pkgdesc='nitro service script for coturn'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-coturn'
+	)
+
+depends=(
+	'coturn'
+	'nitro'
+	)
+
+source=(
+	coturn.run
+	)
+b2sums=('7978cc34a78701d85152cee282ecc546f31ac17267590cd226a9b4a2939d59f3c8fc903fbc9394d25aa4d47451570b96609189a06ccab1d617415573e3fc446e')
+package() {
+	install -Dm755 "$srcdir"/coturn.run "$pkgdir/etc/nitro/sv/coturn/run"
+}

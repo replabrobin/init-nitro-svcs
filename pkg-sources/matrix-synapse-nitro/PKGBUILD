@@ -1,0 +1,26 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='matrix-synapse-nitro'
+pkgver='20200704'
+pkgrel='3'
+pkgdesc='nitro service script for matrix-synapse'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-matrix-synapse'
+	)
+
+depends=(
+	'matrix-synapse'
+	'nitro'
+	)
+
+source=(
+	matrix-synapse-srv.run
+	)
+b2sums=('50c6de2adcdeda4df119367946204f6b6a1a2ee75d39dba7fa69e2e499a70da0d4626f8076e241a1e33f3030a53e0b49298e2159d404cc6162ce237e1d5f8f45')
+package() {
+	install -Dm755 "$srcdir"/matrix-synapse-srv.run "$pkgdir/etc/nitro/sv/matrix-synapse-srv/run"
+}

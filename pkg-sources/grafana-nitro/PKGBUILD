@@ -1,0 +1,26 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='grafana-nitro'
+pkgver='20201004'
+pkgrel='2'
+pkgdesc='nitro service script for grafana'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-grafana'
+	)
+
+depends=(
+	'grafana'
+	'nitro'
+	)
+
+source=(
+	grafana.run
+	)
+b2sums=('37491cb0b9ba546ab6748154088645025e5a7361abd2c7f5726000990344a6ec803bb763c669ed2e356cf5f71c582ca1bb216dd921bbfe46c21b59fcbb3e1fe6')
+package() {
+	install -Dm755 "$srcdir"/grafana.run "$pkgdir/etc/nitro/sv/grafana/run"
+}

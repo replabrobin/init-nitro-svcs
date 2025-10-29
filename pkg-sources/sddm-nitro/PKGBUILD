@@ -1,0 +1,27 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='sddm-nitro'
+pkgver='20211029'
+pkgrel='1'
+pkgdesc='nitro service script for sddm'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-sddm'
+	'init-displaymanager'
+	)
+
+depends=(
+	'sddm'
+	'dbus-nitro'
+	)
+
+source=(
+	sddm.run
+	)
+b2sums=('80f096975e3e3a7d688a868d3bf74feef4cf21131458a7953de26e02aa574db0277a189f3a064fe06b66a109aad30d810972239172c7b483a0e0ecf86e54f05b')
+package() {
+	install -Dm755 "$srcdir"/sddm.run "$pkgdir/etc/nitro/sv/sddm/run"
+}

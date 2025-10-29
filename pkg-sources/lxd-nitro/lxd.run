@@ -1,0 +1,2 @@
+#!/bin/sh
+exec lxd --group=lxd --logfile=/var/log/lxd/lxd.log 2>&1

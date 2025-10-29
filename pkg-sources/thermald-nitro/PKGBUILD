@@ -1,0 +1,26 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='thermald-nitro'
+pkgver='20180314'
+pkgrel='5'
+pkgdesc='nitro service script for thermald'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-thermald'
+	)
+
+depends=(
+	'thermald'
+	'dbus-nitro'
+	)
+
+source=(
+	thermald.run
+	)
+b2sums=('76512da92492f857a38658bcaef9a7d3b878c54b1667ee9996b67ab319dc6ffdf49109d3e0fba09df8e8c85323cc5bf4b3fdfc6a61e37e45410e85049db326a7')
+package() {
+	install -Dm755 "$srcdir"/thermald.run "$pkgdir/etc/nitro/sv/thermald/run"
+}

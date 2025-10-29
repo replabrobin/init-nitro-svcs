@@ -1,0 +1,8 @@
+#!/bin/sh
+set -e; exec 2>&1
+
+sv start logind > /dev/null
+
+[ ! -d /run/gdm ] && mkdir -m0711 -p /run/gdm && chown root:gdm /run/gdm
+
+exec gdm

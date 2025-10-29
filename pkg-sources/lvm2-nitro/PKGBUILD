@@ -1,0 +1,31 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='lvm2-nitro'
+pkgver='20210205'
+pkgrel='3'
+pkgdesc='nitro service script for lvm2'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-lvm2'
+	)
+
+depends=(
+	'lvm2'
+	)
+
+source=("lvm2-monitoring"
+        "lvm2")
+b2sums=('371407953b22d1911e14b34e25d6243d5fde5002d9896d2432b70daa6f050518624329fe6b7ab2c9c45655477b474461d25f564ad8f99721de28f554bce7827a'
+        '413cfadfab691c060b2cb0156a109f82083fb1e57ea612fcf9a90afa1d866f789cb719adc88770763af8e58d517d7e52d64ab92f7530f9698038aa520504b4d9')
+package() {
+    install -Dm755 "${srcdir}/lvm2" "${pkgdir}/usr/lib/rc/sv.d/lvm2"
+    install -Dm755 "${srcdir}/lvm2-monitoring" "${pkgdir}/usr/lib/rc/sv.d/lvm2-monitoring"
+
+    # create default symlinks?
+    install -d ${pkgdir}/etc/rc/{sysinit,shutdown}
+    ln -sf /usr/lib/rc/sv.d/lvm2 ${pkgdir}/etc/rc/sysinit/34-lvm2
+    ln -sf /usr/lib/rc/sv.d/lvm2 ${pkgdir}/etc/rc/shutdown/64-lvm2
+}

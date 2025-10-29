@@ -1,0 +1,26 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='sane-nitro'
+pkgver='20240619'
+pkgrel='1'
+pkgdesc='nitro service script for sane'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-sane'
+	)
+
+depends=(
+	'sane'
+	'nitro'
+	)
+
+source=(
+	saned.run
+	)
+b2sums=('e04d0f910c999656eff3c4fa2e7e45e5e6e2ce6c568ca2a80cf925dbaa29fc6a0e653d61459dabd1ba228bd51b05d901181ec38b1242e02533b1cb9a6590003e')
+package() {
+	install -Dm755 "$srcdir"/saned.run "$pkgdir/etc/nitro/sv/saned/run"
+}

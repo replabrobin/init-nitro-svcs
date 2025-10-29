@@ -1,0 +1,12 @@
+if [ -x /sbin/agetty -o -x /bin/agetty ]; then
+	# util-linux specific settings
+	if [ "${tty}" = "tty1" ]; then
+		GETTY_ARGS="--noclear"
+	fi
+fi
+
+BAUD_RATE=38400
+TERM_NAME=linux
+
+auxtty=$(/bin/cat /etc/ly/config.ini 2>/dev/null 1| /bin/sed -n 's/\(^[[:space:]]*tty[[:space:]]*=[[:space:]]*\)\([[:digit:]][[:digit:]]*\)\(.*\)/\2/p')
+TTY=tty${auxtty:-2}

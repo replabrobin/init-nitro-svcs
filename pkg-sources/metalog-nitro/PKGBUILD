@@ -1,0 +1,26 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='metalog-nitro'
+pkgver='20180226'
+pkgrel='5'
+pkgdesc='nitro service script for metalog'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-metalog'
+	)
+
+depends=(
+	'metalog'
+	'nitro'
+	)
+
+source=(
+	metalog.run
+	)
+b2sums=('210358c26b607330b1826496d7d5621bbad07949609f90912a413d176e9db2920d5f5933c18db4332f8934d93d91cf51af56ff8da0c0be1e4a3f68bb7af6eea1')
+package() {
+	install -Dm755 "$srcdir"/metalog.run "$pkgdir/etc/nitro/sv/metalog/run"
+}

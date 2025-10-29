@@ -1,0 +1,8 @@
+#!/bin/sh
+
+GA_METHOD=virtio-serial
+GA_PATH=/dev/virtio-ports/org.qemu.guest_agent.0
+
+exec /usr/bin/qemu-ga -- -m virtio-serial -p /dev/virtio-ports/org.qemu.guest_agent.0 \
+  -l /var/log/qemu-ga.log -d -f /run/qemu-ga.pid -t /run
+

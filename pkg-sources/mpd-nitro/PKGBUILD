@@ -1,0 +1,26 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='mpd-nitro'
+pkgver='20200613'
+pkgrel='3'
+pkgdesc='nitro service script for mpd'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-mpd'
+	)
+
+depends=(
+	'mpd'
+	'nitro'
+	)
+
+source=(
+	mpd.run
+	)
+b2sums=('67d1d7d67054f066385c7d5e43e67d54240ee6151d942b038a9acd54dec6c30996713ba8c1b4d0584e4dd33b9ba9a9b18969a6f0e964a07b2ea40f72b3f66396')
+package() {
+	install -Dm755 "$srcdir"/mpd.run "$pkgdir/etc/nitro/sv/mpd/run"
+}

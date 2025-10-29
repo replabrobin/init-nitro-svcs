@@ -1,0 +1,26 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='prometheus-nitro'
+pkgver='20190114'
+pkgrel='3'
+pkgdesc='nitro service script for prometheus'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-prometheus'
+	)
+
+depends=(
+	'prometheus'
+	'nitro'
+	)
+
+source=(
+	prometheus.run
+	)
+b2sums=('ceae3213f3dc4437f692f49c3be0c6894cf9b8cab57894921f97615569515a8fd3ef38b2796cbcdfe586dc58d154ec154f841671830b2b42402e595d95a1b4b7')
+package() {
+	install -Dm755 "$srcdir"/prometheus.run "$pkgdir/etc/nitro/sv/prometheus/run"
+}

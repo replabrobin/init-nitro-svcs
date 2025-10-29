@@ -1,0 +1,7 @@
+#!/bin/sh
+set -e
+
+sv start dbus >/dev/null
+
+exec 3>/run/seatd.notification-fd
+exec /usr/bin/seatd -g seat -n 3 2>&1

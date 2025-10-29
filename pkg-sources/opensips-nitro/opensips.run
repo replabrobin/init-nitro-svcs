@@ -1,0 +1,2 @@
+#!/bin/sh
+exec opensips -F -f /etc/opensips/opensips.cfg -w /var/tmp -E

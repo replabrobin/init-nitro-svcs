@@ -1,0 +1,26 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='spotifyd-nitro'
+pkgver='20210407'
+pkgrel='2'
+pkgdesc='nitro service script for spotifyd'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-spotifyd'
+	)
+
+depends=(
+	'spotifyd'
+	'nitro'
+	)
+
+source=(
+	spotifyd.run
+	)
+b2sums=('cf8c12945500c5a3485750fb1080994e8dd16bff4fbed02ebdc6abb8d84646480d263e3e98b593b462bb0bd518affecd46cbac72525c8fa7bae9815a36bd68cd')
+package() {
+	install -Dm755 "$srcdir"/spotifyd.run "$pkgdir/etc/nitro/sv/spotifyd/run"
+}

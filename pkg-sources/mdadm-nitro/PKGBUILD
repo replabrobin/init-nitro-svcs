@@ -1,0 +1,26 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='mdadm-nitro'
+pkgver='20180429'
+pkgrel='3'
+pkgdesc='nitro service script for mdadm'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-mdadm'
+	)
+
+depends=(
+	'mdadm'
+	'nitro'
+	)
+
+source=(
+	mdadm.run
+	)
+b2sums=('abf8afea4d75798d5faba464bc8ae66212ea8f43bd7102f5c15d43fdfa10d3f4a87302531bb228171ed1471469357cff99b81b2980b90e9e65f630ef3ad7e46a')
+package() {
+	install -Dm755 "$srcdir"/mdadm.run "$pkgdir/etc/nitro/sv/mdadm/run"
+}

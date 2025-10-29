@@ -1,0 +1,26 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='rng-tools-nitro'
+pkgver='20180314'
+pkgrel='5'
+pkgdesc='nitro service script for rng-tools'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-rng-tools'
+	)
+
+depends=(
+	'rng-tools'
+	'nitro'
+	)
+
+source=(
+	rngd.run
+	)
+b2sums=('b8e930f216d263176efade615677882585f53d503b51dba6b6fe0c47a0c53a97d12e4f9d85623f4932e7f87b4d9a2efd3e183d06359f42f1e9085990e63af8a1')
+package() {
+	install -Dm755 "$srcdir"/rngd.run "$pkgdir/etc/nitro/sv/rngd/run"
+}

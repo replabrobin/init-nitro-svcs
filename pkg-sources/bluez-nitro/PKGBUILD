@@ -1,0 +1,26 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='bluez-nitro'
+pkgver='20180226'
+pkgrel='5'
+pkgdesc='nitro service script for bluez'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-bluez'
+	)
+
+depends=(
+	'bluez'
+	'dbus-nitro'
+	)
+
+source=(
+	bluetoothd.run
+	)
+b2sums=('398d6798b21e9ee5e4ff1d8731e9acbc283bebc19e75156bd21ff6afd4347d6c9a1fef560ee2b7722642f942f83179adce17493e4c28706282f7d6430fd3a7b1')
+package() {
+	install -Dm755 "$srcdir"/bluetoothd.run "$pkgdir/etc/nitro/sv/bluetoothd/run"
+}

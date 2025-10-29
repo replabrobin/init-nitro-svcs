@@ -1,0 +1,26 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='spamassassin-nitro'
+pkgver='20210417'
+pkgrel='2'
+pkgdesc='nitro service script for spamassassin'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-spamassassin'
+	)
+
+depends=(
+	'spamassassin'
+	'nitro'
+	)
+
+source=(
+	spamd.run
+	)
+b2sums=('98c3304144a346b22c8c5516712a369737d36215a857e86e599fae5b2a299518b1283f80fd429c7c811a6372eff2b60bde9115577adeae49571cd8184f90dc39')
+package() {
+	install -Dm755 "$srcdir"/spamd.run "$pkgdir/etc/nitro/sv/spamd/run"
+}

@@ -1,0 +1,2 @@
+#!/bin/sh
+exec udpxy -T -S -p 4022 -B 256kb

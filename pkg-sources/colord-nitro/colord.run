@@ -1,0 +1,5 @@
+#!/bin/sh
+set -e; exec 1>/dev/null 2>&1
+sv start dbus
+[ -d /var/lib/colord ] || install -dm 755 -o colord -g colord /var/lib/colord
+exec chpst -u colord /usr/lib/colord

@@ -1,0 +1,26 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='prosody-nitro'
+pkgver='20200704'
+pkgrel='2'
+pkgdesc='nitro service script for prosody'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-prosody'
+	)
+
+depends=(
+	'prosody'
+	'nitro'
+	)
+
+source=(
+	prosody.run
+	)
+b2sums=('aaacc820a97da2b0ed26636e0947f551580c371a0c9f31d9ca2c06d84d10e3d6f9b00e47381b826dc40394c506424a5c71e142e1c0cc7ccdb2af4c25ff7ad4a9')
+package() {
+	install -Dm755 "$srcdir"/prosody.run "$pkgdir/etc/nitro/sv/prosody/run"
+}

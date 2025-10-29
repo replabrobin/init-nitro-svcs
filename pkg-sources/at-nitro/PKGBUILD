@@ -1,0 +1,26 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='at-nitro'
+pkgver='20180314'
+pkgrel='5'
+pkgdesc='nitro service script for at'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-at'
+	)
+
+depends=(
+	'at'
+	'nitro'
+	)
+
+source=(
+	at.run
+	)
+b2sums=('ad7e97922f3d1abcb437e40d8bb6f4e719b9ac4d86730b0d2df892fa0553d3f9aafbc6642418eaa308093615634ef98e7b401f8a8696da9d5b8ab2df5a90622a')
+package() {
+	install -Dm755 "$srcdir"/at.run "$pkgdir/etc/nitro/sv/at/run"
+}

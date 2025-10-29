@@ -1,0 +1,26 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='stunnel-nitro'
+pkgver='20200425'
+pkgrel='3'
+pkgdesc='nitro service script for stunnel'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-stunnel'
+	)
+
+depends=(
+	'stunnel'
+	'nitro'
+	)
+
+source=(
+	stunnel.run
+	)
+b2sums=('d88b6e0dca1d174cb20ea52b6cb8c4ef0ffed8b84eaede3e41eb01444c48962ae9cf1f9e5d588bcf284b9a5a116dc790257547bb7c511ca8d568568c325f5512')
+package() {
+	install -Dm755 "$srcdir"/stunnel.run "$pkgdir/etc/nitro/sv/stunnel/run"
+}

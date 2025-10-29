@@ -1,0 +1,5 @@
+#!/bin/sh
+[ -r conf ] && . ./conf
+nitroctl check dbus >/dev/null || exit 1
+mkdir -p /run/spice-vdagentd
+exec /usr/bin/spice-vdagentd -x -X $SPICE_VDAGENTD_EXTRA_ARGS

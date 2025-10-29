@@ -1,0 +1,8 @@
+#!/bin/sh
+
+post_upgrade() {
+    if [ ${2%-*} -lt 20220305 ]; then
+        echo -e '\033[31mIWD-NITRO\033[0m: The service now hard depends on dbus'
+        echo -e '\033[31mIWD-NITRO\033[0m: The service now has a log service, see svlogd(8)'
+    fi
+}

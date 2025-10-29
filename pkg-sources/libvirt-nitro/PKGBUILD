@@ -1,0 +1,32 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='libvirt-nitro'
+pkgver='20180801'
+pkgrel='3'
+pkgdesc='nitro service script for libvirt'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-libvirt'
+	)
+
+depends=(
+	'libvirt'
+	'nitro'
+	)
+
+source=(
+	libvirtd.run
+	virtlockd.run
+	virtlogd.run
+	)
+b2sums=('58ade6c420d26f306df3621e422324475fd1eebbd79c8ce2381b8537a5b1ea296ded51e3738f6365163f6477770721273219e576291e261b45cb1d00a6e2f2d4'
+        '1c9261cba4cd0ca1ed370411b497981edadf28c99de5ebde0f161a8f5f76b3e9e65fbe85b07b49a4692cf6f431546c2bfcc388bfb5a276134a1e0b93c69ff2b1'
+        '082c920fff97afbb98a7eaeffb1181aa043949185ce2e327049ed1caa1c5a79a913e2c9d6493fa814d7cf1b1d257776980fe07da543bd79648b36d85a0e2fea8')
+package() {
+	install -Dm755 "$srcdir"/libvirtd.run "$pkgdir/etc/nitro/sv/libvirtd/run"
+	install -Dm755 "$srcdir"/virtlockd.run "$pkgdir/etc/nitro/sv/virtlockd/run"
+	install -Dm755 "$srcdir"/virtlogd.run "$pkgdir/etc/nitro/sv/virtlogd/run"
+}

@@ -1,0 +1,26 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='distcc-nitro'
+pkgver='20201005'
+pkgrel='2'
+pkgdesc='nitro service script for distcc'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-distcc'
+	)
+
+depends=(
+	'distcc'
+	'nitro'
+	)
+
+source=(
+	distcc.run
+	)
+b2sums=('7eb90d7d2f07db5b47ee626113e64fab47d1a51dae78683517fc24cc6c4ea7907f3e04655dbf0d07dc992cff0435c980c8371b0237246cc72b21c3f2daa79fe0')
+package() {
+	install -Dm755 "$srcdir"/distcc.run "$pkgdir/etc/nitro/sv/distcc/run"
+}

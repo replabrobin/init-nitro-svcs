@@ -1,0 +1,26 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='lighttpd-nitro'
+pkgver='20200613'
+pkgrel='3'
+pkgdesc='nitro service script for lighttpd'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-lighttpd'
+	)
+
+depends=(
+	'nitro'
+	'lighttpd'
+	)
+
+source=(
+	lighttpd.run
+	)
+b2sums=('46b351e60a3c40148051637c1962c0c9fd3d68098421ba59eab8d2d9c0779f73164dcb8c1db80acb1e6995fa2e51d05eb7980d071cc2fd6d3772d6bbcde7a051')
+package() {
+	install -Dm755 "$srcdir"/lighttpd.run "$pkgdir/etc/nitro/sv/lighttpd/run"
+}

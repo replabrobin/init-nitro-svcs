@@ -1,0 +1,2 @@
+#!/bin/sh
+exec java -server -DopenfireHome=/var/lib/openfire -Dopenfire.lib.dir=/usr/lib/openfire -classpath /usr/lib/openfire/startup.jar -jar /usr/lib/openfire/startup.jar

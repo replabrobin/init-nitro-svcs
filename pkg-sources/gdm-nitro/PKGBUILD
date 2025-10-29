@@ -1,0 +1,27 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='gdm-nitro'
+pkgver='20220815'
+pkgrel='1'
+pkgdesc='nitro service script for gdm'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-gdm'
+	'init-displaymanager'
+	)
+
+depends=(
+	'gdm'
+	'init-logind'
+	)
+
+source=(
+	gdm.run
+	)
+b2sums=('ebf5ce9fcf47d2ca374156da559175da2908f72cc72a9b1aefb928fe74870c34e6a79f5a2a8df5775b2e1856e8323b7707ae44654ded366b7c0b81c53d161afb')
+package() {
+	install -Dm755 "$srcdir"/gdm.run "$pkgdir/etc/nitro/sv/gdm/run"
+}

@@ -1,0 +1,26 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='bind-nitro'
+pkgver='20180226'
+pkgrel='5'
+pkgdesc='nitro service script for bind'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-bind'
+	)
+
+depends=(
+	'bind'
+	'nitro'
+	)
+
+source=(
+	named.run
+	)
+b2sums=('cf45399887f9ad729b5933962d2f59e47894d75575403446d724249bad3b939f17360b325018eb6ccf9344bc2c9c3e2a1b7a2c520b804941794125283d9ab658')
+package() {
+	install -Dm755 "$srcdir"/named.run "$pkgdir/etc/nitro/sv/named/run"
+}

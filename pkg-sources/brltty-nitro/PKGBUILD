@@ -1,0 +1,26 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='brltty-nitro'
+pkgver='20180226'
+pkgrel='4'
+pkgdesc='nitro service script for brltty'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-brltty'
+	)
+
+depends=(
+	'brltty'
+	'nitro'
+	)
+
+source=(
+	brltty.run
+	)
+b2sums=('bfe704eb724d596ef8909cbe12dabe104b929e191cf4b87b8060748a300e109d62e06c785800409d020816e371f29abf38f0e72aa4be1fcb1f781bf2ac00f936')
+package() {
+	install -Dm755 "$srcdir"/brltty.run "$pkgdir/etc/nitro/sv/brltty/run"
+}

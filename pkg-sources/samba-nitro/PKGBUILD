@@ -1,0 +1,29 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='samba-nitro'
+pkgver='20211002'
+pkgrel='1'
+pkgdesc='nitro service script for samba'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-samba'
+	)
+
+depends=(
+	'samba'
+	'nitro'
+	)
+
+source=(
+	nmbd.run
+	smbd.run
+	)
+b2sums=('e59dc3328a170e89e1014efe5e6c847ef2ea40f59a4b557c7b384ab29aecb0ef44714033b9df5627e33e579a9186af6826fab2d799edf4b90af2ed9977773201'
+        '37ce3ebf7deda3f5d038e22c719f1c06756076486fe6a68e2df2256fab2103a7b3c4087561bed768032e54284fe41e494397d802d7887a0c61949c42f2fdf1b6')
+package() {
+	install -Dm755 "$srcdir"/nmbd.run "$pkgdir/etc/nitro/sv/nmbd/run"
+	install -Dm755 "$srcdir"/smbd.run "$pkgdir/etc/nitro/sv/smbd/run"
+}

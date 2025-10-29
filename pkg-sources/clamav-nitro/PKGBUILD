@@ -1,0 +1,26 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='clamav-nitro'
+pkgver='20180731'
+pkgrel='3'
+pkgdesc='nitro service script for clamav'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-clamav'
+	)
+
+depends=(
+	'clamav'
+	'nitro'
+	)
+
+source=(
+	clamd.run
+	)
+b2sums=('4936d373540aeb318d97e6116e3ebf26f65800543255a2c94273b11f6da542b93c4fcd25bf94323efb24bcaf5c5569adb8d3595d68961c1fd9dcd678630d7ec1')
+package() {
+	install -Dm755 "$srcdir"/clamd.run "$pkgdir/etc/nitro/sv/clamd/run"
+}

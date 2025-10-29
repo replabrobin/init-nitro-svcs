@@ -1,0 +1,26 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='ejabberd-nitro'
+pkgver='20200607'
+pkgrel='3'
+pkgdesc='nitro service script for ejabberd'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-ejabberd'
+	)
+
+depends=(
+	'ejabberd'
+	'nitro'
+	)
+
+source=(
+	ejabberd.run
+	)
+b2sums=('821de4dcd7507e1320dccd78c2d6e591ebbd4a1a276f03f6c3f26dd0845683b091453f2069b1f9fb86a7d64e79d99bd9c34f5d90b79fabfdff643a1a3e05ef6f')
+package() {
+	install -Dm755 "$srcdir"/ejabberd.run "$pkgdir/etc/nitro/sv/ejabberd/run"
+}

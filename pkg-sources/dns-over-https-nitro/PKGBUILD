@@ -1,0 +1,29 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='dns-over-https-nitro'
+pkgver='20200425'
+pkgrel='3'
+pkgdesc='nitro service script for dns-over-https'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-dns-over-https'
+	)
+
+depends=(
+	'dns-over-https'
+	'nitro'
+	)
+
+source=(
+	doh-client.run
+	doh-server.run
+	)
+b2sums=('720496c3fdc6f1966e5e67c3401550d9abdd571fcfad26fd394bb941d8a13f5ccb38510817be3c13241623c8149c8530af9d35dff87f2a6b3e15d11cab815183'
+        'e8efc87c281a5f2fdf9b8f165577de16573ba3ac38cb780e43bfb53c2fe5c78122a779a71006cdc7343875df804ec4dbf1e7180e4da23b6efde6b89bc1918123')
+package() {
+	install -Dm755 "$srcdir"/doh-client.run "$pkgdir/etc/nitro/sv/doh-client/run"
+	install -Dm755 "$srcdir"/doh-server.run "$pkgdir/etc/nitro/sv/doh-server/run"
+}

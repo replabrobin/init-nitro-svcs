@@ -1,0 +1,26 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='opensips-nitro'
+pkgver='20210407'
+pkgrel='2'
+pkgdesc='nitro service script for opensips'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-opensips'
+	)
+
+depends=(
+	'opensips'
+	'nitro'
+	)
+
+source=(
+	opensips.run
+	)
+b2sums=('bd5364bcabf8f1a9fa36ec7e62e6cdbf0ee90a4f5700dee338d154e2291b53a63ce994e570b9e0fdb129897b837b1f65a7b17e39be972c00af2fc25a806cbdcf')
+package() {
+	install -Dm755 "$srcdir"/opensips.run "$pkgdir/etc/nitro/sv/opensips/run"
+}

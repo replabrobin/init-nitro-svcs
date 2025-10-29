@@ -1,0 +1,26 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='subversion-nitro'
+pkgver='20200614'
+pkgrel='3'
+pkgdesc='nitro service script for subversion'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-subversion'
+	)
+
+depends=(
+	'subversion'
+	'nitro'
+	)
+
+source=(
+	svnserve.run
+	)
+b2sums=('86060c8c18685d35a2c3091c33aadfe2bd5f9f147e17197b86520fe734f5031f69e345bdc074c5477ed77cfd14e40c8bb7a34c7a35402ad3e1846d86df8103fa')
+package() {
+	install -Dm755 "$srcdir"/svnserve.run "$pkgdir/etc/nitro/sv/svnserve/run"
+}

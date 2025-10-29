@@ -1,0 +1,26 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='i2pd-nitro'
+pkgver='20231116'
+pkgrel='1'
+pkgdesc='nitro service script for i2pd'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-i2pd'
+	)
+
+depends=(
+	'nitro'
+	'i2pd'
+	)
+
+source=(
+	i2pd.run
+	)
+b2sums=('7e43cb54397754d77841318bcacffe2368a7c2a033e5331888d4dc47825413a9c04927bcd7fc40ff66f7d079591ce3bdc102ef0846aba9a4c9f655b6a0224e54')
+package() {
+	install -Dm755 "$srcdir"/i2pd.run "$pkgdir/etc/nitro/sv/i2pd/run"
+}

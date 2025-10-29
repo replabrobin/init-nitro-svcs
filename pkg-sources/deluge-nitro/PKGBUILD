@@ -1,0 +1,29 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='deluge-nitro'
+pkgver='20200711'
+pkgrel='3'
+pkgdesc='nitro service script for deluge'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-deluge'
+	)
+
+depends=(
+	'nitro'
+	'deluge'
+	)
+
+source=(
+	deluged.run
+	deluge-web.run
+	)
+b2sums=('bddaf362d185e9db7a21d9a125162950fc2bd1e4a635ebaf1e9d18f02aeb839e749d37b9f6ab433d7bded4a82b742ab30c59150ac5780bad5926dba1cb8bcc8c'
+        '22548dd4e2148117f65694dee89faf4600bda8ca27f81ebe961f73c0b1658c02200e1f4ed5e5d32590231aa757b31fc0e139b9ecb7da1b62895a0176c30a2752')
+package() {
+	install -Dm755 "$srcdir"/deluged.run "$pkgdir/etc/nitro/sv/deluged/run"
+	install -Dm755 "$srcdir"/deluge-web.run "$pkgdir/etc/nitro/sv/deluge-web/run"
+}

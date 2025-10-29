@@ -1,0 +1,26 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='minio-nitro'
+pkgver='20210407'
+pkgrel='2'
+pkgdesc='nitro service script for minio'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-minio'
+	)
+
+depends=(
+	'minio'
+	'nitro'
+	)
+
+source=(
+	minio.run
+	)
+b2sums=('4c4d234659be5e70a953575ac7238aa44f64313953aa6d7935091a87ec95122f35035447301f7dd9c371847bae396c9520718d7014a518c8ae1f2c31ec0ff38b')
+package() {
+	install -Dm755 "$srcdir"/minio.run "$pkgdir/etc/nitro/sv/minio/run"
+}

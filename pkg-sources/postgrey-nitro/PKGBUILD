@@ -1,0 +1,26 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='postgrey-nitro'
+pkgver='20210407'
+pkgrel='2'
+pkgdesc='nitro service script for postgrey'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-postgrey'
+	)
+
+depends=(
+	'postgrey'
+	'nitro'
+	)
+
+source=(
+	postgrey.run
+	)
+b2sums=('b335fc264af1e6a32a874739ab45548f503abbf4310b6c9bd506cd9c2bc42add6e3c5d91a3edea91a562779bce09bbc7e62258ff1b101821491699f018d8d294')
+package() {
+	install -Dm755 "$srcdir"/postgrey.run "$pkgdir/etc/nitro/sv/postgrey/run"
+}

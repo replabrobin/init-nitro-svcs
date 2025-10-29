@@ -1,0 +1,26 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='qemu-guest-agent-nitro'
+pkgver='20201020'
+pkgrel='3'
+pkgdesc='nitro service script for qemu-guest-agent'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-qemu-guest-agent'
+	)
+
+depends=(
+	'qemu-guest-agent'
+	'nitro'
+	)
+
+source=(
+	qemu-guest-agent.run
+	)
+b2sums=('9bbf4ffb91efe653d5ed03f1d8169ddbb67010b50eb558f7be63705eae6d0e670626d01d5788649a7c7673b0a31c5b29378b5830056cf7699989671491cba664')
+package() {
+	install -Dm755 "$srcdir"/qemu-guest-agent.run "$pkgdir/etc/nitro/sv/qemu-guest-agent/run"
+}

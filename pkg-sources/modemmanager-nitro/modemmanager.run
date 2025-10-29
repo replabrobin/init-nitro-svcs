@@ -1,0 +1,6 @@
+#!/bin/sh
+set -e
+
+sv start dbus >/dev/null
+
+exec /usr/bin/ModemManager --debug --log-file=/proc/self/fd/2 2>&1

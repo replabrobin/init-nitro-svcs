@@ -1,0 +1,26 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='device-mapper-nitro'
+pkgver='20180429'
+pkgrel='3'
+pkgdesc='nitro service script for device-mapper'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-device-mapper'
+	)
+
+depends=(
+	'device-mapper'
+	'nitro'
+	)
+
+source=(
+	dmeventd.run
+	)
+b2sums=('406e93ac5893d70adbef29df21034d5e42e29d420d1a46332cd65a64e7a5e554df9777261c362ef698aad666b3baee591ce9fa8d409ba3bb8973c8fc9e90fe3a')
+package() {
+	install -Dm755 "$srcdir"/dmeventd.run "$pkgdir/etc/nitro/sv/dmeventd/run"
+}

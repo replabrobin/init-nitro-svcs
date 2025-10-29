@@ -1,0 +1,26 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='fwknop-nitro'
+pkgver='20180314'
+pkgrel='4'
+pkgdesc='nitro service script for fwknop'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-fwknop'
+	)
+
+depends=(
+	'fwknop'
+	'nitro'
+	)
+
+source=(
+	fwknopd.run
+	)
+b2sums=('280d1fb649e6ebe2fa850812d776b3cca8d07334c8cb0b4989ecfc724d3780e006489e7e47fa5083b92d2a0ea5d2937ba357662898a2c2c688629a98ac8bbb76')
+package() {
+	install -Dm755 "$srcdir"/fwknopd.run "$pkgdir/etc/nitro/sv/fwknopd/run"
+}

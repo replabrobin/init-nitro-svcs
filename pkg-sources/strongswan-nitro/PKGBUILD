@@ -1,0 +1,26 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='strongswan-nitro'
+pkgver='20200425'
+pkgrel='4'
+pkgdesc='nitro service script for strongswan'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-strongswan'
+	)
+
+depends=(
+	'strongswan'
+	'nitro'
+	)
+
+source=(
+	strongswan.run
+	)
+b2sums=('532351a80dacaaee51dbc68c08ed5365f114e982f833b4585aeea998bce3acaa88f7d1b5678d448feb9ddc539e83849eaa9635fb6195534c366d84b0085de082')
+package() {
+	install -Dm755 "$srcdir"/strongswan.run "$pkgdir/etc/nitro/sv/strongswan/run"
+}

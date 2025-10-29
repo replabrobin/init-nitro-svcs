@@ -1,0 +1,26 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='tor-nitro'
+pkgver='20180314'
+pkgrel='4'
+pkgdesc='nitro service script for tor'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-tor'
+	)
+
+depends=(
+	'tor'
+	'nitro'
+	)
+
+source=(
+	tor.run
+	)
+b2sums=('b4ee849244a60c450cac729831afca4bed9053b4cdd941b6b1dcbcf10742eaecc5bf4750c6cc9fb12172b6ee646d73b07867d4959e252f3628c46d4a14e2052a')
+package() {
+	install -Dm755 "$srcdir"/tor.run "$pkgdir/etc/nitro/sv/tor/run"
+}

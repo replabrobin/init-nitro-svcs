@@ -1,0 +1,26 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='xl2tpd-nitro'
+pkgver='20190309'
+pkgrel='3'
+pkgdesc='nitro service script for xl2tpd'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-xl2tpd'
+	)
+
+depends=(
+	'xl2tpd'
+	'nitro'
+	)
+
+source=(
+	xl2tpd.run
+	)
+b2sums=('a0887a6aa1cd1938ad291cc02bfba926fa46db304dadf0b50e104ee105feb581df05c9ca47c37f72b150b4f5f5acfce902ce47f15ab3815b428937c4650efb43')
+package() {
+	install -Dm755 "$srcdir"/xl2tpd.run "$pkgdir/etc/nitro/sv/xl2tpd/run"
+}

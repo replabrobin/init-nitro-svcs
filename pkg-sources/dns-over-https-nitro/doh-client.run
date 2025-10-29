@@ -1,0 +1,2 @@
+#!/bin/sh
+exec doh-client -conf /etc/dns-over-https/doh-client.conf

@@ -1,0 +1,26 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='tinydns-nitro'
+pkgver='20201010'
+pkgrel='2'
+pkgdesc='nitro service script for tinydns'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-tinydns'
+	)
+
+depends=(
+	'tinydns'
+	'nitro'
+	)
+
+source=(
+	tinydns.run
+	)
+b2sums=('1ee8a87f88dad4811465e1f43452d3c776aff72608f55a1d7ed894bb25ef60ac2165d1eb1731816d2ffb2e4f174b5a042690c9960cc334efede997c79118d16b')
+package() {
+	install -Dm755 "$srcdir"/tinydns.run "$pkgdir/etc/nitro/sv/tinydns/run"
+}

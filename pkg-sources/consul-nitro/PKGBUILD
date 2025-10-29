@@ -1,0 +1,26 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='consul-nitro'
+pkgver='20210429'
+pkgrel='2'
+pkgdesc='nitro service script for consul'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-consul'
+	)
+
+depends=(
+	'consul'
+	'nitro'
+	)
+
+source=(
+	consul.run
+	)
+b2sums=('c0e3049dccd16a8ed5e84a025c2b31a3926faa8d6de0388bed7a2ab128214a12dcc9774212414114e48926da2d00064ecc81a6fbd67fcd09cb494c86a6d697ce')
+package() {
+	install -Dm755 "$srcdir"/consul.run "$pkgdir/etc/nitro/sv/consul/run"
+}

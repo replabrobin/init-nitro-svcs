@@ -1,0 +1,7 @@
+#!/bin/sh
+
+post_upgrade() {
+    if [ ${2%-*} -lt 20220304 ]; then
+        echo -e '\033[31mOPENNTPD-NITRO\033[0m: Changed logging facility, see svlogd(8)'
+    fi
+}

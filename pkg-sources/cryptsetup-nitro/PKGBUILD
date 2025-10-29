@@ -1,0 +1,29 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='cryptsetup-nitro'
+pkgver='20220813'
+pkgrel='1'
+pkgdesc='nitro service script for cryptsetup'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-cryptsetup'
+	)
+
+depends=(
+	'cryptsetup'
+	)
+optdepends=(
+	'lvm2-nitro: LVM support for encrypted filesystems'
+	)
+source=('cryptsetup')
+b2sums=('5a37ad9d5f007e431d00afae6075c965aa802eb6e6ef2e8f642a510e45f3062b10fba859652f4e88b533ed08ec5014bfb1357a0caa12461a5a8bdf0f061aeda6')
+package() {
+    install -Dm755 "${srcdir}/cryptsetup" "${pkgdir}/usr/lib/rc/sv.d/cryptsetup"
+
+     install -d ${pkgdir}/etc/rc/{sysinit,shutdown}
+     ln -sf /usr/lib/rc/sv.d/cryptsetup ${pkgdir}/etc/rc/sysinit/35-cryptsetup
+     ln -sf /usr/lib/rc/sv.d/cryptsetup ${pkgdir}/etc/rc/shutdown/65-cryptsetup
+}

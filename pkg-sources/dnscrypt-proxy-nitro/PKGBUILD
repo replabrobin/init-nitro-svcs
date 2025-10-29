@@ -1,0 +1,26 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='dnscrypt-proxy-nitro'
+pkgver='20210513'
+pkgrel='2'
+pkgdesc='nitro service script for dnscrypt-proxy'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-dnscrypt-proxy'
+	)
+
+depends=(
+	'dnscrypt-proxy'
+	'nitro'
+	)
+
+source=(
+	dnscrypt-proxy.run
+	)
+b2sums=('c72cf6aaf03d28e6ffcaa8a7bb9fc875d31dfd5e77005fa5db7b878f4bb7dc268a3724c27141d6922fe5d5d51a9d83a70ed28f209e253a6236fe09f547a72764')
+package() {
+	install -Dm755 "$srcdir"/dnscrypt-proxy.run "$pkgdir/etc/nitro/sv/dnscrypt-proxy/run"
+}

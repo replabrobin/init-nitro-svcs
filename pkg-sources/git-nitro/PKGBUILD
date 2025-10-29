@@ -1,0 +1,26 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='git-nitro'
+pkgver='20180226'
+pkgrel='3'
+pkgdesc='nitro service script for git'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-git'
+	)
+
+depends=(
+	'git'
+	'nitro'
+	)
+
+source=(
+	git-daemon.run
+	)
+b2sums=('ec6fc67ec0720def2803e2da5ca6094a11c21ff4462902186e3a87c33a35a509dca917eb44084d61ef3e630aea2fa5a7a437017e7d656ff4da89710e92cbfc7c')
+package() {
+	install -Dm755 "$srcdir"/git-daemon.run "$pkgdir/etc/nitro/sv/git-daemon/run"
+}

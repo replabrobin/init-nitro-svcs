@@ -1,0 +1,5 @@
+#!/bin/sh -e
+
+sv start logind >/dev/null
+
+exec /usr/bin/greetd 2>&1

@@ -1,0 +1,26 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='cpupower-nitro'
+pkgver='20210407'
+pkgrel='3'
+pkgdesc='nitro service script for cpupower'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-cpupower'
+	)
+
+depends=(
+	'cpupower'
+	'nitro'
+	)
+
+source=(
+	cpupower.run
+	)
+b2sums=('81575ceeb02a232b6111cd3f68346d598cce39ba5362807197564e8fbeb707087a389ddb44fce61d4b214cb14d10509720d861783ef70d8980625297e035dc56')
+package() {
+	install -Dm755 "$srcdir"/cpupower.run "$pkgdir/etc/nitro/sv/cpupower/run"
+}

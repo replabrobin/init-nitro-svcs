@@ -1,0 +1,26 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='stubby-nitro'
+pkgver='20180706'
+pkgrel='5'
+pkgdesc='nitro service script for stubby'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-stubby'
+	)
+
+depends=(
+	'nitro'
+	'stubby'
+	)
+
+source=(
+	stubby.run
+	)
+b2sums=('c071fa2c0a24ce030bfaadcbc5efc20a8a6446d4a024b6931fb1f2a3272a43762cf2b88ffc7d219bbe3b5d05c5998ecbfae510f19ec27dd5888c5601c8f89f2a')
+package() {
+	install -Dm755 "$srcdir"/stubby.run "$pkgdir/etc/nitro/sv/stubby/run"
+}

@@ -1,0 +1,26 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='lxd-nitro'
+pkgver='20200711'
+pkgrel='3'
+pkgdesc='nitro service script for lxd'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-lxd'
+	)
+
+depends=(
+	'lxd'
+	'nitro'
+	)
+
+source=(
+	lxd.run
+	)
+b2sums=('96f9b67e8971c323ea7b4bada8842fbaba3739f1428c2e08c2deecd56927261b8fa9bddba89b43086d359cca61f2620badcdbac255bff522ada7582f27f7904c')
+package() {
+	install -Dm755 "$srcdir"/lxd.run "$pkgdir/etc/nitro/sv/lxd/run"
+}

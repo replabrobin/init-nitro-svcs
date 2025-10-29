@@ -1,0 +1,29 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='apparmor-nitro'
+pkgver='20220321'
+pkgrel='2'
+pkgdesc='nitro service script for apparmor'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+install=apparmor-nitro.install
+provides=(
+	'init-apparmor'
+	)
+
+depends=(
+	'apparmor'
+	'nitro'
+	)
+
+source=('apparmor' 'apparmor.conf')
+b2sums=('3d8bfb59da3d61417cf2770430ce1b0391e1872a53ea94c49b049bdfd460def8e883af881508a167a74df62c7a01103017034d79cba0c235ac5628300f6b74f3'
+        '7d999d06872350a4616f176e4e1307208b70b8ead261c56c2ef6b15b200ca667a2126d57a1c6a352a1ddb32b8ec2fe6d002f9e29d4cc8322a1c751c5eeb91fe4')
+package() {
+    install -Dm755 "${srcdir}/apparmor" "${pkgdir}/usr/lib/rc/sv.d/apparmor"
+    install -Dm644 "${srcdir}/apparmor.conf" "${pkgdir}/etc/rc/apparmor.conf"
+
+    install -d ${pkgdir}/etc/rc/sysinit
+    ln -s ../../../usr/lib/rc/sv.d/apparmor ${pkgdir}/etc/rc/sysinit/96-apparmor
+}

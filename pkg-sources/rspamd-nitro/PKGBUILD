@@ -1,0 +1,26 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='rspamd-nitro'
+pkgver='20210407'
+pkgrel='2'
+pkgdesc='nitro service script for rspamd'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-rspamd'
+	)
+
+depends=(
+	'rspamd'
+	'nitro'
+	)
+
+source=(
+	rspamd.run
+	)
+b2sums=('16f8602ebea9d8705053321998ecfb764b4a64aa637bb9985e0d9c0a845863c2cfa610e259754adbba37f10d12ab7b95fa9329aa3a3a9b416807676839127c33')
+package() {
+	install -Dm755 "$srcdir"/rspamd.run "$pkgdir/etc/nitro/sv/rspamd/run"
+}

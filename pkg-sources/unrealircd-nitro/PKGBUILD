@@ -1,0 +1,26 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='unrealircd-nitro'
+pkgver='20200425'
+pkgrel='3'
+pkgdesc='nitro service script for unrealircd'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-unrealircd'
+	)
+
+depends=(
+	'unrealircd'
+	'nitro'
+	)
+
+source=(
+	unrealircd.run
+	)
+b2sums=('83d222857068136388aca723bc7fe593d3226ec0cff05494e1a20be8c46d0063f194fd2c94982380f4e411c175bde9ac94771406b502c59703459f4934d4a67d')
+package() {
+	install -Dm755 "$srcdir"/unrealircd.run "$pkgdir/etc/nitro/sv/unrealircd/run"
+}

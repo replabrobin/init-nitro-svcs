@@ -1,0 +1,26 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='connman-nitro'
+pkgver='20180314'
+pkgrel='5'
+pkgdesc='nitro service script for connman'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-connman'
+	)
+
+depends=(
+	'connman'
+	'nitro'
+	)
+
+source=(
+	connmand.run
+	)
+b2sums=('b60923d3996a855db0f0f6470c3736f6fa4ff6b56755c91437a6330ea00eb0be1149447fc84033a6ce82cb5bd523bfbdf8a041f0718c5fc0972db09f6c7bf2dc')
+package() {
+	install -Dm755 "$srcdir"/connmand.run "$pkgdir/etc/nitro/sv/connmand/run"
+}

@@ -1,0 +1,29 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='iptables-nitro'
+pkgver='20200613'
+pkgrel='3'
+pkgdesc='nitro service script for iptables'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-iptables'
+	)
+
+depends=(
+	'iptables'
+	'nitro'
+	)
+
+source=(
+	ip6tables.run
+	iptables.run
+	)
+b2sums=('07be1f493d1b9a063f2ed02cd50f552c59f4d674204896ac0930692a29d6c492e72ae3a4fae43dd6d744152408f8055c243faafb6412527b56e14cf9ea973296'
+        'a52adfbb452996d00d6187f874138e0e5ed33207986c9d9d217454df246437afacd3ce0e562f6c6c01be7b47f70b746cfe24e301ad3a0f97bf5e418ae0643d84')
+package() {
+	install -Dm755 "$srcdir"/ip6tables.run "$pkgdir/etc/nitro/sv/ip6tables/run"
+	install -Dm755 "$srcdir"/iptables.run "$pkgdir/etc/nitro/sv/iptables/run"
+}

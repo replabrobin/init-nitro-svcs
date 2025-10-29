@@ -1,0 +1,26 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='pptpd-nitro'
+pkgver='20200704'
+pkgrel='2'
+pkgdesc='nitro service script for pptpd'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-pptpd'
+	)
+
+depends=(
+	'pptpd'
+	'nitro'
+	)
+
+source=(
+	pptpd.run
+	)
+b2sums=('e71489e0613aae9f4448357b2083dc8004dbbc90bf71ce3cb4f4fee76a7a69c0a60db171e0d2b113fd572c851cf4f1ff0ab3ad25c15ce6492bf40d74fb543946')
+package() {
+	install -Dm755 "$srcdir"/pptpd.run "$pkgdir/etc/nitro/sv/pptpd/run"
+}

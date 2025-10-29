@@ -1,0 +1,26 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='mariadb-nitro'
+pkgver='20200823'
+pkgrel='3'
+pkgdesc='nitro service script for mariadb'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-mariadb'
+	)
+
+depends=(
+	'mariadb'
+	'nitro'
+	)
+
+source=(
+	mariadb.run
+	)
+b2sums=('6c4c9f4d248a8f1d454962e04a098297f4d6baf27eea1b03821ed3e1f0a1a1afc52de4b3ef0dfd231dd1fe35c3fa36d538e868a88b61b0522ef55a02104a7bda')
+package() {
+	install -Dm755 "$srcdir"/mariadb.run "$pkgdir/etc/nitro/sv/mariadb/run"
+}

@@ -1,0 +1,10 @@
+#!/bin/sh
+
+install -d -m750 -o grafana -g grafana "/var/lib/grafana/conf/provisioning/dashboards"
+install -d -m750 -o grafana -g grafana "/var/lib/grafana/conf/provisioning/plugins"
+install -d -m750 -o grafana -g grafana "/var/lib/grafana/conf/provisioning/sessions"
+install -d -m750 -o grafana -g grafana "/var/lib/grafana/conf/provisioning/datasources"
+install -d -m750 -o grafana -g grafana "/var/lib/grafana/conf/provisioning/notifiers"
+
+exec chpst -u grafana:grafana grafana-server -homepath /usr/share/grafana/ -config /etc/grafana.ini 2>&1
+

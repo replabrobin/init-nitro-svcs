@@ -1,0 +1,26 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='redis-nitro'
+pkgver='20200614'
+pkgrel='3'
+pkgdesc='nitro service script for redis'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-redis'
+	)
+
+depends=(
+	'redis'
+	'nitro'
+	)
+
+source=(
+	redis.run
+	)
+b2sums=('92583e8a7c944515306e0c7fa419794b55aa0059d9ba9862c43c108ca574e687ebeedc2290b5c8e56d72c3acef5baf301bef405c2915eb73a624e82297ff2e3e')
+package() {
+	install -Dm755 "$srcdir"/redis.run "$pkgdir/etc/nitro/sv/redis/run"
+}

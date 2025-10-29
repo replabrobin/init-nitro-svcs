@@ -1,0 +1,26 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='webhook-nitro'
+pkgver='20210407'
+pkgrel='2'
+pkgdesc='nitro service script for webhook'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-webhook'
+	)
+
+depends=(
+	'webhook'
+	'nitro'
+	)
+
+source=(
+	webhook.run
+	)
+b2sums=('7f4959b2d51319cc86da17d609ce4fa781b2c454b965cc0969cc68d4b506c850979ca64bc3da186d7f7d1ccbccab33b0f62a752632af7af9e9cb9c1b0186337a')
+package() {
+	install -Dm755 "$srcdir"/webhook.run "$pkgdir/etc/nitro/sv/webhook/run"
+}

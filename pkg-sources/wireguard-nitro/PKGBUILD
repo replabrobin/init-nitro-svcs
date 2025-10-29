@@ -1,0 +1,29 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='wireguard-nitro'
+pkgver='20201118'
+pkgrel='3'
+pkgdesc='nitro service script for wireguard'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-wireguard'
+	)
+
+depends=(
+	'wireguard-tools'
+	'nitro'
+	)
+
+source=(
+	wireguard.run
+	wireguard.finish
+	)
+b2sums=('68bdc8cf5a7bd6ea60e7031c2927c210a68d5d6dd4b9bd5f50b4441a508df539980631748e766707a0827b32eade4074098e71d092c5e0570b979f6277768aa2'
+        '814196d1598dad6391ed4d28a437e7c0a78b73b837e56195f2cc6c63b749d45b9ea3bfe83e8bc99347f62a09ccb3c7509a05fc7dcb367759598ce9cc9fc7cdc0')
+package() {
+	install -Dm755 "$srcdir"/wireguard.run "$pkgdir/etc/nitro/sv/wireguard/run"
+	install -Dm755 "$srcdir"/wireguard.finish "$pkgdir/etc/nitro/sv/wireguard/finish"
+}

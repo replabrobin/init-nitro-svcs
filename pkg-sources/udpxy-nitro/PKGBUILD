@@ -1,0 +1,26 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='udpxy-nitro'
+pkgver='20210407'
+pkgrel='2'
+pkgdesc='nitro service script for udpxy'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-udpxy'
+	)
+
+depends=(
+	'udpxy'
+	'nitro'
+	)
+
+source=(
+	udpxy.run
+	)
+b2sums=('b541585a0b7f39a47eaf1786865fe9cdc2e52ac1c8dcf7d30e4b771c24242304cfe4c627469baa9a85c7995b49c02a1f575b0747b2b5a33372b125420579553e')
+package() {
+	install -Dm755 "$srcdir"/udpxy.run "$pkgdir/etc/nitro/sv/udpxy/run"
+}

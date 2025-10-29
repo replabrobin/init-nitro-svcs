@@ -1,0 +1,26 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='mopidy-nitro'
+pkgver='20200803'
+pkgrel='3'
+pkgdesc='nitro service script for mopidy'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-mopidy'
+	)
+
+depends=(
+	'mopidy'
+	'nitro'
+	)
+
+source=(
+	mopidy.run
+	)
+b2sums=('c306d76a467a3a1bee4ae069db7987fb5b6e562be96180409149974d84f186db490b0fe2a3aa27d3c4cabf6f4011260679e98138567144ff1a46f31deb146991')
+package() {
+	install -Dm755 "$srcdir"/mopidy.run "$pkgdir/etc/nitro/sv/mopidy/run"
+}

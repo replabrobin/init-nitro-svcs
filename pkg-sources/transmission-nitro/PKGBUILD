@@ -1,0 +1,26 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='transmission-nitro'
+pkgver='20180226'
+pkgrel='4'
+pkgdesc='nitro service script for transmission'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-transmission'
+	)
+
+depends=(
+	'nitro'
+	'transmission-cli'
+	)
+
+source=(
+	transmission-daemon.run
+	)
+b2sums=('865f29ad4af0e1ebba91b90da56935f3cff1a894ca8a361c2107f488291d49aaad99b2ad1d8ca7671957c1779dd4eea5ce33f4647b60d1dcb7a9b112573a371e')
+package() {
+	install -Dm755 "$srcdir"/transmission-daemon.run "$pkgdir/etc/nitro/sv/transmission-daemon/run"
+}

@@ -1,0 +1,26 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='spice-vdagent-nitro'
+pkgver='20200712'
+pkgrel='2'
+pkgdesc='nitro service script for spice-vdagent'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-spice-vdagent'
+	)
+
+depends=(
+	'spice-vdagent'
+	'dbus-nitro'
+	)
+
+source=(
+	spice-vdagentd.run
+	)
+b2sums=('ce2ac1333f532c91f26b4434e09d9f60041decedfe8111a5136e9522611331a9904ee87c1581b1a5e75bab3655846730d4f218f4b20a8f9c9ecf1b8ff8211ea2')
+package() {
+	install -Dm755 "$srcdir"/spice-vdagentd.run "$pkgdir/etc/nitro/sv/spice-vdagentd/run"
+}

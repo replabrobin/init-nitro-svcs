@@ -1,0 +1,22 @@
+#!/bin/sh -eu
+exec 2>&1
+
+[ -r conf ] && . ./conf
+
+: ${PGDATA:="$PGROOT/data"}
+: ${PGOPTS:=""}
+
+[ -d /run/postgresql ] || install -dm755 -o postgres -g postgres /run/postgresql
+
+[ "$PGROOT" != "/var/lib/postgres" ] && ln -sf "$PGROOT" /var/lib/postgres
+
+
+if [ ! -d "$PGDATA" ]; then
+        install -dm0700 -o postgres -g postgres "$PGDATA"
+	su - postgres -m -c "/usr/bin/initdb $INITOPTS -D '$PGDATA'"
+
+	[ -f /etc/postgresql/postgresql.conf ] && ln -sf /etc/postgresql/postgresql.conf "$PGDATA/postgresql.conf"
+fi
+
+[ "$PGOPTS" ] && exec chpst -u postgres:postgres postgres -D "$PGDATA" "$PGOPTS"
+exec chpst -u postgres:postgres postgres -D "$PGDATA"

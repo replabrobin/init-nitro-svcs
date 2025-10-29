@@ -1,0 +1,26 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='shairport-sync-nitro'
+pkgver='20210407'
+pkgrel='2'
+pkgdesc='nitro service script for shairport-sync'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-shairport-sync'
+	)
+
+depends=(
+	'shairport-sync'
+	'nitro'
+	)
+
+source=(
+	shairport-sync.run
+	)
+b2sums=('1e4a66d1b1da34c92e8b45ad208195cfe68a5afcc5b0a96578138f2ee704fe24a0f5e7781ac8071bd30acee65d958a62aad99228ae6a37515a1c71158101a4b1')
+package() {
+	install -Dm755 "$srcdir"/shairport-sync.run "$pkgdir/etc/nitro/sv/shairport-sync/run"
+}

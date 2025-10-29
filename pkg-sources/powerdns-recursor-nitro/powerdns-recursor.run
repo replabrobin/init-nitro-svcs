@@ -1,0 +1,8 @@
+#!/bin/sh
+
+if [ ! -d /run/pdns-recursor ]; then
+  install -dm755 -o pdns-recursor -g pdns-recursor /run/pdns-recursor
+fi
+
+exec sh -c "/usr/bin/pdns_recursor --setuid=pdns-recursor --daemon=no --disable-syslog=yes --write-pid=no --config-dir=/etc/powerdns --socket-dir=/run/pdns-recursor"
+

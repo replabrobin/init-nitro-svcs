@@ -1,0 +1,26 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='pcsclite-nitro'
+pkgver='20190202'
+pkgrel='4'
+pkgdesc='nitro service script for pcsclite'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-pcsclite'
+	)
+
+depends=(
+	'pcsclite'
+	'nitro'
+	)
+
+source=(
+	pcscd.run
+	)
+b2sums=('69d69ddfbf103de0cd53f0f6dd30a10b30c138aeebbf8ba000a4e3d99e0ef463c6365efce854073e634bf9b0f57cf379e575d413f792089ef44e099cd5b46184')
+package() {
+	install -Dm755 "$srcdir"/pcscd.run "$pkgdir/etc/nitro/sv/pcscd/run"
+}

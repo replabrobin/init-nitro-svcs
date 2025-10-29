@@ -1,0 +1,3 @@
+#!/bin/sh -e
+nitroctl start dbus >/dev/null
+exec /usr/lib/elogind/elogind

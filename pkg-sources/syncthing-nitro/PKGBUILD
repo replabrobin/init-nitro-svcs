@@ -1,0 +1,29 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='syncthing-nitro'
+pkgver='20250813'
+pkgrel='1.1'
+pkgdesc='nitro service script for syncthing'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+install=syncthing-nitro.install
+provides=(
+	'init-syncthing'
+	)
+
+depends=(
+	'syncthing'
+	'nitro'
+	)
+
+source=(
+	syncthing.run
+	syncthing.conf
+	)
+b2sums=('83945aea29f85df9a5978b2873662e5b7c8251f496d3b1cfa2f4e9dce2868554c4e11a2aae6710155e1563e3358cba232dbfd0d2c91531913489eea7c2bccaa1'
+        'c7c657322bec0be9c2a9f3b2e324a9ed0391d3d69de6a06828e58f5c5975cd838ae9672502ed54572e7c5b823eefd9849dc69d0dbd7deb025e2381e0f2dc6b55')
+package() {
+	install -Dm755 "$srcdir"/syncthing.run "$pkgdir/etc/nitro/sv/syncthing/run"
+	install -Dm755 "$srcdir"/syncthing.conf "$pkgdir/etc/nitro/sv/syncthing/conf"
+}

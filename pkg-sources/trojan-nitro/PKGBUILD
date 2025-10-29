@@ -1,0 +1,26 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='trojan-nitro'
+pkgver='20210407'
+pkgrel='2'
+pkgdesc='nitro service script for trojan'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-trojan'
+	)
+
+depends=(
+	'trojan'
+	'nitro'
+	)
+
+source=(
+	trojan.run
+	)
+b2sums=('c11f61767f1cdfa81b6ccbf61a465da70e29fa45b8bdf9fb4c07e1148fd09401ca871681beda4e81a1f278fdaff8d67a6d9f8145e31b9cfef774213ae75fe97c')
+package() {
+	install -Dm755 "$srcdir"/trojan.run "$pkgdir/etc/nitro/sv/trojan/run"
+}

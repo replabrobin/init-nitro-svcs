@@ -1,0 +1,30 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='seatd-nitro'
+pkgver='20231119'
+pkgrel='1'
+pkgdesc='nitro service script for seatd'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-logind'
+	'logind-nitro'
+	)
+
+depends=(
+	'dbus-nitro'
+	'seatd'
+	)
+
+source=(
+	seatd.check
+	seatd.run
+	)
+b2sums=('c09008dc114866a92531c6f1560fcbcdeef74efffcc56159113bfabe659531ef338bf4452f580e559496a7177862a6d5c934dbf8a78c5183b3c0d559bf5c24d2'
+        'd866dbb2709b1a76513e494bbd2c1a65892ff79520f00598e113c7196debc309c5abe1efa3ee989971ccd1dc7d696aac6b860c0c7edc5825559029c33d03278e')
+package() {
+	install -Dm755 "$srcdir"/seatd.check "$pkgdir/etc/nitro/sv/seatd/check"
+	install -Dm755 "$srcdir"/seatd.run "$pkgdir/etc/nitro/sv/seatd/run"
+}

@@ -1,0 +1,5 @@
+#!/bin/sh
+[ -r conf ] && . ./conf
+
+exec 2>&1
+exec chpst -u "$USER" syncthing serve -logflags 0

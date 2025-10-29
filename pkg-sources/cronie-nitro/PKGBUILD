@@ -1,0 +1,27 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='cronie-nitro'
+pkgver='20200613'
+pkgrel='3'
+pkgdesc='nitro service script for cronie'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-cronie'
+	'init-cron'
+	)
+
+depends=(
+	'cronie'
+	'nitro'
+	)
+
+source=(
+	cronie.run
+	)
+b2sums=('4ab132709a7bf6e53c16511181c5558ed5f2ba7ce641be2832dcb4ef3cefab17323203dfcdcdb7800d9cbc420face0975aa4bdb9925b64be14a466c6fd514783')
+package() {
+	install -Dm755 "$srcdir"/cronie.run "$pkgdir/etc/nitro/sv/cronie/run"
+}

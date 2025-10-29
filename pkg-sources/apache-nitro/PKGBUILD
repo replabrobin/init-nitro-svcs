@@ -1,0 +1,26 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='apache-nitro'
+pkgver='20220314'
+pkgrel='1'
+pkgdesc='nitro service script for apache'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+install='apache-nitro.install'
+provides=(
+	'init-apache'
+	)
+
+depends=(
+	'apache'
+	'nitro'
+	)
+
+source=(
+	apache.run
+	)
+b2sums=('a4c806107475204a606489d173dcbfc883a2144e2105807ae4ae709f8dfe474eeddf4c7bd5ad8b925ffff194d2a4b8b0696f186f5acd3b4e517e0ff3564cd5d3')
+package() {
+	install -Dm755 "$srcdir"/apache.run "$pkgdir/etc/nitro/sv/apache/run"
+}

@@ -1,0 +1,4 @@
+#!/bin/sh
+chown prosody:jabber /var/lib/prosody
+sed -i 's/daemonize = true/daemonize = false/' /etc/prosody/prosody.cfg.lua
+exec chpst -u prosody:jabber prosody

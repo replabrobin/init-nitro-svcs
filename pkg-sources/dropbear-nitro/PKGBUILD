@@ -1,0 +1,26 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='dropbear-nitro'
+pkgver='20191211'
+pkgrel='4'
+pkgdesc='nitro service script for dropbear'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-dropbear'
+	)
+
+depends=(
+	'dropbear'
+	'nitro'
+	)
+
+source=(
+	dropbear.run
+	)
+b2sums=('c3b95e38f156e997a5bc76d553503f82065a63f06a8100e75f35ec65fe8f40105700f5151ddd10a5eb39d536d1d526e3bdb7017dd131dba7bdb991acd9a1adc7')
+package() {
+	install -Dm755 "$srcdir"/dropbear.run "$pkgdir/etc/nitro/sv/dropbear/run"
+}

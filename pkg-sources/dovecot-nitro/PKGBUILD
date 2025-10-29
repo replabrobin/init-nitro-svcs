@@ -1,0 +1,26 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='dovecot-nitro'
+pkgver='20180314'
+pkgrel='5'
+pkgdesc='nitro service script for dovecot'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-dovecot'
+	)
+
+depends=(
+	'dovecot'
+	'nitro'
+	)
+
+source=(
+	dovecot.run
+	)
+b2sums=('458fa4388845df674cadfa2575ef44141d87fd6e838b68ff7efce1ba0bc57eccd8277d2719a6fe23aca75eb6d5728d8795c8f5c56aba54e83399c7d5dfe3a043')
+package() {
+	install -Dm755 "$srcdir"/dovecot.run "$pkgdir/etc/nitro/sv/dovecot/run"
+}

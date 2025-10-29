@@ -1,0 +1,22 @@
+#!/bin/sh
+
+## Get the tty from the conf file
+CONFTTY=$(cat /etc/ly/config.ini | sed -n 's/^tty.*=[^1-9]*// p')
+
+## The execution vars
+# If CONFTTY is empty then default to 2
+TTY="tty${CONFTTY:-2}"
+TERM_NAME=linux
+BAUD=38400
+
+[ -r conf ] && . ./conf
+
+if [ -x /sbin/getty -o -x /bin/getty ]; then
+	# busybox
+	GETTY=getty
+elif [ -x /sbin/agetty -o -x /bin/agetty ]; then
+	# util-linux
+	GETTY=agetty
+fi
+
+exec setsid ${GETTY} ${GETTY_ARGS} -nl /usr/bin/ly-dm "${TTY}" "${BAUD_RATE}" "${TERM_NAME}"

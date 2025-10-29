@@ -1,0 +1,26 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='acpid-nitro'
+pkgver='20220314'
+pkgrel='1'
+pkgdesc='nitro service script for acpid'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+install='acpid-nitro.install'
+provides=(
+	'init-acpid'
+	)
+
+depends=(
+	'acpid'
+	'nitro'
+	)
+
+source=(
+	acpid.run
+	)
+b2sums=('9fcd9e23cc720710d36159d6ce7c77aeaadb67368a231a69c0b9217f9c39d887ae7dbf3fa2d75eb3f4c30dc82b49469699e7b791cd5801eaa7a11c95f627c05e')
+package() {
+	install -Dm755 "$srcdir"/acpid.run "$pkgdir/etc/nitro/sv/acpid/run"
+}

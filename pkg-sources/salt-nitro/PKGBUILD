@@ -1,0 +1,33 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='salt-nitro'
+pkgver='20180314'
+pkgrel='4'
+pkgdesc='nitro service script for salt'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-salt'
+	)
+
+depends=(
+	'salt'
+	'nitro'
+	)
+source=("salt-master.run"
+        "salt-minion.run"
+        "salt-api.run"
+        "salt-syndic.run")
+b2sums=('cb0e48b0e5a4ad2a0da65eef1c805ab2ddc8b3af4a16f31f9f60ff1548e9d92d1a6559b5dac09322135279258383b3216be67c1cf24a9a18d0ebe70811593f10'
+        'a8de174ba911c4f1b1c13b87dd95c7b79ddea47838fa4f659f70f3c2299082898dbc354b7f6a44f4f3cc78fc0ade819e216b20b451b118d78a6acd49434589d4'
+        '7850ed1d93186a34bb1d366c33778bc66a6691cca1928492e33d06b463e37cacde51838f41db2e5a1e6986236d09ec5c7e0d84d61aa096932957085e917c5cc3'
+        '402eebafceacd9c7537632f9fa961b70b8527ba28b0b5d9714be9d20f9cc869d232894551bbfb8eae86d8efce93796ae9471e8645a899a3d4ce9c491dd6975a2')
+
+package() {
+	local x
+	for x in ${source[@]}; do
+		install -Dm755 "$srcdir"/$x "$pkgdir/etc/nitro/sv/${x%.*}/${x##*.}"
+	done
+}

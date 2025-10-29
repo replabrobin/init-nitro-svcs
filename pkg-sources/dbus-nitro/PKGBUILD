@@ -1,0 +1,33 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='dbus-nitro'
+pkgver='20220314'
+pkgrel='1'
+pkgdesc='nitro service script for dbus'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+install='dbus-nitro.install'
+provides=(
+	'dbus-runscripts'
+	'init-dbus'
+	)
+
+depends=(
+	'dbus'
+	'nitro'
+	)
+
+source=(
+	80-dbus.sh
+	dbus.check
+	dbus.run
+	)
+b2sums=('2221be465e81d2b71c26785116b456c74942a8db48b1216deff7cde3b64e03cd77ecabdce55bd3c396a7ab9a1e5d2e2f86624c240ca5fa65c680918fbe3533e1'
+        '0e84aebbd8d84213d7eea5828ea94a69a2c185fbbb684b9856735041921cac7299057a55902f44ce4084217fe869d58ee7054efc7d2b29876755bfabc2ae9722'
+        'ba3c92be8e5472a2098a96e8b2a483161e0750de31fb6c28880cf8c66b189d68006f62dc0e61ea643342b6484b65f0dc6eed46b58b681c27f7059b78817fb89a')
+package() {
+	install -Dm755 "$srcdir"/80-dbus.sh "$pkgdir/etc/nitro/sv/dbus/sh"
+	install -Dm755 "$srcdir"/dbus.check "$pkgdir/etc/nitro/sv/dbus/check"
+	install -Dm755 "$srcdir"/dbus.run "$pkgdir/etc/nitro/sv/dbus/run"
+}

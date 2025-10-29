@@ -1,0 +1,33 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='ly-nitro'
+pkgver='20240822'
+pkgrel='1'
+pkgdesc='nitro service script for ly'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-ly'
+	)
+
+depends=(
+	'logind-nitro'
+	'ly'
+	'nitro'
+	)
+
+source=(
+	conf
+	ly.finish
+	ly.run
+	)
+b2sums=('f19d851913dd943918bdfa8d65d4d64dd9c759d7c31033defcf96a2fdd4e39acfb6fced4708bd164e5d69db2d945a8dfc59f509eb4291d3dd9fae6b56dca320c'
+        'a5601711e761acb73fff0f28910be4e961b24a228200b23cda06c518541764951adf803a7318b402eea12bc51efdc5bbe87803495142842c0750c5a5210ab88b'
+        '456aa0f949eda70f135a747a0a8d41633f37982079596a306a5c6bf777cf4dadeb657395e2b121af29b967679e7e04b60258641d796c4db7122074690faaf1cd')
+package() {
+	install -Dm755 "$srcdir"/conf "$pkgdir/etc/nitro/sv/ly/conf"
+	install -Dm755 "$srcdir"/ly.finish "$pkgdir/etc/nitro/sv/ly/finish"
+	install -Dm755 "$srcdir"/ly.run "$pkgdir/etc/nitro/sv/ly/run"
+}

@@ -1,0 +1,26 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='usbguard-nitro'
+pkgver='20210103'
+pkgrel='4'
+pkgdesc='nitro service script for usbguard'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-usbguard'
+	)
+
+depends=(
+	'usbguard'
+	'nitro'
+	)
+
+source=(
+	usbguard.run
+	)
+b2sums=('e72e725a4180ad557b5fea2b315ae07f5fce2a2fd8814d59e1c7b2e369cb4acb81993a2ffc57d7cb3694c65344b07f4944768fa2d075d6ac19e63e5657a405f5')
+package() {
+	install -Dm755 "$srcdir"/usbguard.run "$pkgdir/etc/nitro/sv/usbguard/run"
+}

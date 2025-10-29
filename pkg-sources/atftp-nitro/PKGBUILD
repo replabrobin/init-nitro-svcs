@@ -1,0 +1,26 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='atftp-nitro'
+pkgver='20200425'
+pkgrel='4'
+pkgdesc='nitro service script for atftp'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-atftp'
+	)
+
+depends=(
+	'atftp'
+	'nitro'
+	)
+
+source=(
+	atftp.run
+	)
+b2sums=('3208d5cb0c572f097d5158f11c264d22994dd89f8c567880888f0777129265d519fe44f4ddfeec39e833e432c07b9b329072e749eba277129296358547b19545')
+package() {
+	install -Dm755 "$srcdir"/atftp.run "$pkgdir/etc/nitro/sv/atftp/run"
+}

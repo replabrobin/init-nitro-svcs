@@ -1,0 +1,29 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='dhcpcd-nitro'
+pkgver='20200620'
+pkgrel='2'
+pkgdesc='nitro service script for dhcpcd'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-dhcpcd'
+	)
+
+depends=(
+	'dhcpcd'
+	'nitro'
+	)
+
+source=(
+	dhcpcd.run
+	dhcpcd.conf
+	)
+b2sums=('33603e519978c9aae3035a4119f00b66565c638da063a3d1fe288ee81b226e520fd98ad6af5b3be0c149fe23ec3b86c957fc749d9ef34e8efd18c9b5201a7a76'
+        'eff2c8572748675b427a6954f12e1aa09990fc98c89bd6e2beb3b4c5b03602d1db5e80d13847df0501b8189382f66d408a9b5630fa003cb7214b5f7d71b85381')
+package() {
+	install -Dm755 "$srcdir"/dhcpcd.run "$pkgdir/etc/nitro/sv/dhcpcd/run"
+	install -Dm755 "$srcdir"/dhcpcd.conf "$pkgdir/etc/nitro/sv/dhcpcd/conf"
+}

@@ -1,0 +1,26 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='networkmanager-nitro'
+pkgver='20180226'
+pkgrel='3'
+pkgdesc='nitro service script for networkmanager'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-networkmanager'
+	)
+
+depends=(
+	'networkmanager'
+	'dbus-nitro'
+	)
+
+source=(
+	NetworkManager.run
+	)
+b2sums=('3ad91f87879889e7ce02d4ef380c3fdafbf309a9f8301faf3ce97992044a63b48551c2f14009dcc8b15082ef78ef0a63647cca3fc8c6c4b96a1d0236f6c6129f')
+package() {
+	install -Dm755 "$srcdir"/NetworkManager.run "$pkgdir/etc/nitro/sv/NetworkManager/run"
+}

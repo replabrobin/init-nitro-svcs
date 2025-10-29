@@ -1,0 +1,26 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='bftpd-nitro'
+pkgver='20200425'
+pkgrel='3'
+pkgdesc='nitro service script for bftpd'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-bftpd'
+	)
+
+depends=(
+	'bftpd'
+	'nitro'
+	)
+
+source=(
+	bftpd.run
+	)
+b2sums=('6a183b234f85d9e405f4be95c5bee0be3d113b4c4bfd4c331d8d581954897f01417eccdf791f1cf92599c576bd74c4f027abff354957998ce963ec09f804f328')
+package() {
+	install -Dm755 "$srcdir"/bftpd.run "$pkgdir/etc/nitro/sv/bftpd/run"
+}

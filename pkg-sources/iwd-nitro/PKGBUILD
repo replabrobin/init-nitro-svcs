@@ -1,0 +1,27 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='iwd-nitro'
+pkgver='20220305'
+pkgrel='2'
+pkgdesc='nitro service script for iwd'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+install=iwd-nitro.install
+provides=(
+	'init-iwd'
+	)
+
+depends=(
+	'dbus-nitro'
+	'iwd'
+	'nitro'
+	)
+
+source=(
+	iwd.run
+	)
+b2sums=('3146ec05eb88e5bcb1b9ace827bd6c88f7d404e9b1047f85bcf8f0b39ff00dd773e166f535f73ba5467a9a24784a9257d3b488cef28d858e7f89793ed3e4cc0b')
+package() {
+	install -Dm755 "$srcdir"/iwd.run "$pkgdir/etc/nitro/sv/iwd/run"
+}

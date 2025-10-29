@@ -1,0 +1,26 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='gpm-nitro'
+pkgver='20180226'
+pkgrel='3'
+pkgdesc='nitro service script for gpm'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-gpm'
+	)
+
+depends=(
+	'gpm'
+	'nitro'
+	)
+
+source=(
+	gpm.run
+	)
+b2sums=('6cd3e9dde4f131107d28ade44713443ab76edac09653962eccf8bbba6a9cad0210b7a1cefdce003b30bfb213ba52d4b717104eaf9b236785ad13325c385d6612')
+package() {
+	install -Dm755 "$srcdir"/gpm.run "$pkgdir/etc/nitro/sv/gpm/run"
+}

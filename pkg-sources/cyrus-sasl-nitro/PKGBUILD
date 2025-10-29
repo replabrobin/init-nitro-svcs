@@ -1,0 +1,29 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='cyrus-sasl-nitro'
+pkgver='20180226'
+pkgrel='3'
+pkgdesc='nitro service script for cyrus-sasl'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-cyrus-sasl'
+	)
+
+depends=(
+	'cyrus-sasl'
+	'nitro'
+	)
+
+source=(
+	saslauthd.run
+	saslauthd.conf
+	)
+b2sums=('0898eefe61ca6649eb296c4e234f39776dd2fd8dc8cb941d6f2f55df8b327008e821d4ff0e881b3069a180a3e7a6b81475f3ab07926c08ce8ab5785c4d8cf4ac'
+        'fd9c1f0a1dd3b812c483e1b119782994b556b997583d75fc905a35ba4d4aae94326b24d0313a3b396fef69d4eb6c7dcbd397144b72fd1b729c590cfba432a275')
+package() {
+	install -Dm755 "$srcdir"/saslauthd.run "$pkgdir/etc/nitro/sv/saslauthd/run"
+	install -Dm755 "$srcdir"/saslauthd.conf "$pkgdir/etc/nitro/sv/saslauthd/conf"
+}

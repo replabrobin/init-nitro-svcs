@@ -1,0 +1,27 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='lightdm-nitro'
+pkgver='20220815'
+pkgrel='1'
+pkgdesc='nitro service script for lightdm'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+install='lightdm-nitro.install'
+provides=(
+	'init-lightdm'
+	'init-displaymanager'
+	)
+
+depends=(
+	'lightdm'
+	'init-logind'
+	)
+
+source=(
+	lightdm.run
+	)
+b2sums=('ae71cc178ef9a73ea42f0207fbd2b5d020c1d79396073a4e4fb444bc5ee53347f4f2a08aa737ed149e91228fd93203166501f20231c2ff94e90dbdf5b0e6cb07')
+package() {
+	install -Dm755 "$srcdir"/lightdm.run "$pkgdir/etc/nitro/sv/lightdm/run"
+}

@@ -1,0 +1,26 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='lirc-nitro'
+pkgver='20210429'
+pkgrel='2'
+pkgdesc='nitro service script for lirc'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-lirc'
+	)
+
+depends=(
+	'lirc'
+	'nitro'
+	)
+
+source=(
+	lircd.run
+	)
+b2sums=('520f15c18cbb3dc33a43c509e4f1674306c5669b395eb4bd137a858fb2c5ebe80e16695624e18f98bd0b2f62a928d8cced7f6f1a416fa0e03ed1587f1bdc52fd')
+package() {
+	install -Dm755 "$srcdir"/lircd.run "$pkgdir/etc/nitro/sv/lircd/run"
+}

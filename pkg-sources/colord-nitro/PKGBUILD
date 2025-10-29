@@ -1,0 +1,26 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='colord-nitro'
+pkgver='20220525'
+pkgrel='1'
+pkgdesc='nitro service script for colord'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-colord'
+	)
+
+depends=(
+	'colord'
+	'nitro'
+	)
+
+source=(
+	colord.run
+	)
+b2sums=('64295383c62ed99cdd98a98a69ed13759d53343a478df1c13d375c1639dcd9e3b3b7b8286fd7757bc945f71c3a01f14f8a6e035fb9a1d9ac613cba1b33b91ae7')
+package() {
+	install -Dm755 "$srcdir"/colord.run "$pkgdir/etc/nitro/sv/colord/run"
+}

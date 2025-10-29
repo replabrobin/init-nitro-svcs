@@ -1,0 +1,29 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='nftables-nitro'
+pkgver='20200417'
+pkgrel='2'
+pkgdesc='nitro service script for nftables'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-nftables'
+	)
+
+depends=(
+	'nftables'
+	'nitro'
+	)
+
+source=(
+	nftables.run
+	nftables.finish
+	)
+b2sums=('b06e1e2b722c45187945228b873de5e164467e41fcd3125d54072d0705f3afdeb9e786d8420d03097984b4a636e26c6d7ecaa50ddbc38501d12de63d4f9a5268'
+        'd46cda82c5304f4abc6bf9fc624d0b351a22ddd8cc0d2803871ee9fda342d947ef8bdff1f2dcdfb951020305524d53a03fd2ea3c8fe70defcf590e7ff83119c4')
+package() {
+	install -Dm755 "$srcdir"/nftables.run "$pkgdir/etc/nitro/sv/nftables/run"
+	install -Dm755 "$srcdir"/nftables.finish "$pkgdir/etc/nitro/sv/nftables/finish"
+}

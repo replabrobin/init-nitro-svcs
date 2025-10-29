@@ -1,0 +1,5 @@
+#!/bin/sh
+exec chpst -ui2pd i2pd \
+    --conf=/etc/i2pd/i2pd.conf \
+    --tunconf=/etc/i2pd/tunnels.conf \
+    --service 2>&1

@@ -1,0 +1,26 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='openvpn-nitro'
+pkgver='20231208'
+pkgrel='1'
+pkgdesc='nitro service script for openvpn'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+install=openvpn-nitro.install
+
+
+depends=(
+	'openvpn'
+	)
+
+source=(
+	openvpn.conf
+	openvpn.run
+	)
+b2sums=('c2d556d303ab8e6ea0c5536af0ec372bbb918360078e78ef40b4652da450837477afd1179a19de240b698be4e8bb7546e8ab52466f0c1b06c2021723a2e611eb'
+        'ee46aaf853dc5bf8d81203639dd463cf4405e4873b88c6ba5f004cb518facfc62a4958dc44a16f09a5ea65d61b03512f13028a8cc4d89de672c6cee96414ccdf')
+package() {
+	install -Dm755 "$srcdir"/openvpn.conf "$pkgdir/etc/nitro/sv/openvpn/conf"
+	install -Dm755 "$srcdir"/openvpn.run "$pkgdir/etc/nitro/sv/openvpn/run"
+}

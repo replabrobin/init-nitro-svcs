@@ -1,0 +1,31 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='elogind-nitro'
+pkgver='20231119'
+pkgrel='1'
+pkgdesc='nitro service script for elogind'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-elogind'
+	'init-logind'
+	'logind-nitro'
+	)
+
+depends=(
+	'dbus-nitro'
+	'elogind'
+	)
+
+source=(elogind.run
+	#elogind.check
+	)
+b2sums=('0b3546cc62d9ec1d9919dc6edecf4d36473c1a84e206c9df4beae05ce729f70fd1ebd5e59d1857d99102b716f710a98027d2a0de68bb8486b4f62c01e2d62244')
+package() {
+    install -Dm755 "$srcdir/elogind.run" "$pkgdir/etc/nitro/sv/elogind/run"
+    #install -Dm755 "$srcdir/elogind.check" "$pkgdir/etc/nitro/sv/elogind/check"
+
+    ln -s elogind "${pkgdir}/etc/nitro/sv/logind"
+}

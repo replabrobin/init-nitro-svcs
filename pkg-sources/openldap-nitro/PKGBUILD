@@ -1,0 +1,26 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='openldap-nitro'
+pkgver='20180429'
+pkgrel='3'
+pkgdesc='nitro service script for openldap'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-openldap'
+	)
+
+depends=(
+	'openldap'
+	'nitro'
+	)
+
+source=(
+	slapd.run
+	)
+b2sums=('98699ca6c989fe4e8241d00e2291ea5f773e1d09a2b4dfc66fb8c36f0f23b7f2ded13bb30f7f8be32e31d68dd74bcfe97a8971ca46fc525a19feca7cc0f94e34')
+package() {
+	install -Dm755 "$srcdir"/slapd.run "$pkgdir/etc/nitro/sv/slapd/run"
+}

@@ -1,0 +1,6 @@
+post_install()
+{
+    echo "==> Please note that by default, the AppArmor nitro service"
+    echo "    doesn't load any profile on any mode. You will want to"
+    echo "    edit the behavior in /etc/rc/apparmor.conf"
+}

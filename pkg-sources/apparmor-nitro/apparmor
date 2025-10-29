@@ -1,0 +1,47 @@
+#!/bin/bash
+# Adapted from Void's AppArmor script
+
+. /usr/lib/rc/functions
+. /etc/rc/apparmor.conf
+
+case "$1" in
+  start)
+    stat_busy "Loading AppArmor profiles"
+    if [ ! -d /sys/kernel/security/apparmor ]; then
+      printhl "AppArmor module disabled - aborting"
+      stat_die apparmor
+    fi
+
+    if [[ "$APPARMOR" ]]; then
+      if [[ "$APPARMOR" != "complain" && "$APPARMOR" != "enforce" ]]; then
+        printhl "Unknown AppArmor mode - ignoring profiles"
+        stat_done apparmor
+      fi
+
+      if [[ -d /etc/apparmor.d && -x /usr/bin/apparmor_parser ]]; then
+        for profile in /etc/apparmor.d/*; do
+          if [[ -f "$profile" ]]; then
+            printf '* Load profile %s: %s\n' "$APPARMOR" "$profile"
+            if [ "$APPARMOR" = "complain" ]; then
+              apparmor_parser -a -C "$profile"
+            else
+              apparmor_parser -a "$profile"
+            fi
+          fi
+        done
+      else
+        printhl "AppArmor is not installed, aborting"
+        stat_die apparmor
+      fi
+    fi
+
+    rc=$?
+    (( rc || $? )) && stat_die apparmor
+    add_daemon apparmor
+    stat_done apparmor
+    ;;
+  *)
+    echo "usage: $0 {start}"
+    exit 1
+    ;;
+esac

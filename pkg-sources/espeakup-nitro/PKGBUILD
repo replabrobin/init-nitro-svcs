@@ -1,0 +1,26 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='espeakup-nitro'
+pkgver='20180314'
+pkgrel='5'
+pkgdesc='nitro service script for espeakup'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-espeakup'
+	)
+
+depends=(
+	'espeakup'
+	'nitro'
+	)
+
+source=(
+	espeakup.run
+	)
+b2sums=('046cdc06527392fa83ce302a6f410eaff6ab2b8105112c6db1153a7f0657f58705b9fbb7c97a8e2d79118184e69c6bb8ede3de5f79b272be8eee9b24ac414373')
+package() {
+	install -Dm755 "$srcdir"/espeakup.run "$pkgdir/etc/nitro/sv/espeakup/run"
+}

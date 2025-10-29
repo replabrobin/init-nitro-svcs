@@ -1,0 +1,26 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='apcupsd-nitro'
+pkgver='20180314'
+pkgrel='6'
+pkgdesc='nitro service script for apcupsd'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-apcupsd'
+	)
+
+depends=(
+	'apcupsd'
+	'nitro'
+	)
+
+source=(
+	apcupsd.run
+	)
+b2sums=('73d5dfc40855695b9ab705058c6d182e3480d9dc415121d7cc37c774920355f3f339bd4a5627a74f4bb00005998fcbed674e95513391b7a4a3a835e191c19860')
+package() {
+	install -Dm755 "$srcdir"/apcupsd.run "$pkgdir/etc/nitro/sv/apcupsd/run"
+}

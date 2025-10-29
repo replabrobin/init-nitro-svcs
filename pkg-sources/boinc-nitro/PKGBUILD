@@ -1,0 +1,29 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='boinc-nitro'
+pkgver='20220807'
+pkgrel='1'
+pkgdesc='nitro service script for boinc'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-boinc'
+	)
+
+depends=(
+	'boinc'
+	'nitro'
+	)
+
+source=(
+	boinc.conf
+	boinc.run
+	)
+b2sums=('66c0a0cf11df40d991209f9488331850c8175ebc21fc7c10548a4e5f131736fd46ce6a6af025c241786886b00cbba14cb9fe6e5ad7a3b2c1e0a6337c9d26a422'
+        '3dc5560369ac4b1e4f429976f0bfe0ac79f3a0c5bf85bd322d139f541f3edaf9ff3d9d7bf077bcb39e9e718212edb0ad9ed1776a7b1375c1062e11f254bae334')
+package() {
+	install -Dm755 "$srcdir"/boinc.conf "$pkgdir/etc/nitro/sv/boinc/conf"
+	install -Dm755 "$srcdir"/boinc.run "$pkgdir/etc/nitro/sv/boinc/run"
+}

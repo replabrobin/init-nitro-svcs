@@ -1,0 +1,29 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='darkhttpd-nitro'
+pkgver='20200711'
+pkgrel='2'
+pkgdesc='nitro service script for darkhttpd'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-darkhttpd'
+	)
+
+depends=(
+	'darkhttpd'
+	'nitro'
+	)
+
+source=(
+	darkhttpd.run
+	darkhttpd.conf
+	)
+b2sums=('f92cec7009faba13a88e2c3e9ede295a497baaa5a4ef617a2dc3817bcf7657168e0952d6eaffb23b733e79872e50866a6c1c9b21efb97c372b6b29d30b60fe53'
+        'a516cf707e4bedcc7e9f30d17070e532a6e4c00b37eb9fcf7618e67be0f572428ff81d04c883c431c5794d78485a7138a5eb2d15e17c475f5b5d434f3970f52d')
+package() {
+	install -Dm755 "$srcdir"/darkhttpd.run "$pkgdir/etc/nitro/sv/darkhttpd/run"
+	install -Dm755 "$srcdir"/darkhttpd.conf "$pkgdir/etc/nitro/sv/darkhttpd/conf"
+}

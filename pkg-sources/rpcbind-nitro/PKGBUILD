@@ -1,0 +1,26 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='rpcbind-nitro'
+pkgver='20180429'
+pkgrel='4'
+pkgdesc='nitro service script for rpcbind'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-rpcbind'
+	)
+
+depends=(
+	'rpcbind'
+	'nitro'
+	)
+
+source=(
+	rpcbind.run
+	)
+b2sums=('b52d0f4b80af4ed2b9fdd9f9e2651e36cd13b83d7d2412e1700c93bcacb9834afa5e8082d1365c88b67127f8f38c3a0921f32862d35741e3aaf18209fb3a7a13')
+package() {
+	install -Dm755 "$srcdir"/rpcbind.run "$pkgdir/etc/nitro/sv/rpcbind/run"
+}

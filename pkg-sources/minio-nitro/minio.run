@@ -1,0 +1,3 @@
+#!/bin/sh
+[ -r /etc/minio/minio.conf ] && . /etc/minio/minio.conf
+exec chpst -uminio minio server ${MINIO_OPTS} ${MINIO_VOLUMES}

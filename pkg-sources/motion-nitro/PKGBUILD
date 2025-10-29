@@ -1,0 +1,26 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='motion-nitro'
+pkgver='20210407'
+pkgrel='2'
+pkgdesc='nitro service script for motion'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-motion'
+	)
+
+depends=(
+	'motion'
+	'nitro'
+	)
+
+source=(
+	motion.run
+	)
+b2sums=('cd6fc983d28b7818bc4541bbf317b80b9f5c30d30b97c802fd99f3370a67c7e0af53f8497898fb64500e305da86030159f7422e5cf82eee9f29dccc861d6f66f')
+package() {
+	install -Dm755 "$srcdir"/motion.run "$pkgdir/etc/nitro/sv/motion/run"
+}

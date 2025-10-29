@@ -1,0 +1,11 @@
+#!/bin/sh
+
+if [ ! -f /etc/gitea/gitea.conf ]; then
+  touch /etc/gitea/gitea.conf
+  chmod 660 /etc/gitea/gitea.conf
+  chown gitea:gitea /etc/gitea/gitea.conf
+fi
+
+cd /var/lib/gitea
+
+USER=gitea HOME=/var/lib/gitea GITEA_WORK_DIR=$HOME exec chpst -u gitea:gitea gitea web --config /etc/gitea/gitea.conf

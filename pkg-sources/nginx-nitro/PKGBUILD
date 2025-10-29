@@ -1,0 +1,26 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='nginx-nitro'
+pkgver='20180226'
+pkgrel='4'
+pkgdesc='nitro service script for nginx'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-nginx'
+	)
+
+depends=(
+	'nginx'
+	'nitro'
+	)
+
+source=(
+	nginx.run
+	)
+b2sums=('dbabe6430023575e78a37c7ef61736847d698b4fbd3a5e29ac4ad33c2763da04b172dedb6db856dbe552ab2f020b5180bcac7302139c0d0a6a1328c1ff53fbc4')
+package() {
+	install -Dm755 "$srcdir"/nginx.run "$pkgdir/etc/nitro/sv/nginx/run"
+}

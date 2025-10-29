@@ -1,0 +1,26 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='v2ray-nitro'
+pkgver='20230501'
+pkgrel='1'
+pkgdesc='nitro service script for v2ray'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-v2ray'
+	)
+
+depends=(
+	'v2ray'
+	'nitro'
+	)
+
+source=(
+	v2ray.run
+	)
+b2sums=('e2fec2b48b3da147831944943fd5f6cc600635cb8e5c29d5e2ab9005f7d648e9fedd4f225637932a8b5bb279442c4ff8b9ae203fd873bcd7d68e53f8ada1f8c3')
+package() {
+	install -Dm755 "$srcdir"/v2ray.run "$pkgdir/etc/nitro/sv/v2ray/run"
+}
