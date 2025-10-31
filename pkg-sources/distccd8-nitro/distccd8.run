@@ -1,0 +1,11 @@
+#!/bin/sh
+[ -f "./conf" ] && . ./conf || exit 1
+export PATH="$DISTCCD8_PATH:/usr/bin:$PATH"
+exec distccd \
+	--no-detach \
+	--daemon \
+	--allow="$DISTCCD8_HOSTS" \
+	--jobs=5 \
+	--user "$DISTSCCD8_USER" \
+	--make-me-a-botnet \
+	--log-file="$DISTCCD*_LOG"

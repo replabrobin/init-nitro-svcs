@@ -1,0 +1,23 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='slim-nitro'
+pkgver='20251031'
+pkgrel='1'
+pkgdesc='nitro service script for slim'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=('init-slim')
+conflicts=('init-slim')
+
+depends=(
+	'slim'
+	'nitro'
+	)
+
+source=('slim.run')
+b2sums=('d4796d53387966897d9dac70649e1da137d5cd2aa290238eef303acd79926427f07ef8a1145db2bfe035a0d3f96d9fd575dbb427bd9fff18cecbb4c01eaa91f0')
+package() {
+	install -Dm755 "$srcdir"/slim.run "$pkgdir/etc/nitro/sv/slim/run"
+}

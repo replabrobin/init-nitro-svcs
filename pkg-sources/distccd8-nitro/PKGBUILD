@@ -1,0 +1,24 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='distccd8-nitro'
+pkgver='20251031'
+pkgrel='1'
+pkgdesc='nitro service script for distccd8'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=('init-distccd8')
+conflicts=('init-distccd8')
+
+depends=(
+	'nitro'
+	)
+
+source=('distccd8.run' 'distccd8.conf')
+b2sums=('0eb16087003b38f817bd8aa90723e9e69c58d266d0222bfd73a73d0851ea90701c753852bedc547834531ded2177c7726532db16d2d26c8069e704b4042d5645'
+        '0cb9e1f625b17d8a670110192545c99d71f492810b1d4fb4bf10df13fff7749d67037494d8619eb79d292fdc7629748476de26c88a847d65927c570dd46125c3')
+package() {
+	install -Dm755 "$srcdir"/distccd8.run "$pkgdir/etc/nitro/sv/distccd8/run"
+	install -Dm644 "$srcdir"/distccd8.conf "$pkgdir/etc/nitro/sv/distccd8/conf"
+}
