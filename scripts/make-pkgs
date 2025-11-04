@@ -1,0 +1,91 @@
+#!/bin/bash
+set -e
+TOP=$(realpath "$(dirname "${BASH_SOURCE[0]}")"/..)
+tmp="$TOP/tmp"
+[ ! -d "$tmp" ] && mkdir pp "$tmp" || true
+exec |& tee "$tmp/make-pkgs.log"
+#source ${TOP}/scripts/funcs.sh
+prog="$(basename "$0")"
+src="$(realpath "${1:-"$TOP"/pkg-sources}")"
+build="$TOP/build"
+[ -d "$build" ] && rm -rf "$build" || mkdir -p "$build"
+cp -pr "$src" "$build"
+(
+cd "$build"
+git clone "https://github.com/replabrobin/init-nitro"
+)
+repo="$TOP/htdocs/nitro-world"
+for a in x86_64 aarch64;do
+	pkgs="$repo/$a"
+	[ ! -d "$pkgs" ] && mkdir -p "$pkgs" || true
+done
+
+#hacking signage
+export GPG_TTY=$(tty)
+gpg-connect-agent updatestartuptty /bye >/dev/null
+ZX86_64="$tmp/x86_64-zst.txt"
+ZAARCH64="$tmp/aarch64-zst.txt"
+echo "" > "$ZX86_64"_
+echo "" > "$ZAARCH64"_
+for x in "$build"/*/PKGBUILD; do
+	[ ! -f "$x" ] && echo "!!!!! '$x' is not a file" && continue
+	d="$(dirname "$x")" 
+	rm  -rf "$d"/{src,pkg,*.zst,*.zst.sig,.SRCINFO}
+	(
+	cd "$d"
+	bn="$(basename "$d")"
+	if updpkgsums; then
+		if makepkg --printsrcinfo > .SRCINFO; then
+			if makepkg --nodeps --sign; then
+				echo "##### $bn: makepkg made $(ls *.zst)"
+				for p in *.zst; do
+					case "$p" in
+						(*-any.pkg.tar.zst)
+							pkgs="$repo/x86_64"
+							;;
+						(*-x86_64.pkg.tar.zst)
+							pkgs="$repo/x86_64"
+							;;
+						(*-aarch64.pkg.tar.zst)
+							pkgs="$repo/aarch64"
+							;;
+						(*)
+							echo "!!!!! unknown arch: '$p'"
+							continue
+							;;
+					esac
+					if [ ! -e "$pkgs/$p" ]; then
+						mv "$p" "$p.sig" "$pkgs/"
+						case "$p" in
+							(*-any.pkg.tar.zst)
+								echo "$repo/x86_64/$p" >> "$ZX86_64"
+								echo "$repo/aarch64/$p" >> "$ZAARCH64"
+								rm -f "$repo/aarch64/$p"
+								ln -s "../x86_64/$p" "$repo/aarch64/"
+								ln -s "../x86_64/$p.sig" "$repo/aarch64/"
+								;;
+							(*-x86_64.pkg.tar.zst)
+								echo "$repo/x86_64/$p" >> "$ZX86_64"
+								;;
+							(*-aarch64.pkg.tar.zst)
+								echo "$repo/aarch64/$p" >> "$ZAARCH64"
+								;;
+						esac
+					fi
+				done
+			else
+				echo "!!!!! $bn: makepkg failed" 1>&2
+			fi
+		else
+			echo "!!!!! $bn: makepkg --printsrcinfo failed" 1>&2
+		fi
+	else
+		echo "!!!!! $bn: updpkgsums failed" 1>&2
+	fi
+	)
+done
+
+#hopefully we have added zst lists
+[ -d "$TOP/htdocs" ] && "$TOP/scripts/indexer" "$TOP/htdocs"
+[ -s "$ZX86_64" ] && repo-add -R -s $repo/x86_64/nitro-world.db.tar.zst $(<"$ZX86_64")
+[ -s "$ZAARCH64" ] && repo-add -R -s $repo/x86_64/nitro-world.db.tar.zst $(<"$ZAARCH6")
