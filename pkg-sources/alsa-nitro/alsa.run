@@ -1,0 +1,5 @@
+#!/bin/sh
+#exec &>> /tmp/alsa-run.log
+set -e
+alsactl nrestore
+exec chpst -b alsa pause
