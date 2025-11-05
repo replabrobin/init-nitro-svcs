@@ -1,0 +1,26 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='pacman-init-nitro'
+pkgver='20251105'
+pkgrel='1'
+pkgdesc='nitro service script for pacman-init'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+#install='pacman-init-nitro.install'
+provides=(
+	'init-pacman-init'
+	)
+
+depends=(
+	'pacman-init'
+	'nitro'
+	)
+
+source=(
+	pacman-init.setup
+	)
+b2sums=('b65927e43459dcb536498d6e0fd0a01ceeacca86dd8940962991fdda11065ec04035744a2f84087ecede60c974038bc08917241c7bce18dddc5bc046957dcfcd')
+package() {
+	install -Dm755 "$srcdir"/pacman-init.setup "$pkgdir/etc/nitro/sv/pacman-init/setup"
+}

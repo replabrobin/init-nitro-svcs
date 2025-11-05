@@ -2,6 +2,7 @@
 html_format='''<!DOCTYPE html>
 <html>
 <head>
+ <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
  <title>Downloads</title>
  <style type="text/css">
@@ -11,11 +12,41 @@ html_format='''<!DOCTYPE html>
   A:link    { text-decoration : none; margin : 0px; padding : 0px;}
   A:hover   { text-decoration: underline; background-color : yellow; margin : 0px; padding : 0px;}
   A:active  { margin : 0px; padding : 0px;}
+  /*table, th, td {
+    border: 1px solid black;
+    }*/
+  th, td { text-align: right; }
+  th:nth-child(1) { text-align: left; }
+  td:nth-child(1) { text-align: left; }
+  th {
+    cursor: pointer;
+	}
  </style>
+<script>
+function setup(){
+$('th').click(function(){
+    var table = $(this).parents('table').eq(0)
+    var rows = table.find('tr:gt(0)').toArray().sort(comparer($(this).index()))
+    this.asc = !this.asc
+    if (!this.asc){rows = rows.reverse()}
+    for (var i = 0; i < rows.length; i++){table.append(rows[i])}
+})
+}
+function comparer(index) {
+    return function(a, b) {
+        var valA = getCellValue(a, index), valB = getCellValue(b, index)
+        return $.isNumeric(valA) && $.isNumeric(valB) ? valA - valB : valA.toString().localeCompare(valB)
+    }
+}
+function getCellValue(row, index){ return $(row).children('td').eq(index).text() }
+</script>
 </head>
-<body>
+<body onload="setup()">
 	%s
+	<table>
+	<tr><th>Name</th><th>Size</th><th>Date</th></tr>
 	%s
+	</table>
 </body>
 </html>'''
 		
@@ -33,7 +64,6 @@ def main():
 			usage(f"argument '{d}' is not a directory")
 		E = os.listdir(d)
 		L = []
-		C = dict(name=0,size=0,mt=0)
 		for e in E:
 			if e=='index.html': continue
 			p = os.path.join(d,e)
@@ -43,16 +73,15 @@ def main():
 			else:
 				s = 1
 			mode = os.stat(p)
-			C['name'] = max(C['name'],len(e))
 			size = str(mode[stat.ST_SIZE])
-			C['size'] = max(C['size'],len(size))
 			mt = datetime.fromtimestamp(mode[stat.ST_MTIME],timezone.utc).strftime('%Y%m%dU%H%M%S')
-			C['mt'] = max(C['mt'],len(mt))
 			L.append((s,e,size,mt))
 		L.sort()
-		rows = '<br/>\n'.join([f'<a href="./{e[1]}">{e[1]}{(C["name"]+1-len(e[1]))*"&nbsp;"}</a>{(C["size"]+1-len(e[2]))*"&nbsp;"}{e[2]}{(C["mt"]+1-len(e[3]))*"&nbsp;"}{e[3]}'
+		rows = '\n'.join([f'<tr><td><a href="./{e[1]}">{e[1]}&nbsp;</a></td><td>&nbsp;{e[2]}</td><td>&nbsp;{e[3]}</td></tr>'
 					for e in L])
-		back = '<a href="../">..</a><br/>' if n else ''
+		#rows = '\n'.join([f'<tr><td><a href="./{e[1]}">{e[1]}{(C["name"]+1-len(e[1]))*"&nbsp;"}</a></td><td>{(C["size"]+1-len(e[2]))*"&nbsp;"}{e[2]}</td><td>{(C["mt"]+1-len(e[3]))*"&nbsp;"}{e[3]}</td></tr>'
+		#			for e in L])
+		back = '<a href="../">..</a><br/><br/>' if n else ''
 		with open(os.path.join(d,'index.html'),'w') as f:
 			f.write(html_format % (back,rows))
 
