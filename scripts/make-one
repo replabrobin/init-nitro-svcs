@@ -70,8 +70,11 @@ for x in "$build"/PKGBUILD; do
 								aarch64="$repo/aarch64/$p"
 								;;
 						esac
-					[ -n "$x86_64" ] && repo-add -R -s $repo/x86_64/nitro-world.db.tar.zst "$x86_64"
-					[ -n "$aarch64" ] && repo-add -R -s $repo/aarch64/nitro-world.db.tar.zst "$aarch64"
+						[ -n "$x86_64" ] && repo-add -R -s $repo/x86_64/nitro-world.db.tar.zst "$x86_64"
+						[ -n "$aarch64" ] && repo-add -R -s $repo/aarch64/nitro-world.db.tar.zst "$aarch64"
+					else
+						echo "!!!!! $prog '$pkgs/$p' already exists"
+						exit 2
 					fi
 				done
 			else

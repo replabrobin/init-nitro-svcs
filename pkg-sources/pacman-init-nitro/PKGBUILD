@@ -1,7 +1,7 @@
 # Maintainer: replabrobin <replabrobin@gmail.com>
 pkgname='pacman-init-nitro'
 pkgver='20251105'
-pkgrel='1'
+pkgrel='2'
 pkgdesc='nitro service script for pacman-init'
 arch=('any')
 url="https://github.com/replabrobin/init-nitro-svcs"
@@ -13,7 +13,7 @@ provides=(
 	)
 
 depends=(
-	'pacman-init'
+	'pacman'
 	'nitro'
 	)
 
