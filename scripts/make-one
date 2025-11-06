@@ -59,9 +59,7 @@ for x in "$build"/PKGBUILD; do
 							(*-any.pkg.tar.zst)
 								x86_64="$repo/x86_64/$p"
 								aarch64="$repo/aarch64/$p"
-								rm -f "$repo/aarch64/$p"{,.sig}
-								ln -s "../x86_64/$p" "$repo/aarch64/"
-								ln -s "../x86_64/$p.sig" "$repo/aarch64/"
+								cp "$pkgs/$p"{,.sig} "$repo/aarch64/"
 								;;
 							(*-x86_64.pkg.tar.zst)
 								x86_64="$repo/x86_64/$p"
