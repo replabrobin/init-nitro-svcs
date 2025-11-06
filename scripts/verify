@@ -1,0 +1,25 @@
+#!/bin/bash
+set -e
+TOP=$(realpath "$(dirname "${BASH_SOURCE[0]}")"/..)
+tmp="$TOP/tmp"
+[ ! -d "$tmp" ] && mkdir pp "$tmp" || true
+exec |& tee "$tmp/verify.log"
+prog="$(basename "$0")"
+src="${1:-htdocs}"
+if [ ! -d "$src"  ]; then
+	echo "!!!!! Usage: $prog <dir containing .sig files>" 
+	exit 1
+fi
+src="$(realpath "$src")"
+
+#hacking signage
+export GPG_TTY=$(tty)
+gpg-connect-agent updatestartuptty /bye >/dev/null
+
+BAD="$(for x in $(find "$src" -name \*.sig); do gpg -q --verify "$x" "${x%.sig}" &>/dev/null && echo "$x OK" || echo "$x BAD"; done | grep "BAD")"
+if [ -n "$BAD" ]; then
+	echo "$BAD" 
+	exit 1
+else
+	echo "$prog OK"
+fi
