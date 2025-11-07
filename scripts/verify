@@ -16,7 +16,13 @@ src="$(realpath "$src")"
 export GPG_TTY=$(tty)
 gpg-connect-agent updatestartuptty /bye >/dev/null
 
-BAD="$(for x in $(find "$src" -name \*.sig); do gpg -q --verify "$x" "${x%.sig}" &>/dev/null && echo "$x OK" || echo "$x BAD"; done | grep "BAD")"
+BAD="$(
+	for x in $(find "$src" -name \*.sig); do
+		if ! gpg -q --verify "$x" "${x%.sig}" &>/dev/null; then
+			echo "$x BAD" 
+		fi
+	done
+)"
 if [ -n "$BAD" ]; then
 	echo "$BAD" 
 	exit 1
