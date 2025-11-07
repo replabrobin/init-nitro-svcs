@@ -1,6 +1,6 @@
 # Maintainer: replabrobin <replabrobin@gmail.com>
 pkgname='openntpd-nitro'
-pkgver='20220306'
+pkgver='20220307'
 pkgrel='1'
 pkgdesc='nitro service script for openntpd'
 arch=('any')
@@ -20,7 +20,7 @@ depends=(
 source=(
 	openntpd.run
 	)
-b2sums=('58195e480ddacbddc19512d392e2403a9823479e2fd59736ca8a9637c0ef7550979b754091b7b8582b739dbbe6d9d830fc3271728c04ba1e2c52f4471455830c')
+b2sums=('11e7e1df5211d7dbcc64e36b9d5fd095a92403f02f5babe08c57125350826f652db05b6b5571fa7184131edb9d79bb1fb5e9f0b2c56abf7ffd19befae0efb2a3')
 package() {
 	install -Dm755 "$srcdir"/openntpd.run "$pkgdir/etc/nitro/sv/openntpd/run"
 }

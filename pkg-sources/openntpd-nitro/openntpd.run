@@ -1,2 +1,4 @@
 #!/bin/sh
+# Thanks to replabrobin for the network check!
+[ "$(ip route | awk '/^default/{print ($3!="")+($5!="")}')" = "2" ] || exit 1
 exec ntpd -d 2>&1
