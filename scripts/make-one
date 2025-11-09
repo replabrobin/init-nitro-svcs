@@ -15,8 +15,9 @@ src="$(realpath "$src")"
 build="$tmp/build-one"
 rm -rf "$build"
 cp -pr "$src" "$build"
-htdocs="$TOP/htdocs"
-repo="$htdocs/nitro-world"
+htdocs="${htdocs:-"$TOP/htdocs"}"
+repo="${repo:-"$htdocs/nitro-world"}"
+dbname="$(basename "$repo")"
 for a in x86_64 aarch64;do
 	pkgs="$repo/$a"
 	[ ! -d "$pkgs" ] && mkdir -p "$pkgs" || true
@@ -68,8 +69,8 @@ for x in "$build"/PKGBUILD; do
 								aarch64="$repo/aarch64/$p"
 								;;
 						esac
-						[ -n "$x86_64" ] && repo-add -R -s $repo/x86_64/nitro-world.db.tar.zst "$x86_64"
-						[ -n "$aarch64" ] && repo-add -R -s $repo/aarch64/nitro-world.db.tar.zst "$aarch64"
+						[ -n "$x86_64" ] && repo-add -R -s $repo/x86_64/$dbname.db.tar.zst "$x86_64"
+						[ -n "$aarch64" ] && repo-add -R -s $repo/aarch64/$dbname.db.tar.zst "$aarch64"
 					else
 						echo "!!!!! $prog '$pkgs/$p' already exists"
 						exit 2
