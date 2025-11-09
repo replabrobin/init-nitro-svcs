@@ -1,0 +1,4 @@
+#!/bin/sh
+#uwsgi is mostly for nginx
+#nitro check nginx >/dev/null || exit 1
+exec /usr/bin/uwsgi --emperor /etc/uwsgi/vassals

@@ -1,0 +1,29 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='uwsgi-nitro'
+pkgver='20251109'
+pkgrel='1'
+pkgdesc='nitro service script for uwsgi'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-uwsgi'
+	)
+
+depends=(
+	'uwsgi'
+	'nitro'
+	)
+
+source=(
+	uwsgi.run
+	uwsgi.finish
+	)
+b2sums=('edc4eeb2cd1ee7ef5f7ab55ee0ee1170753177f9bff8a5bfc8353539337efb06f34eb0759ad446fc6e441b025971f06b4c024bfa289147bb8a6649f18c3a1e56'
+        'bebd3d284da3c0ec261a4b870b6b7e9bf1378bd22bdcfec57fc80c7a93fc31d8418404ec9c6fbeb7c0b79e9b95b925b4b69ee96108e27d5aeaf67a6a2a2eee0a')
+package() {
+	install -Dm755 "$srcdir"/uwsgi.run "$pkgdir/etc/nitro/sv/uwsgi/run"
+	install -Dm755 "$srcdir"/uwsgi.finish "$pkgdir/etc/nitro/sv/uwsgi/finish"
+}
