@@ -1,0 +1,30 @@
+#!/bin/bash
+set -e
+TOP=$(realpath "$(dirname "${BASH_SOURCE[0]}")"/..)
+tmp="$TOP/tmp"
+[ ! -d "$tmp" ] && mkdir pp "$tmp" || true
+exec |& tee "$tmp/make-one.log"
+prog="$(basename "$0")"
+htdocs="${htdocs:-"$TOP/htdocs"}"
+repo="${repo:-"$htdocs/nitro-world"}"
+dbname="$(basename "$repo")"
+
+#hacking signage
+export GPG_TTY=$(tty)
+gpg-connect-agent updatestartuptty /bye >/dev/null
+
+for arch in x86_64 aarch64; do
+	d="$repo/$arch"
+	P=""
+	for p in ${1}; do
+		for pkg in "$d/$p"-*.pkg.tar.zst; do
+			P="$P $p"
+		done
+	done
+	if [ -n "$P" ]; then
+		repo-remove -s "$repo/$arch/$dbname.db.tar.zst" ${P}
+	else
+		echo "!!!!! no $arch packages found for $p"
+	fi
+done	
+"$TOP/scripts/indexer" "$htdocs"
