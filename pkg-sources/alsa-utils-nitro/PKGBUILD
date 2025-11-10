@@ -1,6 +1,6 @@
 # Maintainer: replabrobin <replabrobin@gmail.com>
 pkgname='alsa-utils-nitro'
-pkgver='20220321'
+pkgver='20251110'
 pkgrel='1'
 pkgdesc='nitro service script for alsa-utils'
 arch=('any')
