@@ -1,7 +1,6 @@
 #!/bin/sh
 set -e
-
-sv start dbus >/dev/null
-
+nitro check dbus >/dev/null
+[ ! -s /run/seatd.notification-fd ] && exit 1
 exec 3>/run/seatd.notification-fd
 exec /usr/bin/seatd -g seat -n 3 2>&1
