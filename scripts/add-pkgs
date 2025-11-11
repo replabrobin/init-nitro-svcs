@@ -1,0 +1,54 @@
+#!/bin/bash
+set -e
+TOP=$(realpath "$(dirname "${BASH_SOURCE[0]}")"/..)
+tmp="$TOP/tmp"
+[ ! -d "$tmp" ] && mkdir pp "$tmp" || true
+exec |& tee "$tmp/make-one.log"
+prog="$(basename "$0")"
+htdocs="${htdocs:-"$TOP/htdocs"}"
+repo="${repo:-"$htdocs/nitro-world"}"
+dbname="$(basename "$repo")"
+
+#hacking signage
+export GPG_TTY=$(tty)
+gpg-connect-agent updatestartuptty /bye >/dev/null
+for z in ${1}; do
+	p="$(basename "$z")"
+	case "$p" in
+		(*-any.pkg.tar.zst)
+			pkgs="$repo/x86_64"
+			;;
+		(*-x86_64.pkg.tar.zst)
+			pkgs="$repo/x86_64"
+			;;
+		(*-aarch64.pkg.tar.zst)
+			pkgs="$repo/aarch64"
+			;;
+		(*)
+			echo "!!!!! unknown arch: '$p'"
+			continue
+			;;
+	esac
+	if [ ! -e "$pkgs/$p" ]; then
+		mv "$z" "$z.sig" "$pkgs/"
+		case "$p" in
+			(*-any.pkg.tar.zst)
+				x86_64="$repo/x86_64/$p"
+				aarch64="$repo/aarch64/$p"
+				cp "$pkgs/$p"{,.sig} "$repo/aarch64/"
+				;;
+			(*-x86_64.pkg.tar.zst)
+				x86_64="$repo/x86_64/$p"
+				;;
+			(*-aarch64.pkg.tar.zst)
+				aarch64="$repo/aarch64/$p"
+				;;
+		esac
+		[ -n "$x86_64" ] && repo-add -R -s $repo/x86_64/$dbname.db.tar.zst "$x86_64"
+		[ -n "$aarch64" ] && repo-add -R -s $repo/aarch64/$dbname.db.tar.zst "$aarch64"
+	else
+		echo "!!!!! $prog '$pkgs/$p' already exists"
+		exit 2
+	fi
+done
+"$TOP/scripts/indexer" "$htdocs"
