@@ -1,0 +1,40 @@
+#!/bin/bash
+set -e
+TOP=$(realpath "$(dirname "${BASH_SOURCE[0]}")"/..)
+tmp="$TOP/tmp"
+[ ! -d "$tmp" ] && mkdir pp "$tmp" || true
+exec |& tee "$tmp/make-one.log"
+prog="$(basename "$0")"
+repo="$1"
+[ -z "$repo" ] && echo "!!!!! Usage: $prog <directorycontaining db>" && exit 1
+X=( $(find "$repo" -name \*.files) )
+case "${#X[@]}" in
+	(0) echo "!!!!! $prog cannot find <dbname>.files in '$repo'" && exit 2;;
+	(1) X="$(basename ${X[0]})";;
+	(*) echo "!!!!! $prog found too many <dbname>.files in '$repo'" && exit 3;;
+esac
+repo="$(realpath "$repo")"
+dbname="${X%.files}"
+rm -f $(find "$repo" -name "$dbname".db\*)
+rm -f $(find "$repo" -name "$dbname".files\*)
+rm -f $(find "$repo" -name \*.sig)
+rm -f $(find "$repo" -name \*.html)
+
+#hacking signage
+export GPG_TTY=$(tty)
+gpg-connect-agent updatestartuptty /bye >/dev/null
+
+X="$(find "$repo" -type f)"
+[ -z "$X" ] && continue
+for x in ${X}; do
+	gpg --output "$x.sig" --detach-sig "$x"
+done
+repo-add -R -s $repo/$dbname.db.tar.zst ${X}
+if [ "$(dirname "$(dirname "$repo")")" = "$TOP/htdocs" ]; then
+	echo "##### indexer '$TOP/htdocs'"
+	"$TOP/scripts/indexer" "$TOP/htdocs" 
+else
+	echo "##### indexer '$repo'"
+	"$TOP/scripts/indexer" "$repo" 
+fi
+
