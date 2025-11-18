@@ -1,0 +1,755 @@
+#!/usr/bin/env bash
+#
+# Artix Linux service manager (nitro)
+
+# This version v0.0.0 by Robin Becker
+
+NSM_VERSION='0.3.0'
+
+# nitro structure
+#
+# /etc/nitro/
+# 			|
+# 			+--services --> levels/xxx
+#			|
+#			+--levels --> default single  links ../../sv/<svc>
+#			|
+#			+--sv --> all the services available
+
+export SVDIR=${SVDIR:-/etc/nitro/services}
+
+charup='✔'
+chardown='X'
+charunknown='?'
+PROG=${0##*/}
+num_re='^-?[0-9]+$'
+svc_re='^[a-zA-Z0-9_@-]+$'
+
+shopt -s nullglob
+
+# Get time in a human format, like 1 hour ago, 7 minutes ago, etc.
+human() {
+	local seconds=$1
+	if ((seconds < 0)); then
+		((seconds *= -1))
+	fi
+
+	local times=(
+		$((seconds / 60 / 60 / 24 / 365)) # years
+		$((seconds / 60 / 60 / 24 / 30))  # months
+		$((seconds / 60 / 60 / 24 / 7))   # weeks
+		$((seconds / 60 / 60 / 24))       # days
+		$((seconds / 60 / 60))            # hours
+		$((seconds / 60))                 # minutes
+		$((seconds))                      # seconds
+	)
+	local names=(year month week day hour minute second)
+
+	local i
+	for ((i = 0; i < ${#names[@]}; i++)); do
+		if ((${times[$i]} > 1)); then
+			echo "${times[$i]} ${names[$i]}s"
+			return
+		elif ((${times[$i]} == 1)); then
+			echo "${times[$i]} ${names[$i]}"
+			return
+		fi
+	done
+	echo '0 seconds'
+}
+
+# enable or disable colors based on the argument given, i.e.:
+# setcolors on   # colors on
+# setcolors off  # colors off
+# setcolors auto # colors on or off depending on environment
+setcolors() {
+	local opt=$1
+	local colors
+
+	if [[ $opt == auto ]]; then
+		# no colors if stdout is not a TTY
+		if [[ ! -t 1 ]]; then
+			opt='off'
+		else
+			# stdout is a tty, check tput capability for colors
+			colors=$(tput colors 2>/dev/null || echo -1)
+			if ! [[ $colors =~ $num_re ]]; then
+				fatal "failed to parse output of \`tput colors\` ($colors)"
+			fi
+
+			if ((colors >= 8)); then
+				opt='on'
+			else
+				opt='off'
+			fi
+		fi
+	fi
+
+	case "$opt" in
+		(on|yes|true)
+			colorred=$(tput setaf 1)
+			colorgreen=$(tput setaf 2)
+			coloryellow=$(tput setaf 3)
+			colorblue=$(tput setaf 4)
+			colormagenta=$(tput setaf 5)
+			colorcyan=$(tput setaf 6)
+			#colorwhite=$(tput setaf 7)
+			colorgray=$(tput setaf 8)
+			colorbold=$(tput bold)
+			colorreset=$(tput sgr0)
+			;;
+		(off|no|false)
+			colorred=
+			colorgreen=
+			coloryellow=
+			colormagenta=
+			colorcyan=
+			#colorwhite=
+			colorgray=
+			colorbold=
+			colorreset=
+			;;
+		(*)
+			echo "unknown color option: '$opt'" >&2
+			exit 1
+			;;
+	esac
+}
+
+#${colorgreen}
+#install <svc> [...]       $cr Install the service(s) (remove the "down" file, does not start service)
+#${colorgreen}
+#remove <svc> [...]      $cr Remove the service(s) (create the "down" file, does not stop service)
+usage() {
+	local cr=$colorreset
+	local logo
+
+	logo=$(getlogo)
+
+	cat <<EOF
+$colormagenta ╔╗╔╔═╗╔╦╗ $colorgreen Nitro Service Manager for Artix Linux ($NSM_VERSION)
+$colormagenta ║║║╚═╗║║║ $colorgreen Source:
+$colormagenta ╝╚╝╚═╝╩ ╩ $colorgreen MIT License
+
+$logo   $colorblue Manage and view nitro services
+$logo   $colorblue Made specifically for Artix Linux
+$logo   $colorblue Author: replabrobin
+
+${coloryellow}USAGE:${colorgreen}
+$PROG [OPTIONS] [SUBCOMMAND] [<ARGS>]
+$PROG [-u] [-d <dir>] [-h] [-s] [-v] [-t] [SUBCOMMAND] [...]
+
+${coloryellow}OPTIONS:${colorgreen}
+${colorgreen}-c <yes|no|auto>         $cr Enable/disable color output, defaults to auto
+${colorgreen}-d <dir>                 $cr service directory, defaults to env SVDIR or /etc/nitro/services if unset
+${colorgreen}-h                       $cr Print this message and exit
+${colorgreen}-s                       $cr slow/single mode for start, stop and similar
+${colorgreen}-t<topts>                $cr Tree view, this is a shortcut for 'status -t with optional tree opts'
+${colorgreen}-u                       $cr User mode, this is a shortcut for '-d ~/.config/nitro/'
+${colorgreen}-v                       $cr Increase verbosity
+${colorgreen}-V                       $cr Print the version number and exit
+
+${coloryellow}ENV:${colorgreen}
+SVDIR                    $cr The service directory to use, can
+                          be overridden with '-d <dir>'
+
+${coloryellow}SUBCOMMANDS:${colorgreen}
+status [-lt] [filter]    $cr Default subcommand, show process status
+			 $cr '-t' enables tree mode (process tree)
+			 $cr 'filter' is an optional string to match service names against
+${colorgreen}
+raw-status <svc> [...]   $cr show raw status lines for each service
+${colorgreen}
+enable <svc> [...]       $cr install service(s) into the service directory and start
+${colorgreen}
+disable <svc> [...]      $cr stop and remove service(s) from the service directory
+${colorgreen}
+is-active <svc> [...]    $cr report service status activae/inactive
+${colorgreen}
+is-enabled <svc> [...]   $cr report service status enabled/disable/unknown
+${colorgreen}
+list-enabled             $cr list enabled services
+${colorgreen}
+pidof <svc> [....]       $cr return svc pid or unknown
+${colorgreen}
+list-available           $cr list available services which are not enabled
+${colorgreen}
+create-user <user> [...] $cr create user(s) ie ln -s user@ $FLDIR/user@<user>
+${colorgreen}
+delete-user <user> [...] $cr delete user(s) ie remove service links
+${colorgreen}
+destroy-user <user> [...] $cr delete user(s) and remove ~<user>/.config/nitro
+
+
+Any other subcommand gets passed directly to the 'nitroctl' command, see nitroctl(1) for the
+full list of subcommands and information about what each does specifically.
+Common subcommands:
+
+${colorgreen}start <services>         $cr Start services
+${colorgreen}fast-start <services>    $cr Start services without waiting
+${colorgreen}up <services>            $cr Start services without waiting
+${colorgreen}stop <services>          $cr Stop services
+${colorgreen}down <services>          $cr Stop using SIGTERM or first letter of ./down-signal
+${colorgreen}restart <services>       $cr Restart the services
+${colorgreen}reload <service>         $cr Reload the services (send SIGHUP)
+${colorgreen}runlevel <level>         $cr stop current and start a new runlevel
+${colorgreen}runlevels                $cr list runlevel dirs
+
+
+
+${coloryellow}EXAMPLES:${colorgreen}
+${colorgreen}$PROG                      $cr Show service status in /var/service
+${colorgreen}$PROG status               $cr Same as above
+${colorgreen}$PROG -t                   $cr Show service status + pstree output
+${colorgreen}$PROG status -t            $cr Same as above
+${colorgreen}$PROG status tty           $cr Show service status for any service that matches tty*
+${colorgreen}$PROG check uuidd          $cr Check the uuidd svc, wrapper for 'nitroctl check uuidd'
+${colorgreen}$PROG restart sshd         $cr Restart sshd
+${colorgreen}$PROG -u                   $cr Show service status in ~/.config/nitro/
+${colorgreen}$PROG -u restart ssh-agent $cr Restart ssh-agent in ~/.config/nitro/ssh-agent
+EOF
+}
+
+verbose() {
+	if ((verbosity > 0)); then
+		echo '>' "$colorgray" "$@" "$colorreset" >&2
+	fi
+}
+
+# print the logo with brackets colorized
+getlogo() {
+	printf '%s[%s%s%s]%s' \
+	    "$colorcyan" \
+	    "$colormagenta" "$PROG" \
+	    "$colorcyan" \
+	    "$colorreset"
+}
+
+# prints a message
+msg() {
+	local logo
+
+	logo=$(getlogo)
+
+	echo "$logo" "$colorblue$*$colorreset"
+}
+
+# prints a fatal message and exists
+fatal() {
+	echo "${colorred}FATAL:" "$@" "$colorreset"
+	exit 2
+}
+
+# rmsg - same as msg but colorized based on return status passed via $1
+rmsg() {
+	local code=$1
+	local logo
+	local statuscolor
+
+	shift
+
+	logo=$(getlogo)
+
+	if ((code == 0)); then
+		statuscolor=$colorgreen
+	else
+		statuscolor=$colorred
+	fi
+
+	echo "$logo" "$statuscolor$*$colorreset"
+}
+
+disable_message() {
+	local svc=$1
+
+	echo "service $svc disabled by user $USER on $(date)"
+}
+
+# process the status of a single service
+process_service() {
+	local svc="$1"
+	local state="$2"
+	local pid="$3"
+	local tim="$4"
+	local pid when tim msg char err running msgcolor runningcolor \
+	    statecolor prog down
+
+	# get service state, or set error messages
+	err=
+	msg=$(human "$tim")
+
+	# if the service is running (wants up or wants down)
+	if down=$(cat "$SVDIR/$svc/down" 2>&1); then
+		verbose "service down: $down"
+		running='false'
+	else
+		running='true'
+	fi
+
+	# color time if the service hasn't been up long
+	if ((tim < 5)); then
+		msgcolor=$colorred
+	elif ((tim < 30)); then
+		msgcolor=$coloryellow
+	else
+		msgcolor=$colorgray
+	fi
+
+	# sanity check pid
+	if [[ -n $pid ]] && ! [[ $pid =~ $num_re ]]; then
+		fatal "invalid pid: '$pid'"
+	fi
+
+	# figure out character and color to use for status
+	if [[ -n $err ]]; then
+		char=$charunknown
+		statecolor=$coloryellow
+	elif [[ ${state%-*} == 'UP' ]]; then
+		char=$charup
+		statecolor=$colorgreen
+	else
+		char=$chardown
+		statecolor=$colorred
+	fi
+
+	# figure out running color
+	if [[ $running == 'true' ]]; then
+		runningcolor=$colorgreen
+	elif [[ $running == 'false' ]]; then
+		runningcolor=$colorred
+	else
+		runningcolor=$coloryellow
+	fi
+
+	# msg color
+	if [[ -z $msgcolor ]]; then
+		msgcolor=$colorgray
+	fi
+
+	# figure out program name
+	if [[ -n $pid ]]; then
+		IFS= read -d $'\0' -r prog _ < /proc/$pid/cmdline
+		prog=${prog##*/}
+		prog=${prog:0:17}
+	fi
+
+	# print service line
+	printf '%s%s%s %s%-20s%s %s%-8s%s %s%-5s%s %s%-8s%s %s%-20s%s %s%s%s\n' \
+	    "$statecolor"   "$char"           "$colorreset" \
+	    "$colorreset"   "$svc"            "$colorreset" \
+	    "$statecolor"   "$state"          "$colorreset" \
+	    "$runningcolor" "${running:----}" "$colorreset" \
+	    "$colormagenta" "${pid:----}"     "$colorreset" \
+	    "$colorgreen"   "${prog:----}"    "$colorreset" \
+	    "$msgcolor"     "$msg"            "$colorreset"
+
+	# optionally print the pstree
+	if $tree; then
+		if [[ -n $pid ]] && ((pid > 0)); then
+			echo "$colorgray"
+			pstree $topts "$pid"
+		fi
+		echo "$colorreset"
+	fi
+}
+
+filtered_services(){
+	local line svc filter="$1"
+	nitroctl list | sort -k2 | while read line; do
+		line=($line)
+		svc="${line[1]}"
+		if [ "${svc%@}" != "${svc}" ]; then
+			continue
+		fi
+		if [ -z "${filter}" || "${svc}" = "${filter}" ]; then
+			echo ${svc}
+		fi
+	done
+}
+
+# handle the status subcommand
+do_status() {
+	local d logo now filter=$1
+	local line svc pid tim st count=0 services table
+
+	table=$(
+		nitroctl list | sort -k2 | while read line; do
+			line=($line)
+			svc="${line[1]}"
+			if [[ -n $filter && $svc != *"$filter"* ]]; then
+				if [[ $verbosity != 1 ]]; then
+					verbose "filtering out '$svc' because it does not match '$filter'"
+				fi
+				continue
+			fi
+			st=${line[0]}
+			if [ "$st" = "UP" ]; then
+				pid="${line[3]%')'}"
+				st="$st-${line[5]%')'}"
+				tim="${line[6]%'s'}"
+			else
+				pid=""
+				st="$st-${line[3]%')'}"
+				tim="${line[4]%'s'}"
+			fi
+			process_service "$svc" "$st" "$pid" "$tim"
+		done
+		)
+
+	# print title if verbose
+	if ((verbosity > 0)); then
+		count="$(echo "$table" | wc -l)"
+		if ((count == 1)); then
+			services='service'
+		else
+			services='services'
+		fi
+
+		printf '%s> %s %s-%s %s%s %s(%s%s%s)%s %s-%s %s%d %s%s\n' \
+		    "$colorgray" "$logo" \
+		    "$colorgray" "$colorreset" \
+		    "$colorblue" "$HOSTNAME" \
+		    "$colorcyan" "$colorgreen" "${PWD/#$HOME/\~}" \
+		    "$colorcyan" "$colorreset" \
+		    "$colorgray" "$colorreset" \
+		    "$colorblue" "$count" "$services" "$colorreset"
+		echo
+	fi
+
+	if [ -n "$table" ]; then
+		# table header
+		if $header; then
+			printf '%s  %-20s %-8s %-5s %-8s %-20s %s%s\n' \
+				"$colorbold" \
+				'SERVICE' 'STATE' 'LIVE' 'PID' 'COMMAND' 'TIME' \
+				"$colorreset"
+		fi
+
+		echo "$table"
+		echo
+	fi
+}
+
+# handle any other subcommand
+do_nitroctl() {
+	#msg "Running nitroctl command (SVDIR=$SVDIR nitoctl $@):"
+	nitroctl ${_nv} "$@"
+	local ret=$?
+	rmsg "$ret" "[nitroctl $@], exit code: $ret"
+	return "$ret"
+}
+
+#create a user framework
+create_user(){
+	if [ "$USERMODE" = "1" ]; then
+		echo "!!!!! cannot create-user in usermode"
+		exit 1
+	fi
+	local u="$1"
+	if ! id "$u" &> /dev/null ; then
+		echo "!!!!! no such user as '$u'"
+		exit 1
+	fi
+	local dst="$FLDIR/user@$u"
+	if [ -e "$dst" ]; then
+		echo "!!!!! '$dst' already exists"
+		exit 2
+	fi
+	ln -s "user@" "$dst"
+}
+delete_user(){
+	if [ "$USERMODE" = "1" ]; then
+		echo "!!!!! cannot $2 in usermode"
+		exit 1
+	fi
+	local u="$1"
+	if ! id "$u" &> /dev/null ; then
+		fatal "no such user as '$u'"
+	fi
+	local dst="$FLDIR/user@$u"
+	if [ ! -e "$dst" ]; then
+		echo "!!!!! '$dst' does not exist"
+		exit 2
+	fi
+	rm "$dst"
+	if [ "$2" = "destroy-user" ]; then
+		local h="$(eval echo "~$u")"
+		rm -rf $h/.config/nitro
+	fi
+}
+
+color_arg=
+header=true
+tree=false
+do_usage=-1
+verbosity=0
+slow=false
+msg=""
+if [ "$(whoami)" != "root" ]; then
+	do_sudo=1
+	args=("$@")
+fi
+parse(){
+	getopt -o 'c:d:hNt::uvV' --name "$PROG" -- "$@"
+}
+if ! params="$(parse "$@" 2>/dev/null)"; then
+	params="$(parse "$@" 2>&1 1>/dev/null)"
+	fatal "$params"
+fi
+eval set -- "$params"
+while true; do
+	case "${1#-}" in
+		(c) color_arg="$2";shift;;
+		(d) SVDIR="$2";shift;;
+		(h) do_usage=0;;
+		(N) header=false;;
+		(s) slow=trie;;
+		(t) tree=true;
+			topts=""
+			n=${#2}
+			for ((i=0;i<$n;i++)); do
+				c="${2:i:1}"
+				if [[ "aAcCgGlnpsStTuUz" == *$c* ]]; then
+					topts="$topts -$c"
+				else
+					echo "!!!!! bad -t option '$c'" 1>&2
+					exit 2
+				fi
+			done
+			[ -z "$topts" ] && topts="-ac"
+			shift
+			cmd='status';;
+		(u) SVDIR=~/.config/nitro/services
+			USERMODE="1"
+			export NITRO_SOCK="$HOME/.config/nitro/run/nitro.sock"
+			do_sudo=0
+			;;
+		(v)	((verbosity++));;
+		(V)	echo "$NSM_VERSION"; exit 0;;
+		(-) shift;break;;
+		(*) do_usage=1;msg = "not implemented '$1'";;
+	esac
+	shift
+done
+
+
+if ((verbosity>1)); then
+	_nv="-v"
+else
+	_nv=""
+fi
+if false; then
+	echo "##### start $(whoami)"
+	echo "color_arg=$color_arg"
+	echo "SVDIR=$SVDIR"
+	echo "header=$header"
+	echo "tree=$tree"
+	echo "do_sudo=$do_sudo"
+	echo "verbosity=$verbosity"
+	echo "_nv=$_nv"
+	i=0;for x in "$@"; do i=$((i+1));echo "arg $i = '$x'"; done
+fi
+
+if [ -n "$NO_COLOR" ] && [ -z "$color_arg" ]
+then
+	setcolors off
+elif [ -n "$color_arg" ]
+then
+	setcolors "$color_arg"
+else
+	setcolors auto
+fi
+
+# we wait until the colors are optionally set to output the usage message
+if ((do_usage > -1)); then
+	usage
+	[ -n "$msg" ] && fatal "$msg" || exit "$do_usage"
+fi
+
+if [ "$do_sudo" = "1" ]; then
+	exec sudo "${0}" "${args[@]}" -d "$SVDIR"
+fi
+
+# move to the service directory
+cd "$(dirname $SVDIR)" || fatal "failed to enter dir: $(dirname $SVDIR)"
+
+# figure out 'cmd' command
+cmd=${1:-status}
+shift
+
+#force terminal '/'
+SVDIR="${SVDIR%/}"
+FLDIR="$(dirname ${SVDIR})/sv"
+LVLSDIR="$(dirname "$SVDIR")/levels"
+
+relpath(){
+	echo "$(realpath -m --relative-to="$2" "$1")"
+}
+
+link-state(){
+	if [ -e "$SVDIR/$svc" ]; then
+		echo "enabled"
+	elif [ -e "$FLDIR/$svc" ]; then
+		echo "disabled"
+	else
+		echo "unknown"
+	fi
+}
+
+case "$cmd" in
+	(status)
+		do_status "$@"
+		;;
+	(raw-status)
+		nitroctl list "$@"
+		;;
+	(install|remove)
+		do_install_remove "$cmd" "$@"
+		;;
+	(runlevel)
+		if [ -d "${LVLSDIR}/$1" ]; then
+			rm -f "${SVDIR%/}"
+			ln -sf "levels/$1" "${SVDIR}"
+			do_nitroctl rescan
+		else
+			echo "No such level '$1'" 1>&2
+		fi
+		;;
+	(runlevels)
+		echo "Runlevels"
+		for x in "${LVLSDIR%/}"/*; do
+			if [ ! -h "$x" ]; then
+				if [ "$(realpath $SVDIR)" = "$(realpath $x)" ]; then
+					star="-->"
+				else
+					star="   "
+				fi
+				echo "  $star$(basename $x)"
+			fi
+		done
+		;;
+	(enable)
+		for svc in "$@"; do
+			if ! [[ $svc =~ $svc_re ]]; then
+				fatal "unexpected characters in name: '$svc'"
+			fi
+			src="$FLDIR/$svc"
+			if [ ! -d "$src" ]; then
+				fatal "!!!!! '$svc' is not a subfolder of $FLDIR"
+			fi
+		done
+		for svc in "$@"; do
+			src="$FLDIR/$svc"
+			dst="$SVDIR/$svc"
+			[ -e "$dst" ] && rm -f "$dst"
+			[ -f "$src/down" ] && rm -f "$src/down"
+			ln -sf "$(relpath "$FLDIR" "$SVDIR")/$svc" "$dst"
+			verbose "##### $svc enabled"
+		done
+		exec "${0}" rescan -d "$SVDIR"
+		;;
+	(disable)
+		for svc in "$@"; do
+			if ! [[ $svc =~ $svc_re ]]; then
+				fatal "unexpected characters in name: '$svc'"
+				continue
+			fi
+			dst="$SVDIR/$svc"
+			if [ ! -e "$dst" ]; then
+				verbose "!!!!! $svc not enabled"
+			else
+				nitroctl ${_nv} stop "$svc"
+				rm -f "$dst"
+				src="$FLDIR/$svc"
+				[ -f "$src/down" ] && rm -f "$src/down"
+				verbose "##### $svc disabled" || true
+			fi
+		done
+		exec "${0}" rescan -d "$SVDIR"
+		;;
+	(is-active)
+		for svc in "$@"; do
+			if ! [[ $svc =~ $svc_re ]]; then
+				rmsg -1 "unexpected characters in name: '$svc'" >&2
+				continue
+			fi
+			tmp=$(link-state "$svc")
+			if [ "$tmp" = "enabled" ]; then
+				if nitroctl ${_nv} check "$svc"; then
+					echo 'active'
+				else
+					echo 'inactive'
+				fi
+			else
+				echo "$tmp"
+			fi
+		done
+		exit
+		;;
+	(is-enabled)
+		for svc in "$@"; do
+			if ! [[ $svc =~ $svc_re ]]; then
+				rmsg -1 "unexpected characters in name: '$svc'" >&2
+				continue
+			fi
+			link-state "$svc"
+		done
+		;;
+	(list-enabled)
+		for svc in  "$SVDIR"/*; do
+			svc="$(basename "$svc")"
+			case "$svc" in
+				(SYS|*@) ;;
+				(*) echo "$(basename "$svc")";;
+			esac
+		done
+		;;
+	(list-available)
+		for svc in  "$FLDIR"/*; do
+			svc="$(basename "$svc")"
+			[ ! -e "$SVDIR/$svc" ] && echo "$svc" || true
+		done
+		;;
+	(pidof)
+		for svc in "$@"; do
+			pid="$(nitroctl pidof $svc 2>/dev/null)"
+			[ -n "$pid" ] && echo "$pid" || echo "unknown"
+		done
+		;;
+	(create-user)
+			for user in "$@"; do create_user "$user"; done
+			;;
+	(delete-user|destroy-user)
+			for user in "$@"; do delete_user "$user" "$cmd"; done
+			;;
+	(start|stop|fast-start|restart|up|down)
+		if $slow; then
+			L=""
+			B=""
+			for svc in "$@"; do
+				if nitroctl ${_nv} $cmd "$svc" >/dev/null 2>&1; then
+					L="$L $svc"
+				else
+					B="$B $svc"
+				fi
+			done
+			if [ -n "$L" ]; then rmsg 0 "SUCCESS ${cmd}$L"; fi
+			if [ -n "$B" ]; then rmsg 1 "FAILED ${cmd}$B" 1>&2; fi
+		else
+			echo nitroctl ${_nv} $cmd "$@"
+			if nitroctl ${_nv} $cmd "$@"; then
+				rmsg 0 "SUCCESS"
+			else
+				rmsg 1 "FAILED" 1>&2
+			fi
+		fi
+		;;
+
+	(*)
+		if $tree; then
+			rmsg -1 "-t can only be specified with 'status'"
+			exit 1
+		fi
+		do_nitroctl "$cmd" "$@"
+		;;
+esac

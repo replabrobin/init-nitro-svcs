@@ -1,0 +1,12 @@
+pkgbase = nitro-nsm
+	pkgdesc = Nitro service manager
+	pkgver = 0.9.0
+	pkgrel = 1
+	url = https://github.com/replabrobin/init-nitro-svcs
+	arch = any
+	license = MIT
+	depends = init-nitro
+	source = nsm
+	b2sums = 708e0cb1cc00a05c89c5cfef72876878e9fcc229ae7ae1b6793d35aeec0840a9a0ecbd4778453b6fc9ff89042d21dbefcf268ba74f3ead86539c00f1839db864
+
+pkgname = nitro-nsm
