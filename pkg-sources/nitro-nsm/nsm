@@ -607,7 +607,7 @@ case "$cmd" in
 		do_install_remove "$cmd" "$@"
 		;;
 	(runlevel)
-		if [ -d "${LVLSDIR}/$1" ]; then
+		if [ -n "$1" -a -d "${LVLSDIR}/$1" ]; then
 			rm -f "${SVDIR%/}"
 			ln -sf "levels/$1" "${SVDIR}"
 			do_nitroctl rescan
