@@ -4,7 +4,7 @@
 
 # This version v0.0.0 by Robin Becker
 
-NSM_VERSION='0.3.0'
+NSM_VERSION='0.9.2'
 
 # nitro structure
 #
@@ -435,7 +435,7 @@ do_nitroctl() {
 	#msg "Running nitroctl command (SVDIR=$SVDIR nitoctl $@):"
 	nitroctl ${_nv} "$@"
 	local ret=$?
-	rmsg "$ret" "[nitroctl $@], exit code: $ret"
+	[ "$quiet" != "1" ] && rmsg "$ret" "[nitroctl $@], exit code: $ret" || true
 	return "$ret"
 }
 
@@ -484,13 +484,14 @@ tree=false
 do_usage=-1
 verbosity=0
 slow=false
+quiet="${QUIET:-0}"
 msg=""
 if [ "$(whoami)" != "root" ]; then
 	do_sudo=1
 	args=("$@")
 fi
 parse(){
-	getopt -o 'c:d:hNt::uvV' --name "$PROG" -- "$@"
+	getopt -o 'c:d:hNsqt::uvV' --name "$PROG" -- "$@"
 }
 if ! params="$(parse "$@" 2>/dev/null)"; then
 	params="$(parse "$@" 2>&1 1>/dev/null)"
@@ -503,7 +504,8 @@ while true; do
 		(d) SVDIR="$2";shift;;
 		(h) do_usage=0;;
 		(N) header=false;;
-		(s) slow=trie;;
+		(s) slow=true;;
+		(q) quiet=1;;
 		(t) tree=true;
 			topts=""
 			n=${#2}
@@ -532,12 +534,13 @@ while true; do
 	shift
 done
 
-
 if ((verbosity>1)); then
 	_nv="-v"
 else
 	_nv=""
 fi
+[ "$quiet" = "1" ] && _a="-q" || true
+[ "$slow" = "1" ] && _a="$_a -s" || true
 if false; then
 	echo "##### start $(whoami)"
 	echo "color_arg=$color_arg"
@@ -546,6 +549,8 @@ if false; then
 	echo "tree=$tree"
 	echo "do_sudo=$do_sudo"
 	echo "verbosity=$verbosity"
+	echo "slow=$slow"
+	echo "quiet=$quiet"
 	echo "_nv=$_nv"
 	i=0;for x in "$@"; do i=$((i+1));echo "arg $i = '$x'"; done
 fi
@@ -567,7 +572,7 @@ if ((do_usage > -1)); then
 fi
 
 if [ "$do_sudo" = "1" ]; then
-	exec sudo "${0}" "${args[@]}" -d "$SVDIR"
+	exec sudo "${0}" "${args[@]}" -d "$SVDIR" ${_a}
 fi
 
 # move to the service directory
@@ -646,7 +651,7 @@ case "$cmd" in
 			ln -sf "$(relpath "$FLDIR" "$SVDIR")/$svc" "$dst"
 			verbose "##### $svc enabled"
 		done
-		exec "${0}" rescan -d "$SVDIR"
+		exec "${0}" rescan -d "$SVDIR" ${_a}
 		;;
 	(disable)
 		for svc in "$@"; do
@@ -665,7 +670,7 @@ case "$cmd" in
 				verbose "##### $svc disabled" || true
 			fi
 		done
-		exec "${0}" rescan -d "$SVDIR"
+		exec "${0}" rescan -d "$SVDIR" ${_a}
 		;;
 	(is-active)
 		for svc in "$@"; do
