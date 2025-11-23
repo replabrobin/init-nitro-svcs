@@ -1,0 +1,26 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='mongod-nitro'
+pkgver='20180314'
+pkgrel='5'
+pkgdesc='nitro service script for mongod'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+
+provides=(
+	'init-mongod'
+	)
+
+depends=(
+	'mongodb'
+	'nitro'
+	)
+
+source=(
+	mongod.run
+	)
+b2sums=('4fe126699caaa3c510ddf433cef89e429c9f9f8b6bd0ca8b02af34124dcc340331fe647636f07c99ba9149a575489941b94df8403982fd20a63ed714109cf42c')
+package() {
+	install -Dm755 "$srcdir"/mongod.run "$pkgdir/etc/nitro/sv/mongod/run"
+}
