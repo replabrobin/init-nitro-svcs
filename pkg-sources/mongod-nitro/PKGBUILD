@@ -1,7 +1,7 @@
 # Maintainer: replabrobin <replabrobin@gmail.com>
 pkgname='mongod-nitro'
-pkgver='20180314'
-pkgrel='5'
+pkgver='20251123'
+pkgrel='1'
 pkgdesc='nitro service script for mongod'
 arch=('any')
 url="https://github.com/replabrobin/init-nitro-svcs"
