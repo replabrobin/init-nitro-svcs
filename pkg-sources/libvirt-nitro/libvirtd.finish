@@ -1,0 +1,8 @@
+#!/bin/sh
+for x in virtlockd virtlogd libvirtd; do
+	if nitroctl check $x; then
+		nitroctl stop $x
+		nsm disable $x
+	fi
+done
+

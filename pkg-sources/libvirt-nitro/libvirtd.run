@@ -1,4 +1,9 @@
 #!/bin/sh
 nitroctl check dbus >/dev/null || exit 1
 [ -f ./conf ] && . ./conf
+for x in virtlockd virtlogd; do
+	if ! nitroctl check $x >/dev/null 2>&1; then
+		nsm enable $x
+	fi
+done
 exec libvirtd $OPTS 2>&1
