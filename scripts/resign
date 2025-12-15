@@ -12,6 +12,7 @@ rm -f $(find "$repo" -name "$dbname".db\*)
 rm -f $(find "$repo" -name "$dbname".files\*)
 rm -f $(find "$repo" -name \*.sig)
 rm -f $(find "$repo" -name \*.html)
+rm -f $(find "$repo" -name \*.old)
 
 #hacking signage
 export GPG_TTY=$(tty)
