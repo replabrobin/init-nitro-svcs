@@ -23,6 +23,7 @@ for arepo in "$repo"/*; do
 	[ -z "$X" ] && continue
 	for x in ${X}; do
 		gpg --output "$x.sig" --detach-sig "$x"
+		touch -r "$x" "$x.sig"
 	done
 	repo-add -R -s $arepo/$dbname.db.tar.zst ${X}
 done
