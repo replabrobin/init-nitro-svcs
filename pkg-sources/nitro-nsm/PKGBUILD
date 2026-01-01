@@ -1,6 +1,6 @@
 # Maintainer: replabrobin <replabrobin@gmail.com>
 pkgname=nitro-nsm
-pkgver=0.9.2
+pkgver=0.9.3
 pkgrel=1
 pkgdesc="Nitro service manager"
 arch=(any)
@@ -8,7 +8,7 @@ url="https://github.com/replabrobin/init-nitro-svcs"
 license=('MIT')
 depends=('init-nitro')
 source=("nsm")
-b2sums=('a09dd1da07655be9088d3b7bd666b4cbcbf994335f53e9b46ec01c84f9062ae9add38dfbb398b50b1f0e13a72ddd14f84bc99bfb61622e0dc11433b55c487f0d')
+b2sums=('416d4136c350cf057fa74e25639a1c917b3151ce843cfdd2dc363fa5c091beed680df7ae26f12b5f70c01abfdd394427900037359636379f484d013636c6d15d')
 
 package() {
   install -Dm755 nsm -t "$pkgdir/usr/bin"

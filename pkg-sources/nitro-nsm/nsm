@@ -4,7 +4,7 @@
 
 # This version v0.0.0 by Robin Becker
 
-NSM_VERSION='0.9.2'
+NSM_VERSION='0.9.3'
 
 # nitro structure
 #
@@ -663,7 +663,10 @@ case "$cmd" in
 			if [ ! -e "$dst" ]; then
 				verbose "!!!!! $svc not enabled"
 			else
-				nitroctl ${_nv} stop "$svc"
+				case "$svc" in
+					(*@) ;;
+					(*) nitroctl ${_nv} stop "$svc";;
+				esac
 				rm -f "$dst"
 				src="$FLDIR/$svc"
 				[ -f "$src/down" ] && rm -f "$src/down"
