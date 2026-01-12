@@ -1,7 +1,7 @@
 # Maintainer: replabrobin <replabrobin@gmail.com>
 pkgname='chrony-nitro'
 pkgver='2026012'
-pkgrel='3'
+pkgrel='1'
 pkgdesc='nitro service script for chrony'
 arch=('any')
 url="https://github.com/replabrobin/init-nitro-svcs"
