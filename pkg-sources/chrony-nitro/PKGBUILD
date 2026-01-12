@@ -1,6 +1,6 @@
 # Maintainer: replabrobin <replabrobin@gmail.com>
 pkgname='chrony-nitro'
-pkgver='20200907'
+pkgver='2026012'
 pkgrel='3'
 pkgdesc='nitro service script for chrony'
 arch=('any')
@@ -21,7 +21,7 @@ depends=(
 source=(
 	chrony.run
 	)
-b2sums=('5326af330493ab20f3871c6b8999fd10ab3b5c5777ab6d04b5d3dc1fd920cd03f0811707e11f4a0c36f4b245c1c8132fb7e0171fcf95de805ebf5e83232c78cc')
+b2sums=('8056f514f5100ac26d4563f40cd8618b2e3c856fba78535f6302e6714553b11210d41b4c649893219f515e87b131678510f13095e59bb719c47febe5b03d54f9')
 package() {
 	install -Dm755 "$srcdir"/chrony.run "$pkgdir/etc/nitro/sv/chrony/run"
 }

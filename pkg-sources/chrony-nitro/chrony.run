@@ -1,3 +1,4 @@
 #!/bin/sh
+[ "$(ip route | awk '/^default/{if(($3!="")&&($5!="")){print "2";exit}}')" = "2" ] || exit 1
 install -d -m750 -o chrony -g chrony /var/run/chrony
 exec chronyd -n -u chrony
