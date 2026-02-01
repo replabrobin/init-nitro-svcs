@@ -105,7 +105,7 @@ unlock_devices() {
 }
 
 lock_devices() {
-    for file in /sys/block/dm-*; do
+    for file in $(compgen -G '/sys/block/dm-*'); do
         IFS=- read -r dm_type _ _ _ < "$file/dm/uuid"
 
         # --deferred used to prevent hang on FDE systems

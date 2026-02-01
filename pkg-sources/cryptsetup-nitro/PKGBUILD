@@ -1,6 +1,6 @@
 # Maintainer: replabrobin <replabrobin@gmail.com>
 pkgname='cryptsetup-nitro'
-pkgver='20220813'
+pkgver='20260201'
 pkgrel='1'
 pkgdesc='nitro service script for cryptsetup'
 arch=('any')
@@ -19,7 +19,7 @@ optdepends=(
 	'lvm2-nitro: LVM support for encrypted filesystems'
 	)
 source=('cryptsetup')
-b2sums=('5a37ad9d5f007e431d00afae6075c965aa802eb6e6ef2e8f642a510e45f3062b10fba859652f4e88b533ed08ec5014bfb1357a0caa12461a5a8bdf0f061aeda6')
+b2sums=('185faff6d955d3b3444f312c8199039eb05c020e8e46b5942a7da1d51885f411dad9e45bb2cf7afc8f05ebdd25d32041acae99fb2e6c511ea0944624bdb537a1')
 package() {
     install -Dm755 "${srcdir}/cryptsetup" "${pkgdir}/usr/lib/rc/sv.d/cryptsetup"
 
