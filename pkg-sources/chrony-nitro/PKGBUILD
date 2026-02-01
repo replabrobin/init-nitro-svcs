@@ -1,6 +1,6 @@
 # Maintainer: replabrobin <replabrobin@gmail.com>
 pkgname='chrony-nitro'
-pkgver='2026012'
+pkgver='20260112'
 pkgrel='1'
 pkgdesc='nitro service script for chrony'
 arch=('any')
