@@ -1,0 +1,26 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='artix-live-nitro'
+pkgver='20260228'
+pkgrel='1'
+pkgdesc='Artix live nitro init scripts'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+#install='pacman-init-nitro.install'
+provides=('init-artix-live')
+conflicts=('init-artix-live')
+depends=('artix-live-base' 'pacman-init-nitro')
+source=(
+	nitro-live
+	)
+b2sums=('b65927e43459dcb536498d6e0fd0a01ceeacca86dd8940962991fdda11065ec04035744a2f84087ecede60c974038bc08917241c7bce18dddc5bc046957dcfcd')
+package() {
+	local FMODE="-m0644" DMODE="-dm0755" BMODE="-m0755"
+	install "$DMODE" "${pkgdir}/etc/rc/sysinit"
+	install "$DMODE" "${pkgdir}/usr/lib/rc/sv.d"
+	install "$BMODE" nitro-live "${pkgdir}/usr/lib/rc/sv.d/live"
+	ln -sf "/usr/lib/rc/sv.d/live" "${pkgdir}/etc/rc/sysinit/98-live"
+    install -d "${pkgdir}/etc/nitro/levels/default"
+	ln -sf "../../sv/pacman-init" "${pkgdir}/etc/nitro/levels/default/pacman-init"
+}

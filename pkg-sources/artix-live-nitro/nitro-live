@@ -1,0 +1,15 @@
+#!/bin/bash
+
+. /usr/lib/rc/functions
+
+case "$1" in
+    start)
+        stat_busy "Initializing artix live system"
+        artix-live #|| stat_die
+        add_daemon live
+        stat_done
+        ;;
+    *)
+        echo "usage: $0 {start}"
+        ;;
+esac
