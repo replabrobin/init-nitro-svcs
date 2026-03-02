@@ -1,7 +1,7 @@
 # Maintainer: replabrobin <replabrobin@gmail.com>
 pkgname='modemmanager-nitro'
-pkgver='20221204'
-pkgrel='2'
+pkgver='20260302'
+pkgrel='1'
 pkgdesc='nitro service script for modemmanager'
 arch=('any')
 url="https://github.com/replabrobin/init-nitro-svcs"

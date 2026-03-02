@@ -1,6 +1,6 @@
 # Maintainer: replabrobin <replabrobin@gmail.com>
 pkgname='gdm-nitro'
-pkgver='20220815'
+pkgver='20260302'
 pkgrel='1'
 pkgdesc='nitro service script for gdm'
 arch=('any')

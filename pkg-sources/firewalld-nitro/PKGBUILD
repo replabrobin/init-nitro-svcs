@@ -1,7 +1,7 @@
 # Maintainer: replabrobin <replabrobin@gmail.com>
 pkgname='firewalld-nitro'
-pkgver='20200623'
-pkgrel='2'
+pkgver='20260302'
+pkgrel='1'
 pkgdesc='nitro service script for firewalld'
 arch=('any')
 url="https://github.com/replabrobin/init-nitro-svcs"

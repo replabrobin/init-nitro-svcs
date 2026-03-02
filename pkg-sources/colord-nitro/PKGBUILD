@@ -1,6 +1,6 @@
 # Maintainer: replabrobin <replabrobin@gmail.com>
 pkgname='colord-nitro'
-pkgver='20220525'
+pkgver='20260302'
 pkgrel='1'
 pkgdesc='nitro service script for colord'
 arch=('any')

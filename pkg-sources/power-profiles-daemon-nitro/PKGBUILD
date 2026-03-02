@@ -1,6 +1,6 @@
 # Maintainer: replabrobin <replabrobin@gmail.com>
 pkgname='power-profiles-daemon-nitro'
-pkgver='20220503'
+pkgver='20260302'
 pkgrel='1'
 pkgdesc='nitro service script for power-profiles-daemon'
 arch=('any')

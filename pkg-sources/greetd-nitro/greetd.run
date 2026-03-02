@@ -1,5 +1,5 @@
 #!/bin/sh -e
 
-sv start logind >/dev/null
+pgrep --quiet elogind-daemon || exit 1
 
 exec /usr/bin/greetd 2>&1

@@ -1,7 +1,7 @@
 # Maintainer: replabrobin <replabrobin@gmail.com>
 pkgname='iwd-nitro'
-pkgver='20220305'
-pkgrel='2'
+pkgver='20260302'
+pkgrel='1'
 pkgdesc='nitro service script for iwd'
 arch=('any')
 url="https://github.com/replabrobin/init-nitro-svcs"

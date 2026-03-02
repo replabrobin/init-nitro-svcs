@@ -1,6 +1,6 @@
 #!/bin/sh
 set -e
 
-sv start dbus >/dev/null
+nitroctl check dbus || exit 1
 
 exec /usr/lib/power-profiles-daemon -v 2>&1
