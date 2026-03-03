@@ -1,6 +1,6 @@
 # Maintainer: replabrobin <replabrobin@gmail.com>
 pkgname='elogind-nitro'
-pkgver='20231119'
+pkgver='20260303'
 pkgrel='1'
 pkgdesc='nitro service script for elogind'
 arch=('any')

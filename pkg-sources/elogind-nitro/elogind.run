@@ -1,3 +1,14 @@
 #!/bin/sh -e
+#see if elogind already started
+if [ -f /run/elogind.pid ]; then
+	readonly PID="$(cat /run/elogind.pid)"
+	if [ -n "$PID" ]; then 
+		case "`ps -q "$PID" -o comm=`" in
+			(elogind-*|elogind)
+				exec pause
+				;;
+		esac
+	fi
+fi
 nitroctl start dbus >/dev/null
 exec /usr/lib/elogind/elogind
