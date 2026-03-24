@@ -22,7 +22,7 @@ source=(
 	alsa.setup
 	)
 b2sums=('76da57c8e2f7a76022acab2adce3c58a679bae52ab2aa723cc67b68f9ad8c1161de31967a9809a50a7d6f4f650f9cbe367532710e53638c82351683dc9263cfc'
-        '81ad5890c080bc23da03c4050672883c92d9172128cb7166ed54b53a33f3f817a07b89f29e1f37c5dfa359d5f70ec492561bb7d105c7b5b4222e2a97041ea6de')
+        '88a275ccc7b38f14dd3df13d4eddefa267d053843b2ba967019bccb915adf70209c6cc217b7c6c5f43cb4555bb244ac81d80b86f1748d27b6a4270fe781c3253')
 package() {
 	install -Dm755 "$srcdir"/alsa.finish "$pkgdir/etc/nitro/sv/alsa/finish"
 	install -Dm755 "$srcdir"/alsa.setup "$pkgdir/etc/nitro/sv/alsa/setup"

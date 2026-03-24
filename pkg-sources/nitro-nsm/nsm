@@ -307,6 +307,10 @@ process_service() {
 	elif [[ ${state%-*} == 'UP' ]]; then
 		char=$charup
 		statecolor=$colorgreen
+	elif [[ ${state%-*} == 'ONESHOT' ]]; then
+		char=$charup
+		statecolor=$colorgreen
+		state='ONESHOT'
 	else
 		char=$chardown
 		statecolor=$colorred
