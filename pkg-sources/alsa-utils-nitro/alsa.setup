@@ -1,0 +1,6 @@
+#!/bin/sh
+if ! msg=`alsactl nrestore 2>&1`; then
+	[ -n "$msg" ] && msg="
+$msg"
+	logger -t "alsa" "setup failed${msg}" || true
+fi
