@@ -76,6 +76,7 @@ for x in "$build"/PKGBUILD; do
 						exit 2
 					fi
 				done
+				cp -pr "$build/PKGBUILD" "$src"
 			else
 				echo "!!!!! $bn: makepkg failed" 1>&2
 			fi
