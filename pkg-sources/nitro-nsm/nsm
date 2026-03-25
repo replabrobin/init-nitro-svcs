@@ -279,9 +279,12 @@ process_service() {
 	msg=$(human "$tim")
 
 	# if the service is running (wants up or wants down)
-	if down=$(cat "$SVDIR/$svc/down" 2>&1); then
-		verbose "service down: $down"
-		running='false'
+	if down=$(cat "$SVDIR/$svc/error" 2>&1); then
+		verbose "service down: ${down:-error}"
+		running='ERROR'
+	elif down=$(cat "$SVDIR/$svc/down" 2>&1); then
+		verbose "service down: ${down:-down}"
+		running='DOWN'
 	else
 		running='true'
 	fi
@@ -317,13 +320,11 @@ process_service() {
 	fi
 
 	# figure out running color
-	if [[ $running == 'true' ]]; then
-		runningcolor=$colorgreen
-	elif [[ $running == 'false' ]]; then
-		runningcolor=$colorred
-	else
-		runningcolor=$coloryellow
-	fi
+	case "$running" in
+		(true) runningcolor=$colorgreen;;
+		(false|DOWN|ERROR) runningcolor=$colorred;;
+		(*) runningcolor=$coloryellow;;
+	esac
 
 	# msg color
 	if [[ -z $msgcolor ]]; then
@@ -651,7 +652,7 @@ case "$cmd" in
 			src="$FLDIR/$svc"
 			dst="$SVDIR/$svc"
 			[ -e "$dst" ] && rm -f "$dst"
-			[ -f "$src/down" ] && rm -f "$src/down"
+			rm -f "$src"/{down,error}
 			ln -sf "$(relpath "$FLDIR" "$SVDIR")/$svc" "$dst"
 			verbose "##### $svc enabled"
 		done
@@ -673,7 +674,7 @@ case "$cmd" in
 				esac
 				rm -f "$dst"
 				src="$FLDIR/$svc"
-				[ -f "$src/down" ] && rm -f "$src/down"
+				rm -f "$src"/{down,error}
 				verbose "##### $svc disabled" || true
 			fi
 		done
@@ -735,6 +736,9 @@ case "$cmd" in
 			for user in "$@"; do delete_user "$user" "$cmd"; done
 			;;
 	(start|stop|fast-start|restart|up|down)
+		for svc in "$@"; do 
+			rm -f "$FLDIR/$svc/"{down,error}
+		done
 		if $slow; then
 			L=""
 			B=""

@@ -1,6 +1,6 @@
 # Maintainer: replabrobin <replabrobin@gmail.com>
 pkgname='alsa-utils-nitro'
-pkgver='20260324'
+pkgver='20260325'
 pkgrel='1'
 pkgdesc='nitro service script for alsa-utils'
 arch=('any')
@@ -22,7 +22,7 @@ source=(
 	alsa.setup
 	)
 b2sums=('76da57c8e2f7a76022acab2adce3c58a679bae52ab2aa723cc67b68f9ad8c1161de31967a9809a50a7d6f4f650f9cbe367532710e53638c82351683dc9263cfc'
-        '88a275ccc7b38f14dd3df13d4eddefa267d053843b2ba967019bccb915adf70209c6cc217b7c6c5f43cb4555bb244ac81d80b86f1748d27b6a4270fe781c3253')
+        '12a6ebf4f2c3cccaa0ccf9c33fa21699f98b7a445e372ae8c80608a16d048f23ccc9dbbeed91773e3c96fa299efa648aa70c9c356aec37b85cc464b6eaca1098')
 package() {
 	install -Dm755 "$srcdir"/alsa.finish "$pkgdir/etc/nitro/sv/alsa/finish"
 	install -Dm755 "$srcdir"/alsa.setup "$pkgdir/etc/nitro/sv/alsa/setup"

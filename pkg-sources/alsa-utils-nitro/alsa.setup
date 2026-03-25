@@ -1,6 +1,9 @@
 #!/bin/sh
-if ! msg=`alsactl nrestore 2>&1`; then
-	[ -n "$msg" ] && msg="
-$msg"
-	logger -t "alsa" "setup failed${msg}" || true
+if ! m=`alsactl nrestore 2>&1`; then
+	exe=`readlink -f "$0"`
+	msg="$exe: setup failed"
+	[ -n "$m" ] && msg="$msg
+$m"
+	echo "$msg" > `dirname "$exe"`/error
+	logger -t "alsa" "$msg" || true
 fi
