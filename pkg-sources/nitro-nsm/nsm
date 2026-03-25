@@ -691,7 +691,11 @@ case "$cmd" in
 				if nitroctl ${_nv} check "$svc"; then
 					echo 'active'
 				else
-					echo 'inactive'
+					_st="$(nitroctl list "$svc" | cut -d' ' -f1)"
+					case "$_st" in
+						(ONESHOT) echo "oneshot";;
+						(*) echo "inactive";;
+					esac
 				fi
 			else
 				echo "$tmp"
