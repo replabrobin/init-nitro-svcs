@@ -1,7 +1,7 @@
 # Maintainer: replabrobin <replabrobin@gmail.com>
 pkgname='seatd-nitro'
 pkgver='20251110'
-pkgrel='1'
+pkgrel='2'
 pkgdesc='nitro service script for seatd'
 arch=('any')
 url="https://github.com/replabrobin/init-nitro-svcs"
@@ -19,12 +19,14 @@ depends=(
 	)
 
 source=(
-	seatd.check
 	seatd.run
+	seatd.notification-fd
 	)
-b2sums=('c09008dc114866a92531c6f1560fcbcdeef74efffcc56159113bfabe659531ef338bf4452f580e559496a7177862a6d5c934dbf8a78c5183b3c0d559bf5c24d2'
-        'd866dbb2709b1a76513e494bbd2c1a65892ff79520f00598e113c7196debc309c5abe1efa3ee989971ccd1dc7d696aac6b860c0c7edc5825559029c33d03278e')
+b2sums=(
+	'bc7df37191991d47c433eb4e0d15a354eb8df6255b166523165dfd10984131ef7e843529409c4c68b62953a6993f12c91cb191f0b06e47f25a92a20544e80d52'
+	'dfb4f0a38f1ba4731ab1e568b7ec45fa2977d1661b5d1b3a7bb79d49b900d7849a78ef67af65243b357d8a209f379e6f026f86efdce430256f6fadc8ce2b0a49'
+	)
 package() {
-	install -Dm755 "$srcdir"/seatd.check "$pkgdir/etc/nitro/sv/seatd/check"
 	install -Dm755 "$srcdir"/seatd.run "$pkgdir/etc/nitro/sv/seatd/run"
+	install -Dm666 "$srcdir"/seatd.notification-fd "$pkgdir/etc/nitro/sv/seatd/notification-fd"
 }
