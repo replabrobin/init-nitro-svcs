@@ -1,0 +1,16 @@
+diff -Naur openresolv.old/resolvconf.in openresolv/resolvconf.in
+--- openresolv.old/resolvconf.in	2026-04-04 10:05:12.100997548 -0600
++++ openresolv/resolvconf.in	2026-04-04 10:11:43.922971059 -0600
+@@ -433,6 +433,12 @@
+ 		   then
+ 			s6-svc -r /run/service/$1-srv
+ 		   fi'
++	elif [ -d /etc/nitro ] && [ -x /usr/bin/nitroctl ]; then
++		RESTARTCMD='
++		   if nitroctl pidof $1 >/dev/null 2>&1
++		   then
++			nitroctl restart $1
++		   fi'
+ 	elif [ -x /sbin/service ]; then
+ 		# Old RedHat
+ 		RCDIR=/etc/init.d
