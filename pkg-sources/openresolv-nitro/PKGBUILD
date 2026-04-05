@@ -1,0 +1,52 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+
+pkgname=openresolv-nitro
+pkgver=3.17.4
+pkgrel=1
+pkgdesc="resolv.conf management framework (resolvconf)"
+url="https://roy.marples.name/projects/openresolv"
+arch=(any)
+license=(BSD-2-Clause)
+provides=(resolvconf)
+conflicts=(resolvconf openresolv)
+depends=(bash)
+makedepends=(
+  git
+)
+backup=(etc/resolvconf.conf)
+source=(
+  "git+https://github.com/NetworkConfiguration/openresolv?signed#tag=v$pkgver"
+  "nitro.patch"
+)
+b2sums=('9fb1fea852b759011359bfe22c0c32357fa78a63ecdf259914080c16e256e3bf4de749bfcd496629d5af03e49e4db1ca7a6c5211dc900e4e5d5b3bfc85956338'
+        'c4a48d8ebede803b387a5929172b9f8469d3aaf4e0c10152188eb7e5f6afaf5c7843297a0a09c92518b6e05664c1e312255eca356f3fd0295d477a1366b7c5b9')
+validpgpkeys=(
+  A785ED2755955D9E93EA59F6597F97EA9AD45549 # Roy Marples <roy@marples.name>
+)
+_pkgname=openresolv
+
+prepare() {
+  cd $_pkgname
+  patch -p1 -i "$srcdir"/nitro.patch
+}
+
+build() {
+  local configure_options=(
+    --prefix=/usr
+    --sysconfdir=/etc
+    --libexecdir=/usr/lib/resolvconf
+    --sbindir=/usr/bin
+  )
+
+  cd $_pkgname
+  ./configure "${configure_options[@]}"
+  make
+}
+
+package() {
+  cd $_pkgname
+  make DESTDIR="$pkgdir" install
+  install -Dm644 LICENSE -t "$pkgdir/usr/share/licenses/$pkgname"
+}
+
+# vim:set sw=2 sts=-1 et:
