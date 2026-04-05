@@ -1,0 +1,24 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname='autofs-nitro'
+pkgver='20260407'
+pkgrel='1'
+pkgdesc='nitro service script for autofs'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('BSD')
+#groups=('nitro-galaxy')
+install='autofs-nitro.install'
+provides=(
+	'init-autofs'
+	)
+depends=(
+	'autofs'
+	'nitro'
+	)
+source=(
+	automount.run
+	)
+b2sums=('79df069c6d2095a2f07a05758f8eb9edcda891ea1f9250df66f1ee5ca5fbafdddbd008159d1b2cf9a504508a306b63f6345f9866aa8d1a7bb83cbab9a598ab35')
+package() {
+	install -Dm755 "$srcdir"/automount.run "$pkgdir/etc/nitro/sv/automount/run"
+}
