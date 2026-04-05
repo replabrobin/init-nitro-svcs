@@ -1,2 +1,0 @@
-#!/bin/sh
-exec [ -s /run/seatd.notification-fd ]
