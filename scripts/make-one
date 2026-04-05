@@ -26,6 +26,7 @@ done
 #hacking signage
 export GPG_TTY=$(tty)
 gpg-connect-agent updatestartuptty /bye >/dev/null
+MAKEPKGOPTS=${MAKEPKGOPTS:-'--nodeps --sign'}
 
 for x in "$build"/PKGBUILD; do
 	[ ! -f "$x" ] && echo "!!!!! '$x' is not a file" && continue
@@ -36,7 +37,7 @@ for x in "$build"/PKGBUILD; do
 	bn="$(basename "$d")"
 	if updpkgsums; then
 		if makepkg --printsrcinfo > .SRCINFO; then
-			if makepkg --nodeps --sign; then
+			if makepkg ${MAKEPKGOPTS}; then
 				echo "##### $bn: makepkg made $(ls *.zst)"
 				for p in *.zst; do
 					case "$p" in
