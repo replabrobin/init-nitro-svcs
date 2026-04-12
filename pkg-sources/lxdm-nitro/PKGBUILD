@@ -1,7 +1,7 @@
 # Maintainer: replabrobin <replabrobin@gmail.com>
 pkgname='lxdm-nitro'
 pkgver='20180314'
-pkgrel='6'
+pkgrel='7'
 pkgdesc='nitro service script for lxdm'
 arch=('any')
 url="https://github.com/replabrobin/init-nitro-svcs"
@@ -14,7 +14,7 @@ provides=(
 	)
 
 depends=(
-	'lxdm-gtk3'
+	'lxdm'
 	'nitro'
 	)
 
