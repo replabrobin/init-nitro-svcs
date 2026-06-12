@@ -1,7 +1,7 @@
 #!/bin/sh
 set -e; exec 2>&1
 
-pgrep --quiet elogind-daemon || exit 1
+! pgrep --quiet elogind-daemon && ! pgrep --quiet elogind && exit 1 || true
 
 [ ! -d /run/gdm ] && mkdir -m0711 -p /run/gdm && chown root:gdm /run/gdm
 

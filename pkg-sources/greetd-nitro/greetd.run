@@ -1,5 +1,5 @@
 #!/bin/sh -e
 
-pgrep --quiet elogind-daemon || exit 1
+! pgrep --quiet elogind-daemon && ! pgrep --quiet elogind && exit 1 || true
 
 exec /usr/bin/greetd 2>&1
