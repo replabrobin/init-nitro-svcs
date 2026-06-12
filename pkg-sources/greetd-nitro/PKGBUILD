@@ -1,6 +1,6 @@
 # Maintainer: replabrobin <replabrobin@gmail.com>
 pkgname='greetd-nitro'
-pkgver='20260302'
+pkgver='20260612'
 pkgrel='1'
 pkgdesc='nitro service script for greetd'
 arch=('any')
@@ -21,7 +21,7 @@ depends=(
 source=(
 	greetd.run
 	)
-b2sums=('e007c5da29cb6ea3f74fb0bfc9d0f807d99509835dd7b7d46afceaad31944003202bef52697b290d29f5ed5bd7d5a7e20316ff5d3d5bda6573af1cd7b1fe6271')
+b2sums=('0a6d90e16b2f2b9219d6a7b693370d54359b04a421aeb1937e9cdf01e38407bba0e016b0a6c26d74d19a4ced878a1704424c3ceb189cdb77a0d3411e955e5663')
 package() {
 	install -Dm755 "$srcdir"/greetd.run "$pkgdir/etc/nitro/sv/greetd/run"
 }

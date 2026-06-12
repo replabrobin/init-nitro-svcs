@@ -1,6 +1,6 @@
 # Maintainer: replabrobin <replabrobin@gmail.com>
 pkgname='lightdm-nitro'
-pkgver='20260302'
+pkgver='20260612'
 pkgrel='1'
 pkgdesc='nitro service script for lightdm'
 arch=('any')
@@ -21,7 +21,7 @@ depends=(
 source=(
 	lightdm.run
 	)
-b2sums=('ae71cc178ef9a73ea42f0207fbd2b5d020c1d79396073a4e4fb444bc5ee53347f4f2a08aa737ed149e91228fd93203166501f20231c2ff94e90dbdf5b0e6cb07')
+b2sums=('6a7efd74fa772c5917d6ae6e4ecb5ab602b086beefab109cf42d49479c4b581f811862b9d77ddc011c86383a8638865d809df27da51fdcecda2acff7670c9ada')
 package() {
 	install -Dm755 "$srcdir"/lightdm.run "$pkgdir/etc/nitro/sv/lightdm/run"
 }
