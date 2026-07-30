@@ -188,7 +188,7 @@ index 0000000..523ca72
 +	done
 +}
 +
-+reload_debus() {
++reload_dbus() {
 +	dbus-send --print-reply --system --type=method_call \
 +			--dest=org.freedesktop.DBus \
 +			/ org.freedesktop.DBus.ReloadConfig > /dev/null
