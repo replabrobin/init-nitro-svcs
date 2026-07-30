@@ -1,0 +1,208 @@
+diff --git a/Makefile b/Makefile
+index d66f8e7..115cb23 100644
+--- a/Makefile
++++ b/Makefile
+@@ -11,6 +11,13 @@ OPENRCCRONIEHOOKS = $(wildcard openrc/cronie-hooks/*)
+ OPENRCDBUSHOOKS = $(wildcard openrc/dbus-hooks/*)
+ OPENRCATDHOOKS = $(wildcard openrc/atd-hooks/*)
+ 
++NITROSCRIPTS = $(wildcard nitro/scripts/*)
++NITROHOOKS = $(wildcard nitro/hooks/*)
++
++NITROCRONIEHOOKS = $(wildcard nitro/cronie-hooks/*)
++NITRODBUSHOOKS = $(wildcard nitro/dbus-hooks/*)
++NITROATDHOOKS = $(wildcard nitro/atd-hooks/*)
++
+ RUNITSCRIPTS = $(wildcard runit/scripts/*)
+ RUNITHOOKS = $(wildcard runit/hooks/*)
+ 
+@@ -81,6 +88,10 @@ install_openrc: install_common
+ 	install $(EMODE) $(OPENRCSCRIPTS) $(DESTDIR)$(SCRIPTSDIR)
+ 	install $(MODE) $(OPENRCHOOKS) $(DESTDIR)$(HOOKSDIR)
+ 
++install_nitro: install_common
++	install $(EMODE) $(NITROSCRIPTS) $(DESTDIR)$(SCRIPTSDIR)
++	install $(MODE) $(NITROHOOKS) $(DESTDIR)$(HOOKSDIR)
++
+ install_runit: install_common
+ 	install $(EMODE) $(RUNITSCRIPTS) $(DESTDIR)$(SCRIPTSDIR)
+ 	install $(MODE) $(RUNITHOOKS) $(DESTDIR)$(HOOKSDIR)
+@@ -110,6 +121,15 @@ install_openrc_at: install_hook_common
+ install_openrc_dbus: install_hook_common
+ 	install $(MODE) $(OPENRCDBUSHOOKS) $(DESTDIR)$(HOOKSDIR)
+ 
++install_nitro_cronie: install_hook_common
++	install $(MODE) $(NITROCRONIEHOOKS) $(DESTDIR)$(HOOKSDIR)
++
++install_nitro_at: install_hook_common
++	install $(MODE) $(NITROATDHOOKS) $(DESTDIR)$(HOOKSDIR)
++
++install_nitro_dbus: install_hook_common
++	install $(MODE) $(NITRODBUSHOOKS) $(DESTDIR)$(HOOKSDIR)
++
+ install_runit_cronie: install_hook_common
+ 	install $(MODE) $(RUNITCRONIEHOOKS) $(DESTDIR)$(HOOKSDIR)
+ 
+@@ -145,4 +165,4 @@ install_userspawn_dinit: install_common
+ 	install $(EMODE) $(USERSPAWNDINITSCRIPTS) $(DESTDIR)$(SCRIPTSDIR)
+ 	install $(MODE) $(USERSPAWNDINITHOOKS) $(DESTDIR)$(HOOKSDIR)
+ 
+-.PHONY: install install_base install_s6 install_openrc install_runit install_dinit install_wrapper install_dinit_user install_dinit_user_spawn install_userspawn_dinit
++.PHONY: install install_base install_s6 install_openrc install_nitro install_runit install_dinit install_wrapper install_dinit_user install_dinit_user_spawn install_userspawn_dinit
+diff --git a/nitro/atd-hooks/80-atd.hook b/nitro/atd-hooks/80-atd.hook
+new file mode 100644
+index 0000000..cd6fa74
+--- /dev/null
++++ b/nitro/atd-hooks/80-atd.hook
+@@ -0,0 +1,9 @@
++[Trigger]
++Operation = Upgrade
++Type = Package
++Target = glibc
++
++[Action]
++Description = Restarting atd for libc upgrade...
++When = PostTransaction
++Exec = /usr/share/libalpm/scripts/nitro-hook restart atd
+diff --git a/nitro/cronie-hooks/80-cronie.hook b/nitro/cronie-hooks/80-cronie.hook
+new file mode 100644
+index 0000000..93443ec
+--- /dev/null
++++ b/nitro/cronie-hooks/80-cronie.hook
+@@ -0,0 +1,9 @@
++[Trigger]
++Operation = Upgrade
++Type = Package
++Target = glibc
++
++[Action]
++Description = Restarting cronie for libc upgrade...
++When = PostTransaction
++Exec = /usr/share/libalpm/scripts/nitro-hook restart cronie
+diff --git a/nitro/dbus-hooks/dbus-reload.hook b/nitro/dbus-hooks/dbus-reload.hook
+new file mode 100644
+index 0000000..4475991
+--- /dev/null
++++ b/nitro/dbus-hooks/dbus-reload.hook
+@@ -0,0 +1,13 @@
++[Trigger]
++Type = Path
++Operation = Install
++Operation = Upgrade
++Operation = Remove
++Target = etc/dbus-1/system.d/*.conf
++Target = usr/share/dbus-1/system.d/*.conf
++Target = usr/share/dbus-1/system-services/*.service
++
++[Action]
++Description = Reloading system bus configuration...
++When = PostTransaction
++Exec = /usr/share/libalpm/scripts/nitro-hook dbus_reload
+diff --git a/nitro/hooks/30-sysctl.hook b/nitro/hooks/30-sysctl.hook
+new file mode 100644
+index 0000000..6945bcb
+--- /dev/null
++++ b/nitro/hooks/30-sysctl.hook
+@@ -0,0 +1,12 @@
++[Trigger]
++Type = Path
++Operation = Install
++Operation = Upgrade
++Target = etc/sysctl.d/*.conf
++Target = usr/lib/sysctl.d/*.conf
++
++[Action]
++Description = Applying kernel sysctl settings...
++When = PostTransaction
++Exec = /usr/share/libalpm/scripts/nitro-hook sysctl
++NeedsTargets
+diff --git a/nitro/hooks/nitro-install.hook b/nitro/hooks/nitro-install.hook
+new file mode 100644
+index 0000000..fc4a9d3
+--- /dev/null
++++ b/nitro/hooks/nitro-install.hook
+@@ -0,0 +1,11 @@
++[Trigger]
++Type = Path
++Operation = Install
++Operation = Upgrade
++Target = etc/nitro/sv/*
++
++[Action]
++Description = Displaying nitro service help ...
++When = PostTransaction
++Exec = /usr/share/libalpm/scripts/nitro-hook add
++#NeedsTargets
+diff --git a/nitro/hooks/nitro-remove.hook b/nitro/hooks/nitro-remove.hook
+new file mode 100644
+index 0000000..07d7275
+--- /dev/null
++++ b/nitro/hooks/nitro-remove.hook
+@@ -0,0 +1,10 @@
++[Trigger]
++Type = Path
++Operation = Remove
++Target = etc/nitro/sv/*
++
++[Action]
++Description = Displaying nitro service help ...
++When = PostTransaction
++Exec = /usr/share/libalpm/scripts/nitro-hook del
++#NeedsTargets
+diff --git a/nitro/scripts/nitro-hook b/nitro/scripts/nitro-hook
+new file mode 100755
+index 0000000..523ca72
+--- /dev/null
++++ b/nitro/scripts/nitro-hook
+@@ -0,0 +1,51 @@
++#!/bin/sh -e
++
++nitro_live() {
++	local fn="/run/nitro/nitro.sock"
++	if [ ! -S "$fn" ] || [ "$(lsof -Fp "$fn")" != "p1" ]; then
++		echo >&2 "  Skipped: Current root is not booted."
++		exit 0
++	fi
++}
++
++svc_help(){
++	echo "	==> Start/stop/restart a service:"
++	echo "	nsm <start/stop/restart> <service>"
++}
++
++svc_add_help(){
++	echo "	==> Add a service:"
++	echo "	nsm enable <service>"
++	svc_help
++}
++
++svc_del_help(){
++	echo "	==> Remove a service:"
++	echo "	nsm disable <service>"
++	svc_help
++}
++
++each_conf() {
++	while read -r f; do
++		"$@" "/$f"
++	done
++}
++
++reload_dbus() {
++	dbus-send --print-reply --system --type=method_call \
++			--dest=org.freedesktop.DBus \
++			/ org.freedesktop.DBus.ReloadConfig > /dev/null
++}
++
++op="$1"; shift
++
++case $op in
++	(sysctl) nitro_live; each_conf /usr/bin/sysctl -q -p ;;
++	(binfmt) nitro_live; each_conf /usr/lib/rc/sv.d/binfmt once ;;
++	(reload) nitro_live; /usr/bin/sv "$@" reload ;;
++	(add) svc_add_help ;;
++	(del) svc_del_help ;;
++	(*) echo >&2 "  Invalid operation '$op'"; exit 1 ;;
++esac
++
++exit 0

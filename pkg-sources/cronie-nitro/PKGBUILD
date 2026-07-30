@@ -1,8 +1,9 @@
 # Maintainer: replabrobin <replabrobin@gmail.com>
 pkgname='cronie-nitro'
-pkgver='20200613'
+pkgver='20260730'
 pkgrel='3'
 pkgdesc='nitro service script for cronie'
+_tag=3.0 # alpm-hooks
 arch=('any')
 url="https://github.com/replabrobin/init-nitro-svcs"
 license=('BSD')
@@ -20,8 +21,20 @@ depends=(
 
 source=(
 	cronie.run
+	"git+https://gitea.artixlinux.org/artix/alpm-hooks.git#tag=$_tag"
+	"alpm-hooks-001.patch"
 	)
-b2sums=('4ab132709a7bf6e53c16511181c5558ed5f2ba7ce641be2832dcb4ef3cefab17323203dfcdcdb7800d9cbc420face0975aa4bdb9925b64be14a466c6fd514783')
+b2sums=('4ab132709a7bf6e53c16511181c5558ed5f2ba7ce641be2832dcb4ef3cefab17323203dfcdcdb7800d9cbc420face0975aa4bdb9925b64be14a466c6fd514783'
+        '654b9166c85afd17ccaf4deed1803669b2a38fa36399dc83e399aa7b6261f6a58fe79609d3840cec55a84cbe2e7e5e403569412baedc274988d37ca8693bf14e'
+        '54e7613d6f608d1ee5e0daade53baf35c712c2883f6dc58e3927195ad28ae6682bff9e7381dedd3c08d54053133a9f466e995cbeebf9de17857942c022832e75')
+prepare(){
+	cd "$srcdir/alpm-hooks"
+	patch -p1 -i "$srcdir/alpm-hooks-001.patch"
+}
 package() {
 	install -Dm755 "$srcdir"/cronie.run "$pkgdir/etc/nitro/sv/cronie/run"
+
+    # alpm hooks
+    cd "${srcdir}"/alpm-hooks
+    DESTDIR="${pkgdir}" make install_nitro_cronie
 }
