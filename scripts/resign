@@ -2,7 +2,7 @@
 set -e
 TOP=$(realpath "$(dirname "${BASH_SOURCE[0]}")"/..)
 tmp="$TOP/tmp"
-[ ! -d "$tmp" ] && mkdir pp "$tmp" || true
+[ ! -d "$tmp" ] && mkdir -p "$tmp" || true
 exec |& tee "$tmp/resign.log"
 prog="$(basename "$0")"
 htdocs="${htdocs:-"$TOP/htdocs"}"
