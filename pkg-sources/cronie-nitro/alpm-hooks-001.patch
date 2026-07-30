@@ -63,7 +63,7 @@ index 0000000..cd6fa74
 +[Action]
 +Description = Restarting atd for libc upgrade...
 +When = PostTransaction
-+Exec = /usr/share/libalpm/scripts/nitro-hook restart atd
++Exec = /usr/share/libalpm/scripts/nitro-hook restart at
 diff --git a/nitro/cronie-hooks/80-cronie.hook b/nitro/cronie-hooks/80-cronie.hook
 new file mode 100644
 index 0000000..93443ec
@@ -188,7 +188,7 @@ index 0000000..523ca72
 +	done
 +}
 +
-+reload_dbus() {
++reload_debus() {
 +	dbus-send --print-reply --system --type=method_call \
 +			--dest=org.freedesktop.DBus \
 +			/ org.freedesktop.DBus.ReloadConfig > /dev/null
@@ -199,7 +199,9 @@ index 0000000..523ca72
 +case $op in
 +	(sysctl) nitro_live; each_conf /usr/bin/sysctl -q -p ;;
 +	(binfmt) nitro_live; each_conf /usr/lib/rc/sv.d/binfmt once ;;
-+	(reload) nitro_live; /usr/bin/sv "$@" reload ;;
++	(dbus_reload) runit_live; reload_dbus ;;
++	# For use by other packages
++	(restart) nitro_live; /usr/bin/nitroctl restart "$@";;
 +	(add) svc_add_help ;;
 +	(del) svc_del_help ;;
 +	(*) echo >&2 "  Invalid operation '$op'"; exit 1 ;;
