@@ -199,7 +199,7 @@ index 0000000..523ca72
 +case $op in
 +	(sysctl) nitro_live; each_conf /usr/bin/sysctl -q -p ;;
 +	(binfmt) nitro_live; each_conf /usr/lib/rc/sv.d/binfmt once ;;
-+	(dbus_reload) runit_live; reload_dbus ;;
++	(dbus_reload) nitro_live; reload_dbus ;;
 +	# For use by other packages
 +	(restart) nitro_live; /usr/bin/nitroctl restart "$@";;
 +	(add) svc_add_help ;;
