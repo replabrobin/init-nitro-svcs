@@ -1,25 +1,24 @@
 # Maintainer: replabrobin <replabrobin@gmail.com>
 pkgname='hdparm-nitro'
-pkgver='20210407'
-pkgrel='2'
+pkgver='20270731'
+pkgrel='1'
 pkgdesc='nitro service script for hdparm'
 arch=('any')
 url="https://github.com/replabrobin/init-nitro-svcs"
 license=('BSD')
 #groups=('nitro-galaxy')
+provides=('init-hdparm')
+depends=('hdparm')
+conflicts=('init-hdparm')
+backup=('etc/rc/hdparm.conf')
+source=('hdparm' 'hdparm.conf')
+sha256sums=('d070f0a4cf2117810f9b51621dc832701c16fcf8b29fb0efc9242b11c8468b0e'
+            '995bd9e410a98cd5e71696dd1141ba360e85968ce4d34d687365bd97783ee1de')
 
-provides=(
-	'init-hdparm'
-	)
-
-depends=(
-	'hdparm'
-	)
-
-source=(
-	hdparm.conf
-	)
-b2sums=('57fa5ec565bc912075279f02eb7165d756bc8651564a9cfcc315a7970f6e0fad1da37e46d45c47b22c3f845987e6af12070ea4bf677cede39cf8c9ff865da81e')
 package() {
-	install -Dm755 "$srcdir"/hdparm.conf "$pkgdir/etc/nitro/sv/hdparm/conf"
+    install -Dm755 "${srcdir}/hdparm" "${pkgdir}/usr/lib/rc/sv.d/hdparm"
+
+    install -d ${pkgdir}/etc/rc/{sysinit,shutdown}
+    install -Dm644 hdparm.conf "${pkgdir}/etc/rc/"
+    ln -sf /usr/lib/rc/sv.d/hdparm ${pkgdir}/etc/rc/sysinit/04-hdparm
 }
