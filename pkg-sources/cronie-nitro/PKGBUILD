@@ -1,23 +1,17 @@
 # Maintainer: replabrobin <replabrobin@gmail.com>
 pkgname='cronie-nitro'
-pkgver='20260730'
-pkgrel='3'
+pkgver='20260731'
+pkgrel='1'
 pkgdesc='nitro service script for cronie'
 _tag=3.0 # alpm-hooks
 arch=('any')
 url="https://github.com/replabrobin/init-nitro-svcs"
 license=('BSD')
 #groups=('nitro-galaxy')
-
-provides=(
-	'init-cronie'
-	'init-cron'
-	)
-
-depends=(
-	'cronie'
-	'nitro'
-	)
+makedepends=('git')
+depends=('cronie' 'nitro')
+provides=('init-cronie' 'init-cron')
+conflicts=('fcron' 'init-cronie' 'init-cron')
 
 source=(
 	cronie.run
@@ -26,7 +20,7 @@ source=(
 	)
 b2sums=('4ab132709a7bf6e53c16511181c5558ed5f2ba7ce641be2832dcb4ef3cefab17323203dfcdcdb7800d9cbc420face0975aa4bdb9925b64be14a466c6fd514783'
         '654b9166c85afd17ccaf4deed1803669b2a38fa36399dc83e399aa7b6261f6a58fe79609d3840cec55a84cbe2e7e5e403569412baedc274988d37ca8693bf14e'
-        '16bb9edf996035fbdb07c9a154508afe4913a8658a925ffd0d09889d9cb68d46f8ab94ad08659c42867e73a22e3fc643299278a6b2674a65d19f039f46ac0909')
+        '5c9b7dac854f9655c90d061601b1e16d7c46ee8b227f6072e91d6af73a663364cfcdff0c0f81b31590dbb924280eff8f4e8e7ec3790f785fc3508765c93a9de1')
 prepare(){
 	cd "$srcdir/alpm-hooks"
 	patch -p1 -i "$srcdir/alpm-hooks-001.patch"
