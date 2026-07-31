@@ -222,9 +222,24 @@ ${_PBD[itext]%${lf}}
 }
 
 runit-gitea-list(){
+	local i
 	for i in {1..12};do
 		curl -s "https://gitea.artixlinux.org/packages?page=$i&q=-runit&sort=recentupdate"
-	done | sed -n -e'/<a class="text primary name"/{s/^[^>]*>//;s/<.*$//;p}'
+	done | sed -n -e'/<a class="tw-text-primary name"/{s/^[^>]*>//;s/<.*$//;p}'
+}
+
+runit-gitea-fetch(){
+	local x
+	for x in $(runit-gitea-list); do
+		echo "##### $x"
+		if [ -d "$x" ]; then
+			(cd "$x";git pull)
+		else
+			git clone https://gitea.artixlinux.org/packages/$x.git
+		fi
+		echo
+		sleep 5
+	done
 }
 
 conversion-list(){
