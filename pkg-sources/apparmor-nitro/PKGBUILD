@@ -1,12 +1,15 @@
 # Maintainer: replabrobin <replabrobin@gmail.com>
 pkgname='apparmor-nitro'
-pkgver='20220321'
-pkgrel='2'
+pkgver='20260731'
+pkgrel='1'
 pkgdesc='nitro service script for apparmor'
 arch=('any')
 url="https://github.com/replabrobin/init-nitro-svcs"
 license=('BSD')
 #groups=('nitro-galaxy')
+
+conflicts=('init-apparmor')
+backup=('etc/rc/apparmor.conf')
 install=apparmor-nitro.install
 provides=(
 	'init-apparmor'
