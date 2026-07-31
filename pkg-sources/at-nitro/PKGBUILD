@@ -1,22 +1,18 @@
 # Maintainer: replabrobin <replabrobin@gmail.com>
 pkgname='at-nitro'
-pkgver='20260730'
-pkgrel='2'
+pkgver='20260731'
+pkgrel='1'
 pkgdesc='nitro service script for at'
 _tag=3.0 # alpm-hooks
 arch=('any')
 url="https://github.com/replabrobin/init-nitro-svcs"
 license=('BSD')
+makedepends=('git')
+depends=('at' 'nitro')
 #groups=('nitro-galaxy')
+provides=('init-at')
+conflicts=('init-at')
 
-provides=(
-	'init-at'
-	)
-
-depends=(
-	'at'
-	'nitro'
-	)
 
 source=(
 	"git+https://gitea.artixlinux.org/artix/alpm-hooks.git#tag=$_tag"
@@ -29,7 +25,7 @@ prepare(){
 }
 b2sums=('654b9166c85afd17ccaf4deed1803669b2a38fa36399dc83e399aa7b6261f6a58fe79609d3840cec55a84cbe2e7e5e403569412baedc274988d37ca8693bf14e'
         'ad7e97922f3d1abcb437e40d8bb6f4e719b9ac4d86730b0d2df892fa0553d3f9aafbc6642418eaa308093615634ef98e7b401f8a8696da9d5b8ab2df5a90622a'
-        '16bb9edf996035fbdb07c9a154508afe4913a8658a925ffd0d09889d9cb68d46f8ab94ad08659c42867e73a22e3fc643299278a6b2674a65d19f039f46ac0909')
+        '5c9b7dac854f9655c90d061601b1e16d7c46ee8b227f6072e91d6af73a663364cfcdff0c0f81b31590dbb924280eff8f4e8e7ec3790f785fc3508765c93a9de1')
 package() {
 	install -Dm755 "$srcdir"/at.run "$pkgdir/etc/nitro/sv/at/run"
 
