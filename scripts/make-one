@@ -8,7 +8,7 @@ exec |& tee "$tmp/make-one.log"
 prog="$(basename "$0")"
 src="$1"
 if [ ! -d "$src" -o ! -f "$src/PKGBUILD" ]; then
-	echo "!!!!! Usage: $prog <dir> and <dir> should contain PKGBUILD" 
+	echo "!!!!! Usage: $prog <dir> $src should contain PKGBUILD" 
 	exit 1
 fi
 src="$(realpath "$src")"
@@ -34,11 +34,10 @@ for x in "$build"/PKGBUILD; do
 	rm  -rf "$d"/{src,pkg,*.zst,*.zst.sig,.SRCINFO}
 	(
 	cd "$d"
-	bn="$(basename "$d")"
 	if updpkgsums; then
 		if makepkg --printsrcinfo > .SRCINFO; then
 			if makepkg ${MAKEPKGOPTS}; then
-				echo "##### $bn: makepkg made $(ls *.zst)"
+				echo "##### $prog: makepkg made $(ls *.zst)"
 				for p in *.zst; do
 					case "$p" in
 						(*-any.pkg.tar.zst)
@@ -56,36 +55,38 @@ for x in "$build"/PKGBUILD; do
 							;;
 					esac
 					if [ ! -e "$pkgs/$p" ]; then
-						mv "$p" "$p.sig" "$pkgs/"
-						case "$p" in
-							(*-any.pkg.tar.zst)
-								x86_64="$repo/x86_64/$p"
-								aarch64="$repo/aarch64/$p"
-								cp "$pkgs/$p"{,.sig} "$repo/aarch64/"
-								;;
-							(*-x86_64.pkg.tar.zst)
-								x86_64="$repo/x86_64/$p"
-								;;
-							(*-aarch64.pkg.tar.zst)
-								aarch64="$repo/aarch64/$p"
-								;;
-						esac
-						[ -n "$x86_64" ] && repo-add -R -s $repo/x86_64/$dbname.db.tar.zst "$x86_64"
-						[ -n "$aarch64" ] && repo-add -R -s $repo/aarch64/$dbname.db.tar.zst "$aarch64"
+						if [ -z "$DRYRUN" ]; then
+							mv "$p" "$p.sig" "$pkgs/"
+							case "$p" in
+								(*-any.pkg.tar.zst)
+									x86_64="$repo/x86_64/$p"
+									aarch64="$repo/aarch64/$p"
+									cp "$pkgs/$p"{,.sig} "$repo/aarch64/"
+									;;
+								(*-x86_64.pkg.tar.zst)
+									x86_64="$repo/x86_64/$p"
+									;;
+								(*-aarch64.pkg.tar.zst)
+									aarch64="$repo/aarch64/$p"
+									;;
+							esac
+							[ -n "$x86_64" ] && repo-add -R -s $repo/x86_64/$dbname.db.tar.zst "$x86_64"
+							[ -n "$aarch64" ] && repo-add -R -s $repo/aarch64/$dbname.db.tar.zst "$aarch64"
+						fi
 					else
-						echo "!!!!! $prog '$pkgs/$p' already exists"
+						echo "!!!!! $prog: '$pkgs/$p' already exists"
 						exit 2
 					fi
 				done
 				cp -pr "$build/PKGBUILD" "$src"
 			else
-				echo "!!!!! $bn: makepkg failed" 1>&2
+				echo "!!!!! $prog: makepkg failed" 1>&2
 			fi
 		else
-			echo "!!!!! $bn: makepkg --printsrcinfo failed" 1>&2
+			echo "!!!!! $prog: makepkg --printsrcinfo failed" 1>&2
 		fi
 	else
-		echo "!!!!! $bn: updpkgsums failed" 1>&2
+		echo "!!!!! $prog: updpkgsums failed" 1>&2
 	fi
 	)
 done
