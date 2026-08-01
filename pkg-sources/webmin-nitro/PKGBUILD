@@ -1,0 +1,17 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname=webmin-nitro
+pkgver='20260801'
+pkgrel='1'
+pkgdesc='nitro init script for webmin'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('Unlicense')
+depends=('webmin' 'nitro')
+conflicts=('init-webmin')
+provides=('init-webmin')
+source=('webmin.run')
+sha256sums=('32f4832bb814f83e15d8e73e54ca1f8768e52a4cb94c508802971e93a67bcfc6')
+
+package() {
+    install -Dm755 "${srcdir}/webmin.run" "${pkgdir}/etc/nitro/sv/webmin/run"
+}

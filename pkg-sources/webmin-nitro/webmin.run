@@ -1,0 +1,2 @@
+#!/bin/sh
+exec /usr/bin/perl /opt/webmin/miniserv.pl /etc/webmin/miniserv.conf 2>&1

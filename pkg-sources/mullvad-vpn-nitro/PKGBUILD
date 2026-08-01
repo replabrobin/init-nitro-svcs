@@ -1,0 +1,17 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname=mullvad-vpn-nitro
+pkgver='20260801'
+pkgrel='1'
+pkgdesc="nitro service for Mullvad VPN"
+arch=("any")
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=("GPL")
+provides=('init-mullvad')
+conflicts=('init-mullvad')
+depends=("nitro" "mullvad-vpn-daemon")
+source=("mullvad-daemon.run")
+sha256sums=('5affc5eea611b4328e2a3859994ac43178c0d3a5e00ad8783fccae52de83e6db')
+
+package() {
+  install -Dm755 ${srcdir}/mullvad-daemon.run "$pkgdir/etc/nitro/sv/mullvad-daemon/run"
+}
