@@ -1,6 +1,6 @@
 # Maintainer: replabrobin <replabrobin@gmail.com>
 pkgname='at-nitro'
-pkgver='20260731'
+pkgver='20260801'
 pkgrel='1'
 pkgdesc='nitro service script for at'
 _tag=3.0 # alpm-hooks
