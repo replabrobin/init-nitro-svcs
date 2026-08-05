@@ -1,0 +1,54 @@
+_pkgname=snooze
+pkgname="${_pkgname}"-nitro
+pkgver=0.5.1
+pkgrel=1
+pkgdesc="Anacron like common snoozes nitro services"
+arch=('x86_64')
+url="https://github.com/leahneukirchen/${_pkgname}"
+license=('custom:CC0-1.0')
+depends=("snooze" "run-parts")
+source=(
+  "${_pkgname}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz"
+  patches.b2
+)
+b2sums=(
+  '04629dc66e41610272daf630bf34da43a5ab2ae2bf9da076f843004462ed843a5ba63253de95bdb37768f56c5851f5d4cce010f73ed34ee9c9f15fe82fecd440'
+  '52aef8bdacf02de1bdcabbd2bf1ecea43cd79506100c180c4498e182ec2202a6712e0e90c32797ef99282735624233a57b96bf32660ea701d3a98f35fc6d83b6'
+)
+
+_cwd="${PWD}"
+_patches_d="${PWD}/patches"
+
+prepare() {
+  cd "${_pkgname}-${pkgver}"
+  cd "${_cwd}"
+
+  # Check patches
+  b2sum -c patches.b2
+
+  # Return to souces dir
+  cd -
+
+  awk '/To the extent/,/1.0/ {print}' snooze.c | sed 's/^  *\*  *//' > LICENSE
+
+  echo "Applying patches from ${_patches_d} if present..."
+  if [ -d "${_patches_d}" ]; then
+    for patch in "${_patches_d}"/*.patch; do
+      echo "Applying patch ${patch} ..."
+      patch -p1 -s -i ${patch}
+    done
+  fi
+}
+
+build() {
+  echo "Nothing to build..."
+}
+
+package() {
+  cd "${_pkgname}-${pkgver}/sv"
+  make DESTDIR="$pkgdir" install
+  cd ..
+  install -Dm644 LICENSE -t "${pkgdir}"/usr/share/licenses/${pkgname}
+}
+
+# vim:ft=sh ts=2 sw=2
