@@ -1,0 +1,41 @@
+# Maintainer: je-vv github/je-vv aka kixik at artix
+# Maintainer: replabrobin <replabrobin@gmail.com>
+_pkgname=snooze
+pkgname="${_pkgname}"-nitro
+pkgver=0.5.1
+pkgrel=1
+pkgdesc="Anacron like common snoozes nitro services"
+arch=('any')
+url="https://github.com/leahneukirchen/${_pkgname}"
+license=('custom:CC0-1.0')
+depends=("snooze" "run-parts" "nitro")
+provides=("init-snooze")
+conflicts=("init-snooze")
+source=(
+  "${_pkgname}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz"
+  "01-sv_nitro_snoozes.patch"
+)
+b2sums=('04629dc66e41610272daf630bf34da43a5ab2ae2bf9da076f843004462ed843a5ba63253de95bdb37768f56c5851f5d4cce010f73ed34ee9c9f15fe82fecd440'
+        'ff49e8fe22a7a6a3279e1886301f23a10a4f5da7810d41b2ede8b7dbbdc4c575c931d089c988e170d46a168017acc5d0249338c808cfe844b6279f5c25674b00')
+
+prepare() {
+  cd "${_pkgname}-${pkgver}"
+
+  awk '/To the extent/,/1.0/ {print}' snooze.c | sed 's/^  *\*  *//' > LICENSE
+
+  # Check patches
+  patch -p1 -s -i "${srcdir}/01-sv_nitro_snoozes.patch"
+}
+
+build() {
+  echo "Nothing to build..."
+}
+
+package() {
+  cd "${_pkgname}-${pkgver}/sv"
+  make DESTDIR="$pkgdir" install
+  cd ..
+  install -Dm644 LICENSE -t "${pkgdir}"/usr/share/licenses/${pkgname}
+}
+
+# vim:ft=sh ts=2 sw=2

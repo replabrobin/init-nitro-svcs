@@ -1,0 +1,58 @@
+Using the /etc/nitro/sv directory instead of the original /etc/sv, that's
+where artix nitro implementation keeps its sv directory
+
+Not using /etc/cron.<frequency> directories to avoid conflicts with anacron
+implementations, using /etc/snooze/<frequency> instead
+
+diff -Naur snooze-0.5.1-orig/sv/Makefile snooze-0.5.1/sv/Makefile
+--- snooze-0.5.1-orig/sv/Makefile	2026-08-02 02:48:26.460510676 -0600
++++ snooze-0.5.1/sv/Makefile	2026-08-02 02:53:12.515933786 -0600
+@@ -1,9 +1,10 @@
+ DESTDIR=
+ SYSCONFDIR=/etc
+-SVDIR=$(SYSCONFDIR)/sv
++SVDIR=$(SYSCONFDIR)/nitro/sv
+
+ install: FRC
+-	for f in daily hourly weekly monthly; do \
++	for f in hourly daily weekly monthly; do \
++		mkdir -p $(DESTDIR)$(SYSCONFDIR)/snooze/$$f; \
+ 		mkdir -p $(DESTDIR)$(SVDIR)/snooze-$$f; \
+ 		install -m0755 snooze-$$f/run \
+ 			$(DESTDIR)$(SVDIR)/snooze-$$f/; \
+diff -Naur snooze-0.5.1-orig/sv/snooze-daily/run snooze-0.5.1/sv/snooze-daily/run
+--- snooze-0.5.1-orig/sv/snooze-daily/run	2026-08-02 02:48:26.460541848 -0600
++++ snooze-0.5.1/sv/snooze-daily/run	2026-08-02 02:56:26.517787288 -0600
+@@ -1,4 +1,4 @@
+ #!/bin/sh
+ mkdir -p /var/cache/snooze
+ exec snooze -s 1d -t /var/cache/snooze/daily -- sh -c \
+-	"test -d /etc/cron.daily && run-parts --lsbsysinit /etc/cron.daily; touch /var/cache/snooze/daily"
++	"test -d /etc/snooze/daily && run-parts /etc/snooze/daily; touch /var/cache/snooze/daily"
+diff -Naur snooze-0.5.1-orig/sv/snooze-hourly/run snooze-0.5.1/sv/snooze-hourly/run
+--- snooze-0.5.1-orig/sv/snooze-hourly/run	2026-08-02 02:48:26.460579317 -0600
++++ snooze-0.5.1/sv/snooze-hourly/run	2026-08-02 02:57:32.230368347 -0600
+@@ -1,4 +1,4 @@
+ #!/bin/sh
+ mkdir -p /var/cache/snooze
+ exec snooze -H \* -s 1h -t /var/cache/snooze/hourly -- sh -c \
+-	"test -d /etc/cron.hourly && run-parts --lsbsysinit /etc/cron.hourly; touch /var/cache/snooze/hourly"
++	"test -d /etc/snooze/hourly && run-parts /etc/snooze/hourly; touch /var/cache/snooze/hourly"
+diff -Naur snooze-0.5.1-orig/sv/snooze-monthly/run snooze-0.5.1/sv/snooze-monthly/run
+--- snooze-0.5.1-orig/sv/snooze-monthly/run	2026-08-02 02:48:26.460608237 -0600
++++ snooze-0.5.1/sv/snooze-monthly/run	2026-08-02 02:58:33.518889831 -0600
+@@ -1,4 +1,4 @@
+ #!/bin/sh
+ mkdir -p /var/cache/snooze
+ exec snooze -d 1 -s 28d -t /var/cache/snooze/monthly -- sh -c \
+-	"test -d /etc/cron.monthly && run-parts --lsbsysinit /etc/cron.monthly; touch /var/cache/snooze/monthly"
++	"test -d /etc/snooze/monthly && run-parts /etc/snooze/monthly; touch /var/cache/snooze/monthly"
+diff -Naur snooze-0.5.1-orig/sv/snooze-weekly/run snooze-0.5.1/sv/snooze-weekly/run
+--- snooze-0.5.1-orig/sv/snooze-weekly/run	2026-08-02 02:48:26.460636341 -0600
++++ snooze-0.5.1/sv/snooze-weekly/run	2026-08-02 02:59:13.799271201 -0600
+@@ -1,4 +1,4 @@
+ #!/bin/sh
+ mkdir -p /var/cache/snooze
+ exec snooze -w 0 -s 7d -t /var/cache/snooze/weekly -- sh -c \
+-	"test -d /etc/cron.weekly && run-parts --lsbsysinit /etc/cron.weekly; touch /var/cache/snooze/weekly"
++	"test -d /etc/snooze/weekly && run-parts /etc/snooze/weekly; touch /var/cache/snooze/weekly"
