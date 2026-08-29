@@ -1,0 +1,3 @@
+#!/bin/sh
+install -dm 700 "$XDG_RUNTIME_DIR"/nitro/env
+#exec runsvdir "$HOME/.config/service"

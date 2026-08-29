@@ -1,0 +1,12 @@
+#!/bin/sh
+
+post_install() {
+    cat <<'EOF'
+
+Per-user services live under ~/.config/service/.
+
+A per-user envdir is created at \$XDG_RUNTIME_DIR/nitro/env on login.
+User services can source it with chpst -e \$XDG_RUNTIME_DIR/nitro/env.
+
+EOF
+}

@@ -1,0 +1,21 @@
+# Maintainer: replabrobin <replabrobin@gmail.com>
+pkgname=userspawn-nitro
+pkgver='20260801'
+pkgrel='1'
+pkgdesc='Launch anything, upon any user login'
+arch=('any')
+url="https://github.com/replabrobin/init-nitro-svcs"
+license=('LGPL-3.0-or-later')
+makedepends=('git')
+depends=('nitro' 'sh' 'userspawn')
+provides=('init-userspawn')
+conflicts=('init-userspawn' 'turnstile-nitro')
+install=userspawn-nitro.install
+source=('userspawn.run' 'userspawnrc')
+sha256sums=('5efa2b881784b61cb21aa8ddfb988830621b5c5d766f9c6c57c65d1fecffe3f2'
+            '60ad911bec48c174eba7f976b7221bef78d6cf5bd1eb09030be44b4debf2124e')
+
+package() {
+    install -Dm755 userspawnrc "$pkgdir"/etc/xdg/userspawn/userspawnrc
+    install -Dm755 userspawn.run "$pkgdir"/etc/nitro/sv/userspawn/run
+}
